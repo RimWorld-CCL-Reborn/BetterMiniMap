@@ -1,0 +1,31 @@
+using System.Collections.Generic;
+using UnityEngine;
+using Verse;
+
+namespace BetterMiniMap
+{
+    public class Overlay_Buildings : Overlay
+    {
+        private static readonly Color planningColor = Color.white;
+
+        public Overlay_Buildings(bool visible) : base(visible) { }
+
+        public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Buildings;
+
+        public override void Update()
+        {
+            base.ClearTexture(false);
+            List<Building> allBuildingsColonist = Find.VisibleMap.listerBuildings.allBuildingsColonist;
+            foreach (Building current in allBuildingsColonist)
+            {
+                // todo: AffectsRegions?
+                bool flag = current.def.defName.Equals("Wall") || current.def.defName.Equals("Door") || current.def.defName.Equals("Autodoor") || current.def.defName.Equals("Embrasure") || current.def.defName.Equals("ReinforcedFireResistantEmbrasures") || current.def.defName.Equals("ReinforcedEmbrasures") || current.def.defName.Equals("FireResistantEmbrasures");
+                if (flag)
+                {
+                    base.Texture.SetPixel(current.Position.x, current.Position.z, planningColor);
+                }
+            }
+        }
+
+    }
+}

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+
+	<positionmapx>Posição X:</positionmapx>
+	<positionmapz>Posição Y:</positionmapz>
+	<size>Tamanho(x por x):</size>
+	
+	<positionmapxdesc>Da esquerda para direita.</positionmapxdesc>
+	<positionmapzdesc>De cima para baixo.</positionmapzdesc>
+	<sizedesc>O mapa é sempre quadrado.</sizedesc>
+
+	<nameminimapconfig>Mini Mapa</nameminimapconfig>
+	
+	<labeltimeupdatet>Atualizar de X em X Frames</labeltimeupdatet>
+	<overlay_Areat>Áreas</overlay_Areat>
+	<overlay_Buildingst>Construções</overlay_Buildingst>
+	<overlay_Colonistst>Colonista</overlay_Colonistst>
+	<overlay_Fogt>Montanhas</overlay_Fogt>
+	<overlay_Miningt>Mineração</overlay_Miningt>
+	<overlay_NonColonistPawnst>Não Colonista</overlay_NonColonistPawnst>
+	<overlay_PowerGridt>Rede Elétrica</overlay_PowerGridt>
+	<overlay_Robotst>Robô - Sempre ativo</overlay_Robotst>
+	<overlay_Shipst>Nave - Sempre ativa</overlay_Shipst>
+	<overlay_Terraint>Terreno</overlay_Terraint>
+	<overlay_ViewPortt>Camera</overlay_ViewPortt>
+	<overlay_Wildlifet>Animais</overlay_Wildlifet>
+	
+	<labeltimeupdated></labeltimeupdated>
+	<overlay_Aread></overlay_Aread>
+	<overlay_Buildingsd></overlay_Buildingsd>
+	<overlay_Colonistsd></overlay_Colonistsd>
+	<overlay_Fogd></overlay_Fogd>
+	<overlay_Miningd></overlay_Miningd>
+	<overlay_NonColonistPawnsd></overlay_NonColonistPawnsd>
+	<overlay_PowerGridd></overlay_PowerGridd>
+	<overlay_Robotsd></overlay_Robotsd>
+	<overlay_Shipsd></overlay_Shipsd>
+	<overlay_Terraind></overlay_Terraind>
+	<overlay_ViewPortd></overlay_ViewPortd>
+	<overlay_Wildlifed></overlay_Wildlifed>
+	
+	<labelradiust>Raio do círculo</labelradiust>
+	<radiu_Colonistst>Colonista</radiu_Colonistst>
+	<radiu_ColonistsAnimalt>Colonista (Animais)</radiu_ColonistsAnimalt>
+	<radiu_NonColonistPawnsEnemyt>Inimigo</radiu_NonColonistPawnsEnemyt>
+	<radiu_NonColonistPawnsTradert>Comerciante</radiu_NonColonistPawnsTradert>
+	<radiu_NonColonistPawnsVisitort>Visitante</radiu_NonColonistPawnsVisitort>
+	<radiu_Robotst>Robô</radiu_Robotst>
+	<radiu_Shipst>Nave Inimiga</radiu_Shipst>
+	<radiu_Wildlifewildt>Animal Selvagem</radiu_Wildlifewildt>
+	<radiu_Wildlifetamet>Animal Domado</radiu_Wildlifetamet>
+	<radiu_Wildlifehostilet>Animal Hostil</radiu_Wildlifehostilet>
+	<radiu_Wildlifehuntingt>Animal Caçado</radiu_Wildlifehuntingt>
+	
+	<labelradiusd></labelradiusd>
+	<radiu_Buildingsd></radiu_Buildingsd>
+	<radiu_Colonistsd></radiu_Colonistsd>
+	<radiu_ColonistsAnimald></radiu_ColonistsAnimald>
+	<radiu_NonColonistPawnsEnemyd></radiu_NonColonistPawnsEnemyd>
+	<radiu_NonColonistPawnsTraderd></radiu_NonColonistPawnsTraderd>
+	<radiu_NonColonistPawnsVisitord></radiu_NonColonistPawnsVisitord>
+	<radiu_Robotsd></radiu_Robotsd>
+	<radiu_Shipsd></radiu_Shipsd>
+	<radiu_Wildlifewildd></radiu_Wildlifewildd>
+	<radiu_Wildlifetamed></radiu_Wildlifetamed>
+	<radiu_Wildlifehostiled></radiu_Wildlifehostiled>
+	<radiu_Wildlifehuntingd></radiu_Wildlifehuntingd>
+	
+</LanguageData>
