@@ -3,8 +3,6 @@ using System.Reflection;
 using UnityEngine;
 using Verse;
 using Verse.Sound;
-using RimWorld;
-using RimWorld.Planet;
 
 namespace BetterMiniMap
 {

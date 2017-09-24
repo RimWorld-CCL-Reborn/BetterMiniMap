@@ -18,12 +18,8 @@ namespace BetterMiniMap
 			base.ClearTexture(false);
 			IEnumerable<IntVec3> edgeCells = Find.CameraDriver.CurrentViewRect.EdgeCells;
 			foreach (IntVec3 current in edgeCells)
-			{
 				if (current.InBounds(Find.VisibleMap))
-				{
 					base.Texture.SetPixel(current.x, current.z, color);
-				}
-			}
 		}
 
 	}

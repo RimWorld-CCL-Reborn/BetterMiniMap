@@ -2,6 +2,8 @@
 using Verse;
 using RimWorld;
 using Harmony;
+using RimWorld.Planet;
+using System.Linq;
 
 namespace BetterMiniMap
 {
@@ -28,8 +30,11 @@ namespace BetterMiniMap
         private static Vector2 position;
         private static Vector2 size;
 
-        private static MiniMapWindow dialogWindow;
+        private static MiniMapWindow miniMap;
         private static bool initialized;
+
+        private static bool researchPal; // used to toggle minimap
+        private static bool relationsTab; // used to toggle minimap
 
         public MiniMap_GameComponent(Game g) { }
         public MiniMap_GameComponent() { }
@@ -39,6 +44,8 @@ namespace BetterMiniMap
         {
             HarmonyInstance harmony = HarmonyInstance.Create("rimworld.whyisthat.betterminimap.gamecomponent");
             harmony.Patch(AccessTools.Method(typeof(UIRoot_Play), nameof(UIRoot_Play.Init)), null, new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(Initilize)));
+            harmony.Patch(AccessTools.Method(typeof(MainTabsRoot), nameof(MainTabsRoot.ToggleTab)), null, new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(ToggleMiniMap)));
+            harmony.Patch(AccessTools.Method(typeof(MainButtonWorker_ToggleWorld), nameof(MainButtonWorker_ToggleWorld.Activate)), null, new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(ToggleMiniMap_WorldTab)));
         }
         
         static void Initilize()
@@ -46,9 +53,45 @@ namespace BetterMiniMap
 #if DEBUG
             Log.Message("MiniMap_GameComponent.Initilize");
 #endif
-            dialogWindow = new MiniMapWindow();
-            dialogWindow.MakeOptions();
-            Find.WindowStack.Add(dialogWindow);
+            miniMap = new MiniMapWindow();
+            miniMap.MakeOptions();
+            Find.WindowStack.Add(miniMap);
+
+            // used for toggling minimap 
+            researchPal = ModLister.AllInstalledMods.FirstOrDefault(m => m.Name == "ResearchPal")?.Active == true;
+            relationsTab = ModLister.AllInstalledMods.FirstOrDefault(m => m.Name == "Relations Tab")?.Active == true;
+        }
+
+        static void ToggleMiniMap(MainTabsRoot __instance, MainButtonDef newTab)
+        {
+#if DEBUG
+            Log.Message($"MainTabsRoot.ToggleTab: {newTab} {__instance.OpenTab != null}");
+#endif
+            if (__instance.OpenTab != null)
+            {
+                switch (newTab.defName)
+                {
+                    case "Research":
+                        if (researchPal) miniMap.Toggle(false);
+                        break;
+                    case "Factions":
+                        if (relationsTab) miniMap.Toggle(false);
+                        break;
+                    default:
+                        miniMap.Toggle(!WorldRendererUtility.WorldRenderedNow);
+                        break;
+                }
+            }
+            else
+                miniMap.Toggle(!WorldRendererUtility.WorldRenderedNow);
+        }
+
+        static void ToggleMiniMap_WorldTab()
+        {
+#if DEBUG
+            Log.Message($"MainButtonWorker_ToggleWorld.Activate: {Find.World.renderer.wantedMode}");
+#endif
+            miniMap.Toggle(!WorldRendererUtility.WorldRenderedNow);
         }
 
         public static bool OverlayColonists { get => overlayColonists; set => overlayColonists = value; }
@@ -80,7 +123,7 @@ namespace BetterMiniMap
             UpdateWindow();
         }
 
-        private static void UpdateWindow() => dialogWindow.UpdateWindow(position, size);
+        private static void UpdateWindow() => miniMap.UpdateWindow(position, size);
 
         public override void ExposeData()
         {
@@ -96,9 +139,9 @@ namespace BetterMiniMap
             Scribe_Values.Look<bool>(ref overlayNoncolonist, "overlayNoncolonist", true);
             Scribe_Values.Look<bool>(ref overlayBuilding, "overlayBuilding", true);
             Scribe_Values.Look<bool>(ref overlayPower, "overlayPower", true);
-            Scribe_Values.Look<bool>(ref overlayTerrain, "overlayTerrain", false);
+            Scribe_Values.Look<bool>(ref overlayTerrain, "overlayTerrain", true);
             Scribe_Values.Look<bool>(ref overlayView, "overlayView", true);
-            Scribe_Values.Look<bool>(ref overlayWild, "overlayWild", false);
+            Scribe_Values.Look<bool>(ref overlayWild, "overlayWild", true);
             Scribe_Values.Look<bool>(ref overlayShips, "overlayShips", true);
             Scribe_Values.Look<bool>(ref overlayRobots, "overlayRobots", true);
             initialized = Scribe.mode == LoadSaveMode.LoadingVars;

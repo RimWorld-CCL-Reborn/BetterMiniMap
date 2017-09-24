@@ -129,10 +129,8 @@ namespace BetterMiniMap
                 new FloatMenuOptionItem(this.mmc.overlayNoncolonist.Visible, "overlay_NonColonistPawnst".Translate(), delegate
                 {
                     this.mmc.overlayNoncolonist.Visible = !this.mmc.overlayNoncolonist.Visible;
-                    this.mmc.overlayShips.Visible = !this.mmc.overlayShips.Visible;
                     this.MakeOptions();
                     MiniMap_GameComponent.OverlayNoncolonist = this.mmc.overlayNoncolonist.Visible;
-                    MiniMap_GameComponent.OverlayShips = this.mmc.overlayShips.Visible;
                 }),
                 new FloatMenuOptionItem(this.mmc.overlayWild.Visible, "overlay_Wildlifet".Translate(), delegate
                 {
@@ -169,13 +167,14 @@ namespace BetterMiniMap
                     this.mmc.overlayTerrain.Visible = !this.mmc.overlayTerrain.Visible;
                     this.MakeOptions();
                     MiniMap_GameComponent.OverlayTerrain = this.mmc.overlayTerrain.Visible;
-                })
-                /*new FloatMenuOptionItem(this.mmc.overlayView.Visible, "overlay_ViewPortt".Translate(), delegate
+                }),
+                new FloatMenuOptionItem(this.mmc.overlayShips.Visible, "overlay_Shipst".Translate(), delegate
                 {
-                    this.mmc.overlayView.Visible = !this.mmc.overlayView.Visible;
+                    this.mmc.overlayShips.Visible = !this.mmc.overlayTerrain.Visible;
                     this.MakeOptions();
-                    MiniMap_GameComponent.OverlayView = this.mmc.overlayView.Visible;
-                })*/
+                    MiniMap_GameComponent.OverlayShips = this.mmc.overlayShips.Visible;
+                })
+
             };
 			this.floatMenu = new FloatMenu(this.options)
             {
@@ -263,6 +262,25 @@ namespace BetterMiniMap
                     Find.WindowStack.TryRemove(this, true);
             }
         }*/
+
+        /*public void Toggle()
+        {
+            if (Find.WindowStack.Windows.IndexOf(this) == -1)
+                Find.WindowStack.Add(this);
+            else
+                Find.WindowStack.TryRemove(this, true);
+        }*/
+
+        public void Toggle(bool add = false)
+        {
+            if (add)
+            {
+                if (Find.WindowStack.Windows.IndexOf(this) == -1) // keep from double add...
+                    Find.WindowStack.Add(this);
+            }
+            else
+                Find.WindowStack.TryRemove(this, true);
+        }
 
         private void DrawOverlayButtons()
 		{
@@ -363,10 +381,6 @@ namespace BetterMiniMap
 
             MiniMap_GameComponent.Position = this.windowRect.position;
             MiniMap_GameComponent.Size = this.windowRect.size;
-
-            //MiniMap_GameComponent.PositionX = this.windowRect.x;
-            //MiniMap_GameComponent.PositionY = this.windowRect.y;
-            //MiniMap_GameComponent.Size = this.windowRect.width;
 		}
 	}
 }

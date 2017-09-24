@@ -20,7 +20,8 @@ namespace BetterMiniMap
 
 		public override IEnumerable<Thing> GetThings()
 		{
-            return Find.VisibleMap.listerThings.AllThings.Where(t => t.def == ThingDefOf.CrashedPoisonShipPart);
+            return Find.VisibleMap.listerThings.AllThings.Where(t => t is Building_CrashedShipPart);
+            //return Find.VisibleMap.listerThings.AllThings.Where(t => t.def == ThingDefOf.CrashedPoisonShipPart);
         }
 
 	}
