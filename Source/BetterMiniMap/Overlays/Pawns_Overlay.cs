@@ -35,6 +35,7 @@ namespace BetterMiniMap.Overlays
 			base.ClearTexture(false);
 			foreach (Pawn current in this.GetPawns())
 				this.CreateMarker(current, true, 0.5f);
-		}
+            base.Flush();
+        }
 	}
 }

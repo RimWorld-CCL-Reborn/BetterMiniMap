@@ -18,13 +18,14 @@ namespace BetterMiniMap.Overlays
             List<Building> allBuildingsColonist = Find.VisibleMap.listerBuildings.allBuildingsColonist;
             foreach (Building current in allBuildingsColonist)
             {
-                // todo: AffectsRegions?
+                // TODO: AffectsRegions?
                 bool flag = current.def.defName.Equals("Wall") || current.def.defName.Equals("Door") || current.def.defName.Equals("Autodoor") || current.def.defName.Equals("Embrasure") || current.def.defName.Equals("ReinforcedFireResistantEmbrasures") || current.def.defName.Equals("ReinforcedEmbrasures") || current.def.defName.Equals("FireResistantEmbrasures");
                 if (flag)
                 {
                     base.Texture.SetPixel(current.Position.x, current.Position.z, planningColor);
                 }
             }
+            base.Flush();
         }
 
     }

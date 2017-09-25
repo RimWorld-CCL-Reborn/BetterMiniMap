@@ -172,7 +172,7 @@ namespace BetterMiniMap
                 }),
                 new FloatMenuOptionItem(this.mmc.overlayShips.Visible, "overlay_Shipst".Translate(), delegate
                 {
-                    this.mmc.overlayShips.Visible = !this.mmc.overlayTerrain.Visible;
+                    this.mmc.overlayShips.Visible = !this.mmc.overlayShips.Visible;
                     this.MakeOptions();
                     MiniMap_GameComponent.OverlayShips = this.mmc.overlayShips.Visible;
                 }),
@@ -191,7 +191,7 @@ namespace BetterMiniMap
             };
 		}
 
-		public void MakeOptionsArea()
+		public void MakeAreaOptions()
 		{
 			if (this.mmc.AreaOverlays?.Count > 0)
 			{
@@ -202,15 +202,16 @@ namespace BetterMiniMap
                     this.areasoptions.Add(new FloatMenuOptionItem(overlayArea.Visible, overlayArea.area.Label, delegate
                     {
                         overlayArea.Visible = !overlayArea.Visible;
-                        if (this.mmc.selectedArea == overlayArea)
+                        if (this.mmc.selectedArea == null)
+                            this.mmc.selectedArea = overlayArea;
+                        else if (this.mmc.selectedArea == overlayArea)
                             this.mmc.selectedArea = null;
                         else
                         {
                             this.mmc.selectedArea.Visible = false;
                             this.mmc.selectedArea = overlayArea;
-                            this.mmc.selectedArea.Dirty = true;
                         }
-                        this.MakeOptionsArea();
+                        this.MakeAreaOptions();
                     }));
                 }
 
@@ -334,7 +335,7 @@ namespace BetterMiniMap
                 {
                     if (!this.mmc.AreaOverlays.Any((Areas_Overlay w) => w.area == area))
                     {
-                        this.mmc.AreaOverlays.Add(new Areas_Overlay(area, true));
+                        this.mmc.AreaOverlays.Add(new Areas_Overlay(area, false));
                         remakeOptions = true;
                     }
                 }
@@ -353,7 +354,7 @@ namespace BetterMiniMap
 				}
 
 				if (remakeOptions)
-					this.MakeOptionsArea();
+					this.MakeAreaOptions();
 			}
 		}
 
@@ -370,8 +371,8 @@ namespace BetterMiniMap
             if (this.windowRect.xMax > UI.screenWidth)
                 this.windowRect.x = UI.screenWidth - this.windowRect.width;
 
-            if (this.windowRect.yMax > UI.screenHeight - buttonWidth)
-				this.windowRect.y = UI.screenHeight - this.windowRect.height - buttonWidth;
+            if (this.windowRect.yMax > UI.screenHeight - buttonWidth - 1)
+				this.windowRect.y = UI.screenHeight - this.windowRect.height - buttonWidth - 1;
 
 			if (this.windowRect.xMin < 0f)
 				this.windowRect.x = this.windowRect.x - this.windowRect.xMin;

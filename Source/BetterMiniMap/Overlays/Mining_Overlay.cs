@@ -21,7 +21,8 @@ namespace BetterMiniMap.Overlays
 				IntVec3 cell = current.target.Cell;
 				base.Texture.SetPixel(cell.x, cell.z, miningColor);
 			}
-		}
+            base.Flush();
+        }
 
 		public override int GetUpdateInterval()
 		{

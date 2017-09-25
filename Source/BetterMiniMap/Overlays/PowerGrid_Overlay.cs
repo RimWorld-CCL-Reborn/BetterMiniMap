@@ -23,7 +23,8 @@ namespace BetterMiniMap.Overlays
 			base.ClearTexture(false);
             foreach (Building poweredBuilding in Find.VisibleMap.listerBuildings.allBuildingsColonist.Where(b => b.PowerComp != null))
 				this.DrawConnection(poweredBuilding.PowerComp);
-		}
+            base.Flush();
+        }
 
 		private void DrawBattery(CompPowerBattery battery)
 		{

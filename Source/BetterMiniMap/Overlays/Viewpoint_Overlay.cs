@@ -20,7 +20,8 @@ namespace BetterMiniMap.Overlays
 			foreach (IntVec3 current in edgeCells)
 				if (current.InBounds(Find.VisibleMap))
 					base.Texture.SetPixel(current.x, current.z, color);
-		}
+            base.Flush();
+        }
 
 	}
 }

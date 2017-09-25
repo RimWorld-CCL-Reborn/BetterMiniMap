@@ -20,7 +20,8 @@ namespace BetterMiniMap.Overlays
                     color = Color.clear;
                 base.Texture.SetPixel(cell.x, cell.z, color);
 			}
-		}
+            base.Flush();
+        }
 
 	}
 }

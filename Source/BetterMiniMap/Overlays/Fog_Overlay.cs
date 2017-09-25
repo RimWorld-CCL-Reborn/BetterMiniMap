@@ -15,11 +15,10 @@ namespace BetterMiniMap.Overlays
 				IntVec3 intVec = Find.VisibleMap.cellIndices.IndexToCell(i);
 				base.Texture.SetPixel(intVec.x, intVec.z, fogGrid[i] ? Color.gray : Color.clear);
 			}
-		}
+            base.Flush();
+        }
 
-		public override int GetUpdateInterval()
-		{
-			return BetterMiniMapMod.settings.overlay_Fog;
-		}
+		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Fog;
+
 	}
 }

@@ -59,21 +59,13 @@ namespace BetterMiniMap
 				foreach (Overlay current in this.overlays)
 				{
 					if (this.ShouldUpdateOverlay(current))
-					{
 						current.Update();
-						current.Texture.Apply();
-						current.Dirty = false;
-					}
 				}
 			}
 			if (this.selectedArea != null)
 			{
 				if (this.ShouldUpdateOverlay(this.selectedArea))
-				{
 					this.selectedArea.Update();
-					this.selectedArea.Texture.Apply();
-					this.selectedArea.Dirty = false;
-				}
 			}
 		}
 
@@ -82,18 +74,10 @@ namespace BetterMiniMap
 			if (this.overlays.Any<Overlay>())
 			{
 				foreach (Overlay current in this.overlays)
-				{
                     current.Update();
-					current.Texture.Apply();
-					current.Dirty = false;
-				}
 			}
 			if (this.selectedArea != null)
-			{
 				this.selectedArea.Update();
-				this.selectedArea.Texture.Apply();
-				this.selectedArea.Dirty = false;
-			}
 		}
 
 	}

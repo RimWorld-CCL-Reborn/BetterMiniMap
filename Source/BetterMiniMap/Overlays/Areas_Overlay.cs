@@ -18,7 +18,8 @@ namespace BetterMiniMap.Overlays
 			base.ClearTexture(false);
 			foreach (IntVec3 current in this.area.ActiveCells)
 				base.Texture.SetPixel(current.x, current.z, color);
-		}
+            base.Flush();
+        }
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Area;
 	}
