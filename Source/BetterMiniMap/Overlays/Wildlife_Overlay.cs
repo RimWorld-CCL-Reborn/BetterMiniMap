@@ -4,11 +4,11 @@ using UnityEngine;
 using Verse;
 using RimWorld;
 
-namespace BetterMiniMap
+namespace BetterMiniMap.Overlays
 {
     // TODO: get color and radius in a single go...
 
-	public class Overlay_Wildlife : Overlay_Pawns
+	public class Wildlife_Overlay : Pawns_Overlay
 	{
 		private Color wildColor = Color.yellow;
 		private Color tameColor = Color.green;
@@ -16,7 +16,7 @@ namespace BetterMiniMap
 		private Color huntingColor = GenUI.MouseoverColor;
 		private Color tamingColor = GenUI.MouseoverColor;
 
-        public Overlay_Wildlife(bool visible) : base(visible) { }
+        public Wildlife_Overlay(bool visible) : base(visible) { }
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Wildlife;
 

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
-namespace BetterMiniMap
+namespace BetterMiniMap.Overlays
 {
-	public class Overlay_ViewPort : Overlay
+	public class Viewpoint_Overlay : Overlay
 	{
 		private static readonly Color color = Color.white;
 
-        public Overlay_ViewPort(bool visible) : base(visible) { }
+        public Viewpoint_Overlay(bool visible) : base(visible) { }
 
         public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_ViewPort;
 

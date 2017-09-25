@@ -1,11 +1,11 @@
 using UnityEngine;
 using Verse;
 
-namespace BetterMiniMap
+namespace BetterMiniMap.Overlays
 {
-	public class Overlay_Fog : Overlay
+	public class Fog_Overlay : Overlay
 	{
-        public Overlay_Fog(bool visible) : base(visible) { }
+        public Fog_Overlay(bool visible) : base(visible) { }
 
 		public override void Update()
 		{

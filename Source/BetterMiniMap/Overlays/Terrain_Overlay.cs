@@ -2,11 +2,11 @@ using System;
 using UnityEngine;
 using Verse;
 
-namespace BetterMiniMap
+namespace BetterMiniMap.Overlays
 {
-	public class Overlay_Terrain : Overlay
+	public class Terrain_Overlay : Overlay
 	{
-        public Overlay_Terrain(bool visible) : base(visible) { }
+        public Terrain_Overlay(bool visible) : base(visible) { }
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Terrain;
 

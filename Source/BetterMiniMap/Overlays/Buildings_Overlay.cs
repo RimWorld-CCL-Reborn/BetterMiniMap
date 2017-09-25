@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
-namespace BetterMiniMap
+namespace BetterMiniMap.Overlays
 {
-    public class Overlay_Buildings : Overlay
+    public class Buildings_Overlay : Overlay
     {
         private static readonly Color planningColor = Color.white;
 
-        public Overlay_Buildings(bool visible) : base(visible) { }
+        public Buildings_Overlay(bool visible) : base(visible) { }
 
         public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Buildings;
 

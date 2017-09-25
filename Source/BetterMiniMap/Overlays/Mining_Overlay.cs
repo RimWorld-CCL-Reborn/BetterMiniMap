@@ -4,13 +4,13 @@ using UnityEngine;
 using Verse;
 using RimWorld;
 
-namespace BetterMiniMap
+namespace BetterMiniMap.Overlays
 {
-	public class Overlay_Mining : Overlay
+	public class Mining_Overlay : Overlay
 	{
 		private static readonly Color miningColor = new Color(0.75f, 0.4f, 0.125f, 1f);
 
-        public Overlay_Mining(bool visible) : base(visible) { }
+        public Mining_Overlay(bool visible) : base(visible) { }
 
 		public override void Update()
 		{

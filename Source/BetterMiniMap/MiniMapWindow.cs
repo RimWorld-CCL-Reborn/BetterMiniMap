@@ -3,6 +3,8 @@ using UnityEngine;
 using Verse;
 using RimWorld;
 
+using BetterMiniMap.Overlays;
+
 // TODO: get rid of these delegates...
 
 namespace BetterMiniMap
@@ -10,12 +12,12 @@ namespace BetterMiniMap
 	[StaticConstructorOnStartup]
     class MiniMapTextures
     {
-        public static Texture2D config;
-        public static Texture2D dragA;
-        public static Texture2D dragD;
-        public static Texture2D homeA;
-        public static Texture2D resizeA;
-        public static Texture2D resizeD;
+        public static readonly Texture2D config;
+        public static readonly Texture2D dragA;
+        public static readonly Texture2D dragD;
+        public static readonly Texture2D homeA;
+        public static readonly Texture2D resizeA;
+        public static readonly Texture2D resizeD;
 
         static MiniMapTextures()
         {
@@ -79,13 +81,13 @@ namespace BetterMiniMap
 			if (Find.VisibleMap.uniqueID != this.idMapActual)
 			{
 				this.idMapActual = Find.VisibleMap.uniqueID;
-				this.mmc.UpdateAll();
+				this.mmc.Refresh();
 			}
 
 			new WaitForEndOfFrame();
-			this.mmc.UpdateOverlays();
+			this.mmc.Update();
 
-			foreach (Overlay current in this.mmc.Layers)
+			foreach (Overlay current in this.mmc.Overlays)
 				if (current.Visible)
 					GUI.DrawTexture(inRect, current.Texture);
 
@@ -120,7 +122,7 @@ namespace BetterMiniMap
 		{
             this.options = new List<FloatMenuOption>()
             {
-                new FloatMenuOptionItem(this.mmc.overlayColonists.Visible, "overlay_Colonistst".Translate(), delegate
+                new FloatMenuOptionItem(this.mmc.overlayColonists.Visible, "BMM_ColonistsOverlayLabel".Translate(), delegate
                 {
                     this.mmc.overlayColonists.Visible = !this.mmc.overlayColonists.Visible;
                     this.MakeOptions();
@@ -138,7 +140,7 @@ namespace BetterMiniMap
                     this.MakeOptions();
                     MiniMap_GameComponent.OverlayWild = this.mmc.overlayWild.Visible;
                 }),
-                new FloatMenuOptionItem(this.mmc.overlayBuilding.Visible, "overlay_Buildingst".Translate(),  delegate
+                new FloatMenuOptionItem(this.mmc.overlayBuilding.Visible, "BMM_BuildingsOverlayLabel".Translate(),  delegate
                 {
                     this.mmc.overlayBuilding.Visible = !this.mmc.overlayBuilding.Visible;
                     this.MakeOptions();
@@ -173,6 +175,12 @@ namespace BetterMiniMap
                     this.mmc.overlayShips.Visible = !this.mmc.overlayTerrain.Visible;
                     this.MakeOptions();
                     MiniMap_GameComponent.OverlayShips = this.mmc.overlayShips.Visible;
+                }),
+                new FloatMenuOptionItem(this.mmc.overlayRobots.Visible, "overlay_Robotst".Translate(), delegate
+                {
+                    this.mmc.overlayRobots.Visible = !this.mmc.overlayRobots.Visible;
+                    this.MakeOptions();
+                    MiniMap_GameComponent.OverlayRobots = this.mmc.overlayRobots.Visible;
                 })
 
             };
@@ -185,11 +193,11 @@ namespace BetterMiniMap
 
 		public void MakeOptionsArea()
 		{
-			if (this.mmc.overlayAreas?.Count > 0)
+			if (this.mmc.AreaOverlays?.Count > 0)
 			{
 				this.areasoptions = new List<FloatMenuOption>();
 
-                foreach (Overlay_Area overlayArea in this.mmc.overlayAreas)
+                foreach (Areas_Overlay overlayArea in this.mmc.AreaOverlays)
                 {
                     this.areasoptions.Add(new FloatMenuOptionItem(overlayArea.Visible, overlayArea.area.Label, delegate
                     {
@@ -198,6 +206,7 @@ namespace BetterMiniMap
                             this.mmc.selectedArea = null;
                         else
                         {
+                            this.mmc.selectedArea.Visible = false;
                             this.mmc.selectedArea = overlayArea;
                             this.mmc.selectedArea.Dirty = true;
                         }
@@ -215,7 +224,6 @@ namespace BetterMiniMap
 
 		public override void PostOpen()
 		{
-            //this.windowRect = new Rect(MiniMap_GameComponent.PositionX, MiniMap_GameComponent.PositionY, MiniMap_GameComponent.Size, MiniMap_GameComponent.Size);
             this.windowRect = new Rect(MiniMap_GameComponent.Position, MiniMap_GameComponent.Size);
 
             MiniMap_GameComponent.ResolutionX = UI.screenWidth;
@@ -246,7 +254,7 @@ namespace BetterMiniMap
 
 		public override void ExtraOnGUI()
 		{
-			new WaitForEndOfFrame();
+			//new WaitForEndOfFrame(); // why?
 			this.ClampWindowToScreen();
 			this.DrawOverlayButtons();
 		}
@@ -261,14 +269,6 @@ namespace BetterMiniMap
                 else
                     Find.WindowStack.TryRemove(this, true);
             }
-        }*/
-
-        /*public void Toggle()
-        {
-            if (Find.WindowStack.Windows.IndexOf(this) == -1)
-                Find.WindowStack.Add(this);
-            else
-                Find.WindowStack.TryRemove(this, true);
         }*/
 
         public void Toggle(bool add = false)
@@ -328,25 +328,25 @@ namespace BetterMiniMap
 		private void UpdateAreaOverlays()
 		{
 			bool remakeOptions = false;
-			if (Find.VisibleMap.areaManager.AllAreas.Count != this.mmc.overlayAreas.Count)
+			if (Find.VisibleMap.areaManager.AllAreas.Count != this.mmc.AreaOverlays.Count)
 			{
                 foreach (Area area in Find.VisibleMap.areaManager.AllAreas)
                 {
-                    if (!this.mmc.overlayAreas.Any((Overlay_Area w) => w.area == area))
+                    if (!this.mmc.AreaOverlays.Any((Areas_Overlay w) => w.area == area))
                     {
-                        this.mmc.overlayAreas.Add(new Overlay_Area(area, true));
+                        this.mmc.AreaOverlays.Add(new Areas_Overlay(area, true));
                         remakeOptions = true;
                     }
                 }
 
-				if (this.mmc.overlayAreas != null && this.mmc.overlayAreas.Any<Overlay_Area>())
+				if (this.mmc.AreaOverlays.Any<Areas_Overlay>())
 				{
-					for (int i = this.mmc.overlayAreas.Count - 1; i >= 0; i--)
+					for (int i = this.mmc.AreaOverlays.Count - 1; i >= 0; i--)
 					{
-						Area area2 = this.mmc.overlayAreas[i].area;
-						if (area2 == null || !Find.VisibleMap.areaManager.AllAreas.Contains(area2))
+						Area area = this.mmc.AreaOverlays[i].area;
+						if (area == null || !Find.VisibleMap.areaManager.AllAreas.Contains(area))
 						{
-							this.mmc.overlayAreas.RemoveAt(i);
+							this.mmc.AreaOverlays.RemoveAt(i);
                             remakeOptions = true;
 						}
 					}
@@ -357,25 +357,27 @@ namespace BetterMiniMap
 			}
 		}
 
+        // TODO: consider tabs at the bottom?
 		private void ClampWindowToScreen()
 		{
 			if (this.windowRect.width < minimumSize)
 				this.windowRect.width = minimumSize;
 			
+            // NOTE: unsure if this is needed (as we are square)
 			/*if (this.windowRect.height < this.minimumSize)
 				this.windowRect.height = this.minimumSize;*/
 
-            if (this.windowRect.xMax > UI.screenWidth - 2f)
-                this.windowRect.x = this.windowRect.x - this.windowRect.xMax - UI.screenWidth - 2f;
+            if (this.windowRect.xMax > UI.screenWidth)
+                this.windowRect.x = UI.screenWidth - this.windowRect.width;
 
-			if (this.windowRect.xMin < 2f)
-				this.windowRect.x = this.windowRect.x - this.windowRect.xMin + 2f;
+            if (this.windowRect.yMax > UI.screenHeight - buttonWidth)
+				this.windowRect.y = UI.screenHeight - this.windowRect.height - buttonWidth;
 
-			if (this.windowRect.yMax > UI.screenHeight - 2f)
-				this.windowRect.y = this.windowRect.y - this.windowRect.yMax - UI.screenHeight - 2f;
+			if (this.windowRect.xMin < 0f)
+				this.windowRect.x = this.windowRect.x - this.windowRect.xMin;
 
-			if (this.windowRect.yMin < 2f)
-				this.windowRect.y = this.windowRect.y - (this.windowRect.yMin + 2f);
+			if (this.windowRect.yMin < 0f)
+				this.windowRect.y = this.windowRect.y - this.windowRect.yMin;
 
 			this.windowRect.height = this.windowRect.width;
 

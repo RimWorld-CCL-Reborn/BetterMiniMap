@@ -5,16 +5,16 @@ using UnityEngine;
 using Verse;
 using RimWorld;
 
-namespace BetterMiniMap
+namespace BetterMiniMap.Overlays
 {
-	public class Overlay_PowerGrid : Overlay
+	public class PowerGrid_Overlay : Overlay
 	{
 		private static readonly Color poweredColor = GenUI.MouseoverColor;
 		private static readonly Color poweredByBatteriesColor = Color.green;
 		private static readonly Color notPoweredColor = Color.red;
 		private static readonly Color offColor = Color.grey;
 
-        public Overlay_PowerGrid(bool visible) : base(visible) { }
+        public PowerGrid_Overlay(bool visible) : base(visible) { }
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_PowerGrid;
 

@@ -4,9 +4,9 @@ using UnityEngine;
 using Verse;
 using RimWorld;
 
-namespace BetterMiniMap
+namespace BetterMiniMap.Overlays
 {
-	public class Overlay_NonColonistPawns : Overlay_Pawns
+	public class NonColonists_Overlay : Pawns_Overlay
 	{
 		private Color enemyColor = Color.red;
 
@@ -14,7 +14,7 @@ namespace BetterMiniMap
 
 		private Color visitorColor = Color.green;
 
-        public Overlay_NonColonistPawns(bool visible) : base(visible) { }
+        public NonColonists_Overlay(bool visible) : base(visible) { }
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_NonColonistPawns;
 

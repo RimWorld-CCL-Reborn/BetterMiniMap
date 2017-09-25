@@ -18,17 +18,49 @@ namespace BetterMiniMap
         public int overlay_ViewPort = 5;
         public int overlay_Wildlife = 80;
 
-        public int radiu_Colonists = 3;
+        public class UpdatePeriods
+        {
+            public int viewpoint = 5; // should this be variable?
+            public int colonists = 5;
+            public int animals = 5;
+            public int robots = 5;
+            public int ships = 5; // TODO: this seems too often?
+            public int powerGrid = 50;
+            public int wildlife = 80;
+            public int buildings = 240;
+            public int mining = 240;
+            public int areas = 240;
+            public int terrain = 2500;
+            public int fog = 2500;
+        }
+
+        public int colonistsIndicatorSize = 3;
         public int radiu_ColonistsAnimal = 3;
         public int radiu_NonColonistPawnsEnemy = 2;
         public int radiu_NonColonistPawnsTrader = 2;
         public int radiu_NonColonistPawnsVisitor = 2;
         public int radiu_Robots = 3;
-        public int radiu_Ships = 2;
+        public int shipsIndicatorSize = 3;
         public int radiu_Wildlifewild = 1;
         public int radiu_Wildlifetame = 1;
         public int radiu_Wildlifehostile = 1;
         public int radiu_Wildlifehunting = 1;
+
+        public class IndicatorSizes
+        {
+            public int colonists = 3;
+            public int tamedAnimals = 3;
+            public int enemyPawns = 2;
+            public int traderPawns = 2;
+            public int visitorPawns = 2;
+            public int robots = 3;
+            public int ships = 3;
+            public int wildlife = 1;
+            public int wildlifeTaming = 1;
+            public int wildlifeHunting = 1;
+            public int wildlifePredators = 1;
+        }
+
     }
 
     class BetterMiniMapMod : Mod
@@ -40,7 +72,7 @@ namespace BetterMiniMap
             settings = GetSettings<BetterMiniMapSettings>();
         }
 
-        public override string SettingsCategory() => "nameminimapconfig".Translate();
+        public override string SettingsCategory() => "BMM_SettingsCategoryLabel".Translate();
 
         public override void DoSettingsWindowContents(Rect rect)
         {
@@ -56,13 +88,13 @@ namespace BetterMiniMap
             string text10 = settings.overlay_Terrain.ToString();
             string text11 = settings.overlay_ViewPort.ToString();
             string text12 = settings.overlay_Wildlife.ToString();
-            string text13 = settings.radiu_Colonists.ToString();
+            string text13 = settings.colonistsIndicatorSize.ToString();
             string text14 = settings.radiu_ColonistsAnimal.ToString();
             string text15 = settings.radiu_NonColonistPawnsEnemy.ToString();
             string text16 = settings.radiu_NonColonistPawnsTrader.ToString();
             string text17 = settings.radiu_NonColonistPawnsVisitor.ToString();
             string text18 = settings.radiu_Robots.ToString();
-            string text19 = settings.radiu_Ships.ToString();
+            string text19 = settings.shipsIndicatorSize.ToString();
             string text20 = settings.radiu_Wildlifewild.ToString();
             string text21 = settings.radiu_Wildlifetame.ToString();
             string text22 = settings.radiu_Wildlifehostile.ToString();
@@ -76,7 +108,7 @@ namespace BetterMiniMap
             Rect rect2 = listing_Standard.GetRect(Text.LineHeight);
             Rect rect3 = rect2.LeftHalf().Rounded();
             TooltipHandler.TipRegion(rect2, "labeltimeupdated".Translate());
-            Widgets.Label(rect3, "labeltimeupdatet".Translate());
+            Widgets.Label(rect3, "BMM_TimeUpdateLabel".Translate());
             listing_Standard.Gap(12f);
             Rect rect4 = listing_Standard.GetRect(Text.LineHeight);
 
@@ -87,7 +119,7 @@ namespace BetterMiniMap
             TooltipHandler.TipRegion(rect4, "overlay_Aread".Translate());
             TextAnchor anchor = Text.Anchor;
             Text.Anchor = TextAnchor.MiddleLeft;
-            Widgets.Label(rect5, "overlay_Areat".Translate());
+            Widgets.Label(rect5, "BMM_AreasOverlayLabel".Translate());
             Text.Anchor = anchor;
             Widgets.TextFieldNumeric<int>(rect6, ref settings.overlay_Area, ref text, 0f, 100000f);
             listing_Standard.Gap(12f);
@@ -99,7 +131,7 @@ namespace BetterMiniMap
             TooltipHandler.TipRegion(rect7, "overlay_Buildingsd".Translate());
             TextAnchor anchor2 = Text.Anchor;
             Text.Anchor = TextAnchor.MiddleLeft;
-            Widgets.Label(rect8, "overlay_Buildingst".Translate());
+            Widgets.Label(rect8, "BMM_BuildingsOverlayLabel".Translate());
             Text.Anchor = anchor2;
             Widgets.TextFieldNumeric<int>(rect9, ref settings.overlay_Buildings, ref text2, 0f, 100000f);
             listing_Standard.Gap(12f);
@@ -111,7 +143,7 @@ namespace BetterMiniMap
             TooltipHandler.TipRegion(rect10, "overlay_Colonistsd".Translate());
             TextAnchor anchor3 = Text.Anchor;
             Text.Anchor = TextAnchor.MiddleLeft;
-            Widgets.Label(rect11, "overlay_Colonistst".Translate());
+            Widgets.Label(rect11, "BMM_ColonistsOverlayLabel".Translate());
             Text.Anchor = anchor3;
             Widgets.TextFieldNumeric<int>(rect12, ref settings.overlay_Colonists, ref text3, 0f, 100000f);
             listing_Standard.Gap(12f);
@@ -239,7 +271,7 @@ namespace BetterMiniMap
             Text.Anchor = TextAnchor.MiddleLeft;
             Widgets.Label(rect43, "radiu_Colonistst".Translate());
             Text.Anchor = anchor13;
-            Widgets.TextFieldNumeric<int>(rect44, ref settings.radiu_Colonists, ref text13, 0f, 100000f);
+            Widgets.TextFieldNumeric<int>(rect44, ref settings.colonistsIndicatorSize, ref text13, 0f, 100000f);
             listing_Standard.Gap(12f);
             Rect rect45 = listing_Standard.GetRect(Text.LineHeight);
             Rect rect46 = rect45.LeftHalf().Rounded();
@@ -311,7 +343,7 @@ namespace BetterMiniMap
             Text.Anchor = TextAnchor.MiddleLeft;
             Widgets.Label(rect61, "radiu_Shipst".Translate());
             Text.Anchor = anchor19;
-            Widgets.TextFieldNumeric<int>(rect62, ref settings.radiu_Ships, ref text19, 0f, 100000f);
+            Widgets.TextFieldNumeric<int>(rect62, ref settings.shipsIndicatorSize, ref text19, 0f, 100000f);
             listing_Standard.Gap(12f);
             Rect rect63 = listing_Standard.GetRect(Text.LineHeight);
             Rect rect64 = rect63.LeftHalf().Rounded();

@@ -1,7 +1,7 @@
 using UnityEngine;
 using Verse;
 
-namespace BetterMiniMap
+namespace BetterMiniMap.Overlays
 {
 	public abstract class Overlay
 	{
@@ -46,7 +46,6 @@ namespace BetterMiniMap
 		}
 
 		public abstract void Update();
-
 		public abstract int GetUpdateInterval();
 	}
 }

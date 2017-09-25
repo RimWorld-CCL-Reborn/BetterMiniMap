@@ -2,35 +2,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
+using BetterMiniMap.Overlays;
+
 namespace BetterMiniMap
 {
 	internal class MiniMapController
 	{
-		private List<Overlay> layers;
+		private List<Overlay> overlays;
+		private List<Areas_Overlay> areaOverlays = new List<Areas_Overlay>();
 
-		public List<Overlay_Area> overlayAreas = new List<Overlay_Area>();
-		public Overlay_Area selectedArea;
-		public Overlay_Colonists overlayColonists = new Overlay_Colonists(MiniMap_GameComponent.OverlayColonists);
-		public Overlay_Fog overlayFog = new Overlay_Fog(MiniMap_GameComponent.OverlayFog);
-		public Overlay_Mining overlayMining = new Overlay_Mining(MiniMap_GameComponent.OverlayMining);
-		public Overlay_NonColonistPawns overlayNoncolonist = new Overlay_NonColonistPawns(MiniMap_GameComponent.OverlayNoncolonist);
-		public Overlay_Buildings overlayBuilding = new Overlay_Buildings(MiniMap_GameComponent.OverlayBuilding);
-		public Overlay_PowerGrid overlayPower = new Overlay_PowerGrid(MiniMap_GameComponent.OverlayPower);
-		public Overlay_Terrain overlayTerrain = new Overlay_Terrain(MiniMap_GameComponent.OverlayTerrain);
-		public Overlay_ViewPort overlayView = new Overlay_ViewPort(MiniMap_GameComponent.OverlayView);
-		public Overlay_Wildlife overlayWild = new Overlay_Wildlife(MiniMap_GameComponent.OverlayWild);
-		public Overlay_Ships overlayShips = new Overlay_Ships(MiniMap_GameComponent.OverlayShips);
-		public Overlay_Robots overlayRobots = new Overlay_Robots(MiniMap_GameComponent.OverlayRobots);
+		public Areas_Overlay selectedArea;
+		public Colonists_Overlay overlayColonists = new Colonists_Overlay(MiniMap_GameComponent.OverlayColonists);
+		public Fog_Overlay overlayFog = new Fog_Overlay(MiniMap_GameComponent.OverlayFog);
+		public Mining_Overlay overlayMining = new Mining_Overlay(MiniMap_GameComponent.OverlayMining);
+		public NonColonists_Overlay overlayNoncolonist = new NonColonists_Overlay(MiniMap_GameComponent.OverlayNoncolonist);
+		public Buildings_Overlay overlayBuilding = new Buildings_Overlay(MiniMap_GameComponent.OverlayBuilding);
+		public PowerGrid_Overlay overlayPower = new PowerGrid_Overlay(MiniMap_GameComponent.OverlayPower);
+		public Terrain_Overlay overlayTerrain = new Terrain_Overlay(MiniMap_GameComponent.OverlayTerrain);
+		public Viewpoint_Overlay overlayView = new Viewpoint_Overlay(MiniMap_GameComponent.OverlayView);
+		public Wildlife_Overlay overlayWild = new Wildlife_Overlay(MiniMap_GameComponent.OverlayWild);
+		public Ships_Overlay overlayShips = new Ships_Overlay(MiniMap_GameComponent.OverlayShips);
+		public Robots_Overlay overlayRobots = new Robots_Overlay(MiniMap_GameComponent.OverlayRobots);
 
-		public List<Overlay> Layers
-		{
-            get => this.layers;
-			set => this.layers = value;
-		}
+		public List<Overlay> Overlays { get => this.overlays; }
+		public List<Areas_Overlay> AreaOverlays { get => this.areaOverlays; }
 
 		public MiniMapController()
 		{
-            this.layers = new List<Overlay>()
+            this.overlays = new List<Overlay>()
             {
                 overlayTerrain,
                 overlayColonists,
@@ -51,14 +50,13 @@ namespace BetterMiniMap
 			return overlay.Dirty || (overlay.GetUpdateInterval() > 0 && (Time.frameCount + overlay.GetHashCode()) % overlay.GetUpdateInterval() == 0);
 		}
 
-
         // TODO: are both UpdateOverlays() and UpdateAll() really needed?
 
-		public void UpdateOverlays()
+		public void Update()
 		{
-			if (this.layers.Any<Overlay>())
+			if (this.overlays.Any<Overlay>())
 			{
-				foreach (Overlay current in this.layers)
+				foreach (Overlay current in this.overlays)
 				{
 					if (this.ShouldUpdateOverlay(current))
 					{
@@ -79,11 +77,11 @@ namespace BetterMiniMap
 			}
 		}
 
-		public void UpdateAll()
+		public void Refresh()
 		{
-			if (this.layers.Any<Overlay>())
+			if (this.overlays.Any<Overlay>())
 			{
-				foreach (Overlay current in this.layers)
+				foreach (Overlay current in this.overlays)
 				{
                     current.Update();
 					current.Texture.Apply();
@@ -97,5 +95,6 @@ namespace BetterMiniMap
 				this.selectedArea.Dirty = false;
 			}
 		}
+
 	}
 }

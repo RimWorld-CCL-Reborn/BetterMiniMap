@@ -56,20 +56,18 @@ namespace BetterMiniMap
             rect2.xMin += this.HorizontalMargin;
             rect2.xMax -= this.HorizontalMargin;
             rect2.xMax -= this.colorBoxMargin;
-            rect2.xMax -= this.extraPartWidth;
+            //rect2.xMax -= this.extraPartWidth;
 
 			if (mouseOver)
-			{
-				rect2.x =(rect2.x + this.colorBoxMargin);
-			}
+				rect2.x = rect2.x + this.colorBoxMargin ;
 
-			Rect extraPartRect = default(Rect);
+			/*Rect extraPartRect = default(Rect);
 			if (this.extraPartWidth != 0f)
 			{
 				float num = Mathf.Min(Text.CalcSize(base.Label).x, rect2.width - this.colorBoxMargin);
 				extraPartRect = new Rect(rect2.xMin + num, rect2.yMin, this.extraPartWidth, this.colorBoxSize * 2f);
 				extraPartMouseOver = Mouse.IsOver(extraPartRect);
-			}
+			}*/
 
 			if (!base.Disabled)
 				MouseoverSounds.DoRegion(rect);
@@ -104,12 +102,12 @@ namespace BetterMiniMap
 
 			GUI.backgroundColor = backgroundColor;
 
-			if (this.extraPartOnGUI != null)
+			/*if (this.extraPartOnGUI != null)
 			{
                 GUI.color = color;
 				if (this.extraPartOnGUI(extraPartRect))
 					return true;
-			}
+			}*/
 
 			if (mouseOver)
                 this.mouseoverGuiAction?.Invoke();

@@ -3,13 +3,13 @@ using System.Linq;
 using UnityEngine;
 using Verse;
 
-namespace BetterMiniMap
+namespace BetterMiniMap.Overlays
 {
-	public class Overlay_Robots : Overlay_Pawns
+	public class Robots_Overlay : Pawns_Overlay
 	{
 		private static readonly Color robotColor = Color.white;
 
-        public Overlay_Robots(bool visible) : base(visible) { }
+        public Robots_Overlay(bool visible) : base(visible) { }
 
         public override Color GetColor(Pawn pawn) => robotColor;
 
