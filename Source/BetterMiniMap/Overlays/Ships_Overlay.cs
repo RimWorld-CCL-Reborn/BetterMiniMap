@@ -8,13 +8,13 @@ namespace BetterMiniMap.Overlays
 {
 	public class Ships_Overlay : Things_Overlay
 	{
-		private Color shipColor = Color.red;
+		private static readonly Color shipColor = Color.red;
 
         public Ships_Overlay(bool visible) : base(visible) { }
 
-		public override Color GetColor(Thing thing) => this.shipColor;
+		public override Color GetColor(Thing thing) => shipColor;
 
-		public override float GetRadius(Thing thing) => BetterMiniMapMod.settings.shipsIndicatorSize;
+		public override float GetRadius(Thing thing) => BetterMiniMapMod.settings.indicatorSizes.ships;
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Ships;
 

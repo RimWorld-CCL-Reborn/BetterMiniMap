@@ -10,11 +10,11 @@ namespace BetterMiniMap.Overlays
 
 	public class Wildlife_Overlay : Pawns_Overlay
 	{
-		private Color wildColor = Color.yellow;
-		private Color tameColor = Color.green;
-		private Color hostileColor = Color.red;
-		private Color huntingColor = GenUI.MouseoverColor;
-		private Color tamingColor = GenUI.MouseoverColor;
+		private static readonly Color wildColor = Color.yellow;
+		private static readonly Color tameColor = Color.green;
+		private static readonly Color hostileColor = Color.red;
+		private static readonly Color huntingColor = GenUI.MouseoverColor;
+		private static readonly Color tamingColor = GenUI.MouseoverColor;
 
         public Wildlife_Overlay(bool visible) : base(visible) { }
 
@@ -23,19 +23,19 @@ namespace BetterMiniMap.Overlays
 		public override Color GetColor(Pawn pawn)
 		{
 			if (pawn.def.race.predator || pawn.HostileTo(Faction.OfPlayer))
-				return this.hostileColor;
+				return hostileColor;
 
             Designation designation = Find.VisibleMap.designationManager.DesignationOn(pawn);
             if (designation != null)
             {
                 DesignationDef designationDef = designation.def;
                 if (designationDef == DesignationDefOf.Hunt)
-                    return this.huntingColor;
+                    return huntingColor;
                 if (designationDef == DesignationDefOf.Tame)
-                    return this.tameColor;
+                    return tameColor;
             }
 
-            return this.wildColor;
+            return wildColor;
 		}
 
 		public override IEnumerable<Pawn> GetPawns()
@@ -46,19 +46,19 @@ namespace BetterMiniMap.Overlays
         public override float GetRadius(Pawn pawn)
         {
             if (pawn.HostileTo(Faction.OfPlayer))
-                return (float)BetterMiniMapMod.settings.radiu_Wildlifehostile;
+                return BetterMiniMapMod.settings.indicatorSizes.wildlifeHostiles;
 
             Designation designation = Find.VisibleMap.designationManager.DesignationOn(pawn);
             if (designation != null)
             {
                 DesignationDef designationDef = designation.def;
                 if (designationDef == DesignationDefOf.Hunt)
-                    return (float)BetterMiniMapMod.settings.radiu_Wildlifehunting;
+                    return BetterMiniMapMod.settings.indicatorSizes.wildlifeHunting;
                 if (designationDef == DesignationDefOf.Tame)
-                    return (float)BetterMiniMapMod.settings.radiu_Wildlifetame;
+                    return BetterMiniMapMod.settings.indicatorSizes.wildlifeTaming;
             }
 
-            return (float)BetterMiniMapMod.settings.radiu_Wildlifewild;
+            return BetterMiniMapMod.settings.indicatorSizes.wildlife;
         }
 
     }

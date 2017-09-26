@@ -13,7 +13,7 @@ namespace BetterMiniMap.Overlays
 
         public override Color GetColor(Pawn pawn) => robotColor;
 
-		public override float GetRadius(Pawn pawn) => BetterMiniMapMod.settings.radiu_Robots;
+		public override float GetRadius(Pawn pawn) => BetterMiniMapMod.settings.indicatorSizes.robots;
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Robots;
 

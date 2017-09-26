@@ -22,12 +22,12 @@ namespace BetterMiniMap.Overlays
 
 		public override IEnumerable<Pawn> GetPawns()
 		{
-			return Find.VisibleMap.mapPawns.AllPawns.Where(p => p.Faction == Faction.OfPlayer && !p.RaceProps.Animal);
+			return Find.VisibleMap.mapPawns.AllPawns.Where(p => p.Faction == Faction.OfPlayer);
         }
 
 		public override float GetRadius(Pawn pawn)
 		{
-			return pawn.RaceProps.Animal ? BetterMiniMapMod.settings.radiu_ColonistsAnimal : BetterMiniMapMod.settings.colonistsIndicatorSize;
+			return pawn.RaceProps.Animal ? BetterMiniMapMod.settings.indicatorSizes.tamedAnimals : BetterMiniMapMod.settings.indicatorSizes.colonists;
 		}
 
 	}
