@@ -11,15 +11,17 @@ namespace BetterMiniMap.Overlays
 
         public Robots_Overlay(bool visible) : base(visible) { }
 
-        public override Color GetColor(Pawn pawn) => robotColor;
-
-		public override float GetRadius(Pawn pawn) => BetterMiniMapMod.settings.indicatorSizes.robots;
-
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Robots;
 
 		public override IEnumerable<Pawn> GetPawns()
 		{
 			return Find.VisibleMap.mapPawns.AllPawns.Where(p => p.def.thingClass.ToString().ToLower().Contains("robot"));
 		}
-	}
+
+        public override void GetIndicatorProperities(Pawn pawn, out Color color, out float radius)
+        {
+            color = robotColor;
+            radius = BetterMiniMapMod.settings.indicatorSizes.robots;
+        }
+    }
 }

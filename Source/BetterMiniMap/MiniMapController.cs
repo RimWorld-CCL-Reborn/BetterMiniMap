@@ -45,26 +45,20 @@ namespace BetterMiniMap
             };
 		}
 
-		private bool ShouldUpdateOverlay(Overlay overlay)
-		{
-			return overlay.Dirty || (overlay.GetUpdateInterval() > 0 && (Time.frameCount + overlay.GetHashCode()) % overlay.GetUpdateInterval() == 0);
-		}
-
         // TODO: are both UpdateOverlays() and UpdateAll() really needed?
-
 		public void Update()
 		{
 			if (this.overlays.Any<Overlay>())
 			{
 				foreach (Overlay current in this.overlays)
 				{
-					if (this.ShouldUpdateOverlay(current))
+					if (current.ShouldUpdateOverlay)
 						current.Update();
 				}
 			}
 			if (this.selectedArea != null)
 			{
-				if (this.ShouldUpdateOverlay(this.selectedArea))
+				if (this.selectedArea.ShouldUpdateOverlay)
 					this.selectedArea.Update();
 			}
 		}

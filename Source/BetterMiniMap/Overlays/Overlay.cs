@@ -6,16 +6,14 @@ namespace BetterMiniMap.Overlays
 {
     public abstract class Overlay
     {
-        private bool dirty = true;
         private bool visible;
         private Texture2D texture;
 
         // caching
         private static Map map;
 
-        protected Overlay(bool visible) => this.Visible = visible;
-
-        public bool Dirty { get => dirty; }
+        // NOTE: do not use property here or else NPEs at Update()
+        protected Overlay(bool visible) => this.visible = visible;
 
         public bool Visible
         {
@@ -24,7 +22,7 @@ namespace BetterMiniMap.Overlays
             {
                 this.visible = value;
                 if (this.visible)
-                    this.dirty = true;
+                    this.Update();
             }
         }
 
@@ -40,14 +38,6 @@ namespace BetterMiniMap.Overlays
                 }
                 return this.texture;
             }
-        }
-
-        // TODO: is this needed?
-        protected void ClearTexture(bool apply = false)
-        {
-            this.Texture.SetPixels(Utilities.GetClearPixelArray);
-            if (apply)
-                this.Texture.Apply();
         }
 
         // NOTE: consider splitting this into two methods...
@@ -71,22 +61,24 @@ namespace BetterMiniMap.Overlays
         public void Update(bool clearTexture = true)
         {
             if (clearTexture)
-                this.ClearTexture();
+                this.Texture.SetPixels(Utilities.GetClearPixelArray);
             this.Render();
             this.Texture.Apply();
-            this.dirty = false;
         }
 
         public abstract void Render();
 
-        //public abstract void Update();
 		public abstract int GetUpdateInterval();
 
-        /*public virtual void Flush()
+        public virtual  bool ShouldUpdateOverlay
         {
-            this.Texture.Apply();
-            this.dirty = false;
-        }*/
-
-	}
+            get
+            {
+                if (!Visible)
+                    return false;
+                // TODO looks like hashticking... (is this best?)
+                return (Time.frameCount + this.GetHashCode()) % this.GetUpdateInterval() == 0;
+            }
+        }
+    }
 }

@@ -12,15 +12,17 @@ namespace BetterMiniMap.Overlays
 
         public Ships_Overlay(bool visible) : base(visible) { }
 
-		public override Color GetColor(Thing thing) => shipColor;
-
-		public override float GetRadius(Thing thing) => BetterMiniMapMod.settings.indicatorSizes.ships;
-
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Ships;
 
 		public override IEnumerable<Thing> GetThings()
 		{
             return Find.VisibleMap.listerThings.AllThings.Where(t => t is Building_CrashedShipPart);
         }
-	}
+
+        public override void GetIndicatorProperities(Thing thing, out Color color, out float radius)
+        {
+            color = shipColor;
+            radius = BetterMiniMapMod.settings.indicatorSizes.ships;
+        }
+    }
 }

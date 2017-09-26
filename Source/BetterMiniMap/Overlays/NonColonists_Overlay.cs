@@ -16,32 +16,29 @@ namespace BetterMiniMap.Overlays
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_NonColonistPawns;
 
-		public override Color GetColor(Pawn pawn)
-		{
-			Color result;
-			if (pawn.HostileTo(Faction.OfPlayer))
-				result = enemyColor;
-			else if (pawn.trader != null)
-                result = traderColor;
-            else
-                result = visitorColor;
-
-            return result;
-		}
-
 		public override IEnumerable<Pawn> GetPawns()
 		{
             return Find.VisibleMap.mapPawns.AllPawns.Where(p => !p.RaceProps.Animal && p.Faction != Faction.OfPlayer);
 		}
 
-		public override float GetRadius(Pawn pawn)
-		{
-			if (pawn.HostileTo(Faction.OfPlayer))
-				return BetterMiniMapMod.settings.indicatorSizes.enemyPawns;
+        public override void GetIndicatorProperities(Pawn pawn, out Color color, out float radius)
+        {
+            if (pawn.HostileTo(Faction.OfPlayer))
+            {
+                color = enemyColor;
+                radius = BetterMiniMapMod.settings.indicatorSizes.enemyPawns;
+            }
             else if (pawn.trader != null)
-                return BetterMiniMapMod.settings.indicatorSizes.traderPawns;
-            return BetterMiniMapMod.settings.indicatorSizes.visitorPawns;
-		}
+            {
+                color = traderColor;
+                radius = BetterMiniMapMod.settings.indicatorSizes.traderPawns;
+            }
+            else
+            {
+                color = visitorColor;
+                radius = BetterMiniMapMod.settings.indicatorSizes.visitorPawns;
+            }
+        }
 
-	}
+    }
 }

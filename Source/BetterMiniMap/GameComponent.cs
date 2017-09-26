@@ -7,7 +7,6 @@ using System.Linq;
 
 namespace BetterMiniMap
 {
-    // TODO: fix these nasty default values...
     [StaticConstructorOnStartup]
     class MiniMap_GameComponent : GameComponent
     {
@@ -33,8 +32,9 @@ namespace BetterMiniMap
         private static MiniMapWindow miniMap;
         private static bool initialized;
 
-        private static bool researchPal; // used to toggle minimap
-        private static bool relationsTab; // used to toggle minimap
+        // used to toggle minimap
+        private static bool researchPal; 
+        private static bool relationsTab; 
 
         public MiniMap_GameComponent(Game g) { }
         public MiniMap_GameComponent() { }

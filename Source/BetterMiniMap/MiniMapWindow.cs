@@ -45,20 +45,17 @@ namespace BetterMiniMap
         private float resizex;
         private float resizey;
 
-        private bool resize = false;
-
 		private List<FloatMenuOption> areasoptions;
 		private List<FloatMenuOption> options;
 
 		private FloatMenu floatMenu;
 		private FloatMenu areafloatMenu;
 
-		private Vector3 lastpositionmouse = new Vector3(-1f, -1f, -1f);
-
 		private MiniMapController mmc;
-
-        // TODO: how to get rid of this default...
-		private int idMapActual = -2147483648;
+        // TODO: better way to deal with default?
+		private Vector3 prevMousePos = new Vector3(-1f, -1f, -1f);
+        private bool resize = false;
+		private int mapID = -1;
 
         public MiniMapWindow()
         {
@@ -78,9 +75,9 @@ namespace BetterMiniMap
 
 		public override void DoWindowContents(Rect inRect)
 		{
-			if (Find.VisibleMap.uniqueID != this.idMapActual)
+			if (Find.VisibleMap.uniqueID != this.mapID)
 			{
-				this.idMapActual = Find.VisibleMap.uniqueID;
+				this.mapID = Find.VisibleMap.uniqueID;
 				this.mmc.Refresh();
 			}
 
@@ -105,16 +102,16 @@ namespace BetterMiniMap
 			{
 				if (this.resize && Mouse.IsOver(inRect) && Input.GetMouseButton(0))
 				{
-					if (this.lastpositionmouse.x == -1f)
+					if (this.prevMousePos.x == -1f)
 					{
-						this.lastpositionmouse = Input.mousePosition;
+						this.prevMousePos = Input.mousePosition;
 					}
-					this.windowRect.width = this.windowRect.width + (this.lastpositionmouse.x - Input.mousePosition.x);
+					this.windowRect.width = this.windowRect.width + (this.prevMousePos.x - Input.mousePosition.x);
 					this.windowRect.height = this.windowRect.width;
-					this.lastpositionmouse = Input.mousePosition;
+					this.prevMousePos = Input.mousePosition;
 				}
                 else if (this.resize && Mouse.IsOver(inRect) && !Input.GetMouseButton(0))
-                    this.lastpositionmouse = new Vector3(-1f, -1f, -1f);
+                    this.prevMousePos = new Vector3(-1f, -1f, -1f);
 			}
 		}
 
@@ -358,16 +355,11 @@ namespace BetterMiniMap
 			}
 		}
 
-        // TODO: consider tabs at the bottom?
 		private void ClampWindowToScreen()
 		{
 			if (this.windowRect.width < minimumSize)
-				this.windowRect.width = minimumSize;
+				this.windowRect.height = this.windowRect.width = minimumSize;
 			
-            // NOTE: unsure if this is needed (as we are square)
-			/*if (this.windowRect.height < this.minimumSize)
-				this.windowRect.height = this.minimumSize;*/
-
             if (this.windowRect.xMax > UI.screenWidth)
                 this.windowRect.x = UI.screenWidth - this.windowRect.width;
 
@@ -379,8 +371,6 @@ namespace BetterMiniMap
 
 			if (this.windowRect.yMin < 0f)
 				this.windowRect.y = this.windowRect.y - this.windowRect.yMin;
-
-			this.windowRect.height = this.windowRect.width;
 
             MiniMap_GameComponent.Position = this.windowRect.position;
             MiniMap_GameComponent.Size = this.windowRect.size;

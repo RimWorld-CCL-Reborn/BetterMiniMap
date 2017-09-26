@@ -15,20 +15,21 @@ namespace BetterMiniMap.Overlays
 
         public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Colonists;
 
-		public override Color GetColor(Pawn pawn)
-		{
-			return pawn.RaceProps.Animal ? colonistAnimalColor : colonistColor;
-		}
+		public override IEnumerable<Pawn> GetPawns() => Find.VisibleMap.mapPawns.AllPawns.Where(p => p.Faction == Faction.OfPlayer);
 
-		public override IEnumerable<Pawn> GetPawns()
-		{
-			return Find.VisibleMap.mapPawns.AllPawns.Where(p => p.Faction == Faction.OfPlayer);
+        public override void GetIndicatorProperities(Pawn pawn, out Color color, out float radius)
+        {
+            if (pawn.RaceProps.Animal)
+            {
+                color = colonistAnimalColor;
+                radius = BetterMiniMapMod.settings.indicatorSizes.tamedAnimals;
+            }
+            else
+            {
+                color = colonistColor;
+                radius = BetterMiniMapMod.settings.indicatorSizes.colonists;
+            }
         }
-
-		public override float GetRadius(Pawn pawn)
-		{
-			return pawn.RaceProps.Animal ? BetterMiniMapMod.settings.indicatorSizes.tamedAnimals : BetterMiniMapMod.settings.indicatorSizes.colonists;
-		}
 
 	}
 }
