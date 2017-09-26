@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -8,6 +9,9 @@ namespace BetterMiniMap.Overlays
         private bool dirty = true;
         private bool visible;
         private Texture2D texture;
+
+        // caching
+        private static Map map;
 
         protected Overlay(bool visible) => this.Visible = visible;
 
@@ -38,22 +42,51 @@ namespace BetterMiniMap.Overlays
             }
         }
 
-        public void ClearTexture(bool apply = false)
+        // TODO: is this needed?
+        protected void ClearTexture(bool apply = false)
         {
             this.Texture.SetPixels(Utilities.GetClearPixelArray);
             if (apply)
                 this.Texture.Apply();
         }
 
-        public abstract void Update();
-		public abstract int GetUpdateInterval();
-
-        // NOTE: is this a bad pattern?
-        public virtual void Flush()
+        // NOTE: consider splitting this into two methods...
+        // NOTE: consider more caching? (e.g. edgeColor)?
+        protected virtual void CreateMarker(float radius, Color color, IntVec3 position, float edgeOpacity = 0.5f)
         {
+            map = Find.VisibleMap;
+
+            int numRadiusCells = GenRadial.NumCellsInRadius(radius);
+            int numInnerCells = (radius >= 2f) ? GenRadial.NumCellsInRadius(radius - 1f) : numRadiusCells;
+
+            Color edgeColor = new Color(color.r, color.g, color.b, color.a * edgeOpacity);
+            // NOTE: it would be nice to do this once per all things/pawns within each render...
+            IntVec3[] array = GenRadial.RadialCellsAround(position, radius, true).ToArray<IntVec3>();
+
+            for (int i = 0; i < numRadiusCells; i++)
+                if (array[i].InBounds(map))
+                    this.Texture.SetPixel(array[i].x, array[i].z, (i > numInnerCells) ? edgeColor : color);
+        }
+
+        public void Update(bool clearTexture = true)
+        {
+            if (clearTexture)
+                this.ClearTexture();
+            this.Render();
             this.Texture.Apply();
             this.dirty = false;
         }
+
+        public abstract void Render();
+
+        //public abstract void Update();
+		public abstract int GetUpdateInterval();
+
+        /*public virtual void Flush()
+        {
+            this.Texture.Apply();
+            this.dirty = false;
+        }*/
 
 	}
 }

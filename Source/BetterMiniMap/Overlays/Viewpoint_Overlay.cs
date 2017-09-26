@@ -13,14 +13,11 @@ namespace BetterMiniMap.Overlays
 
         public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_ViewPort;
 
-		public override void Update()
+		public override void Render()
 		{
-			base.ClearTexture(false);
-			IEnumerable<IntVec3> edgeCells = Find.CameraDriver.CurrentViewRect.EdgeCells;
-			foreach (IntVec3 current in edgeCells)
+			foreach (IntVec3 current in Find.CameraDriver.CurrentViewRect.EdgeCells)
 				if (current.InBounds(Find.VisibleMap))
 					base.Texture.SetPixel(current.x, current.z, color);
-            base.Flush();
         }
 
 	}

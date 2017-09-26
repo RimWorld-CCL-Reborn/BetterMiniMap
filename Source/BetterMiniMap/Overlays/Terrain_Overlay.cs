@@ -10,7 +10,9 @@ namespace BetterMiniMap.Overlays
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Terrain;
 
-		public override void Update()
+        public void Update() => base.Update(false);
+
+		public override void Render()
 		{
 			for (int i = 0; i < Find.VisibleMap.cellIndices.NumGridCells; i++)
 			{
@@ -20,7 +22,6 @@ namespace BetterMiniMap.Overlays
                     color = Color.clear;
                 base.Texture.SetPixel(cell.x, cell.z, color);
 			}
-            base.Flush();
         }
 
 	}

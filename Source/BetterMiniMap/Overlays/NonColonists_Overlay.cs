@@ -8,11 +8,9 @@ namespace BetterMiniMap.Overlays
 {
 	public class NonColonists_Overlay : Pawns_Overlay
 	{
-		private Color enemyColor = Color.red;
-
-		private Color traderColor = Color.blue;
-
-		private Color visitorColor = Color.green;
+		private readonly Color enemyColor = Color.red;
+		private readonly Color traderColor = Color.blue;
+		private readonly Color visitorColor = Color.green;
 
         public NonColonists_Overlay(bool visible) : base(visible) { }
 

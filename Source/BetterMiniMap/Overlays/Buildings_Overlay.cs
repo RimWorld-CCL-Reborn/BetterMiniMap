@@ -12,20 +12,11 @@ namespace BetterMiniMap.Overlays
 
         public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Buildings;
 
-        public override void Update()
+        public override void Render()
         {
-            base.ClearTexture(false);
-            List<Building> allBuildingsColonist = Find.VisibleMap.listerBuildings.allBuildingsColonist;
-            foreach (Building current in allBuildingsColonist)
-            {
-                // TODO: AffectsRegions?
-                bool flag = current.def.defName.Equals("Wall") || current.def.defName.Equals("Door") || current.def.defName.Equals("Autodoor") || current.def.defName.Equals("Embrasure") || current.def.defName.Equals("ReinforcedFireResistantEmbrasures") || current.def.defName.Equals("ReinforcedEmbrasures") || current.def.defName.Equals("FireResistantEmbrasures");
-                if (flag)
-                {
+            foreach (Building current in Find.VisibleMap.listerBuildings.allBuildingsColonist)
+                if (current.def.AffectsRegions)
                     base.Texture.SetPixel(current.Position.x, current.Position.z, planningColor);
-                }
-            }
-            base.Flush();
         }
 
     }

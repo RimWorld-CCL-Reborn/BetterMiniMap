@@ -7,15 +7,16 @@ namespace BetterMiniMap.Overlays
 	{
         public Fog_Overlay(bool visible) : base(visible) { }
 
-		public override void Update()
+        public void Update() => base.Update(false);
+
+        public override void Render()
 		{
-			bool[] fogGrid = Find.VisibleMap.fogGrid.fogGrid;
+            bool[] fogGrid = Find.VisibleMap.fogGrid.fogGrid;
 			for (int i = 0; i < Find.VisibleMap.cellIndices.NumGridCells; i++)
 			{
 				IntVec3 intVec = Find.VisibleMap.cellIndices.IndexToCell(i);
 				base.Texture.SetPixel(intVec.x, intVec.z, fogGrid[i] ? Color.gray : Color.clear);
 			}
-            base.Flush();
         }
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Fog;

@@ -48,17 +48,17 @@ namespace BetterMiniMap
 
         public class IndicatorSizes
         {
-            public int colonists = 3;
-            public int tamedAnimals = 3;
-            public int enemyPawns = 2;
-            public int traderPawns = 2;
-            public int visitorPawns = 2;
-            public int robots = 3;
-            public int ships = 3;
-            public int wildlife = 1;
-            public int wildlifeTaming = 1;
-            public int wildlifeHunting = 1;
-            public int wildlifePredators = 1;
+            public float colonists = 3f;
+            public float tamedAnimals = 3f;
+            public float enemyPawns = 2f;
+            public float traderPawns = 2f;
+            public float visitorPawns = 2f;
+            public float robots = 3f;
+            public float ships = 3f;
+            public float wildlife = 1f;
+            public float wildlifeTaming = 1f;
+            public float wildlifeHunting = 1f;
+            public float wildlifePredators = 1f;
         }
 
     }

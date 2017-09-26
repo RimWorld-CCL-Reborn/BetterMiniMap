@@ -11,14 +11,12 @@ namespace BetterMiniMap.Overlays
 
 		public Areas_Overlay(Area area, bool visible) : base(visible) => this.area = area;
 
-		public override void Update()
+		public override void Render()
 		{
 			Color color = this.area.Color;
 			color.a = Areas_Overlay.opacity;
-			base.ClearTexture(false);
 			foreach (IntVec3 current in this.area.ActiveCells)
 				base.Texture.SetPixel(current.x, current.z, color);
-            base.Flush();
         }
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Area;

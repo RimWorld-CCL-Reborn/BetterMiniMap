@@ -18,12 +18,10 @@ namespace BetterMiniMap.Overlays
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_PowerGrid;
 
-		public override void Update()
+		public override void Render()
 		{
-			base.ClearTexture(false);
             foreach (Building poweredBuilding in Find.VisibleMap.listerBuildings.allBuildingsColonist.Where(b => b.PowerComp != null))
 				this.DrawConnection(poweredBuilding.PowerComp);
-            base.Flush();
         }
 
 		private void DrawBattery(CompPowerBattery battery)

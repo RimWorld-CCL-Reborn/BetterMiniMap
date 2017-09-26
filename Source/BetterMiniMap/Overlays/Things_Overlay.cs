@@ -10,19 +10,11 @@ namespace BetterMiniMap.Overlays
 	{
         protected Things_Overlay(bool visible) : base(visible) { }
 
-        // TODO: consolidate?
-		public virtual void CreateMarker(Thing thing, bool transparentEdges = true, float edgeOpacity = 0.5f)
+		public virtual void CreateMarker(Thing thing, float edgeOpacity = 0.5f)
 		{
 			float radius = this.GetRadius(thing);
-			int num = GenRadial.NumCellsInRadius(radius);
-			int num2 = (transparentEdges && radius >= 2f) ? GenRadial.NumCellsInRadius(radius - 1f) : num;
 			Color color = this.GetColor(thing);
-			Color color2 = new Color(color.r, color.g, color.b, color.a * edgeOpacity);
-			IntVec3[] array = GenRadial.RadialCellsAround(thing.Position, radius, true).ToArray<IntVec3>();
-
-            for (int i = 0; i < num; i++)
-				if (array[i].InBounds(Find.VisibleMap))
-					base.Texture.SetPixel(array[i].x, array[i].z, (transparentEdges && i > num2) ? color2 : color);
+            base.CreateMarker(radius, color, thing.Position, edgeOpacity);
 		}
 
 		public abstract Color GetColor(Thing thing);
@@ -31,12 +23,10 @@ namespace BetterMiniMap.Overlays
 
 		public abstract IEnumerable<Thing> GetThings();
 
-		public override void Update()
+		public override void Render()
 		{
-			base.ClearTexture(false);
 			foreach (Thing current in this.GetThings())
-				this.CreateMarker(current, true, 0.5f);
-            base.Flush();
+				this.CreateMarker(current);
         }
 	}
 }

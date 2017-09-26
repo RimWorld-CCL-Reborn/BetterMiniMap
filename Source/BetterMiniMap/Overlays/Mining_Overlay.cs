@@ -12,16 +12,13 @@ namespace BetterMiniMap.Overlays
 
         public Mining_Overlay(bool visible) : base(visible) { }
 
-		public override void Update()
+		public override void Render()
 		{
-			base.ClearTexture(false);
-			List<Designation> list = Find.VisibleMap.designationManager.allDesignations.Where(d => d.def == DesignationDefOf.Mine).ToList<Designation>();
-			foreach (Designation current in list)
+			foreach (Designation current in Find.VisibleMap.designationManager.allDesignations.Where(d => d.def == DesignationDefOf.Mine).ToList<Designation>())
 			{
 				IntVec3 cell = current.target.Cell;
 				base.Texture.SetPixel(cell.x, cell.z, miningColor);
 			}
-            base.Flush();
         }
 
 		public override int GetUpdateInterval()
