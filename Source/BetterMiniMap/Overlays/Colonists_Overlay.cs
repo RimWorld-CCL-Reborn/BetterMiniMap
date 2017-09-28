@@ -11,6 +11,8 @@ namespace BetterMiniMap.Overlays
 		private static readonly Color colonistColor = Color.green;
 		private static readonly Color colonistAnimalColor = Color.green;
 
+        //public Colonists_Overlay(bool visible) : base(visible) { }
+
         public Colonists_Overlay(bool visible) : base(visible) { }
 
         public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Colonists;

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using UnityEngine;
 using Verse;
@@ -6,6 +7,7 @@ namespace BetterMiniMap.Overlays
 {
     public abstract class Overlay
     {
+        //private bool visible;
         private bool visible;
         private Texture2D texture;
 
@@ -70,7 +72,7 @@ namespace BetterMiniMap.Overlays
 
 		public abstract int GetUpdateInterval();
 
-        public virtual  bool ShouldUpdateOverlay
+        public virtual bool ShouldUpdateOverlay
         {
             get
             {
@@ -80,5 +82,6 @@ namespace BetterMiniMap.Overlays
                 return (Time.frameCount + this.GetHashCode()) % this.GetUpdateInterval() == 0;
             }
         }
+
     }
 }

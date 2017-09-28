@@ -4,70 +4,52 @@ using UnityEngine;
 using Verse;
 using Verse.Sound;
 
+using BetterMiniMap.Overlays;
+
 namespace BetterMiniMap
 {
 	internal class FloatMenuOptionItem : FloatMenuOption
 	{
+		private const float colorBoxSize = 15f;
+		private const float colorBoxMargin = 4f;
+        private const float horizontalMargin = 6f;
+        //private const float verticalMargin = 4f;
+
 		private static readonly Color colorBackgroundActive = new ColorInt(21, 25, 29).ToColor;
 		private static readonly Color colorBackgroundActiveMouseover = new ColorInt(29, 45, 50).ToColor;
 		private static readonly Color colorBackgroundDisabled = new ColorInt(40, 40, 40).ToColor;
 		private static readonly Color colorTextActive = Color.white;
 		private static readonly Color colorTextDisabled = new Color(0.9f, 0.9f, 0.9f);
 
-		private float colorBoxSize;
-		private float colorBoxMargin;
-
 		private bool visible;
-
-        private GameFont CurrentFont { get => GameFont.Small; }
-
-        private float HorizontalMargin { get => 6f; }
-
-        private float VerticalMargin { get => 4f; }
 
         public FloatMenuOptionItem(bool visible, string label, Action action) : base($"XXXX{label}", action)
         {
-            this.colorBoxSize = 15f;
-            this.colorBoxMargin = 4f;
             this.visible = visible;
         }
 
-        private void SetRequiredWidth(float width)
-		{
-			FieldInfo[] fields = typeof(FloatMenuOption).GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.SetField);
-			for (int i = 0; i < fields.Length; i++)
-			{
-				FieldInfo fieldInfo = fields[i];
-				if (fieldInfo.Name == "cachedRequiredWidth")
-				{
-					fieldInfo.SetValue(this, width);
-				}
-			}
-		}
+        public FloatMenuOptionItem(Overlay overlay, string label) : base($"XXXX{label}", null)
+        {
+            this.visible = overlay.Visible;
+            this.action = this.FloatMenuAction(overlay);
+        }
+
+        private Action FloatMenuAction(Overlay overlay) => () => this.visible = overlay.Visible = !overlay.Visible;
 
 		public override bool DoGUI(Rect rect, bool colonistOrdering)
 		{
             bool mouseOver = !base.Disabled && Mouse.IsOver(rect);
             bool extraPartMouseOver = false;
 
-			Text.Font = this.CurrentFont;
-			Rect rect2 = rect;
+			Text.Font = GameFont.Small;
+            Rect rect2 = rect;
 
-            rect2.xMin += this.HorizontalMargin;
-            rect2.xMax -= this.HorizontalMargin;
-            rect2.xMax -= this.colorBoxMargin;
-            //rect2.xMax -= this.extraPartWidth;
+            rect2.xMin += horizontalMargin;
+            rect2.xMax -= horizontalMargin;
+            rect2.xMax -= colorBoxMargin;
 
 			if (mouseOver)
-				rect2.x = rect2.x + this.colorBoxMargin ;
-
-			/*Rect extraPartRect = default(Rect);
-			if (this.extraPartWidth != 0f)
-			{
-				float num = Mathf.Min(Text.CalcSize(base.Label).x, rect2.width - this.colorBoxMargin);
-				extraPartRect = new Rect(rect2.xMin + num, rect2.yMin, this.extraPartWidth, this.colorBoxSize * 2f);
-				extraPartMouseOver = Mouse.IsOver(extraPartRect);
-			}*/
+				rect2.x = rect2.x + colorBoxMargin;
 
 			if (!base.Disabled)
 				MouseoverSounds.DoRegion(rect);
@@ -88,14 +70,14 @@ namespace BetterMiniMap
 			Widgets.DrawAtlas(rect, TexUI.FloatMenuOptionBG);
 			Text.Anchor = TextAnchor.MiddleLeft;
 			Rect rect4 = rect2;
-			rect4.x = rect.xMin + this.colorBoxMargin + this.colorBoxSize + this.colorBoxMargin;
+			rect4.x = rect.xMin + colorBoxMargin + colorBoxSize + colorBoxMargin;
 			Widgets.Label(rect4, base.Label.Remove(0, 4));
 			Text.Anchor = 0;
 			GUI.color = color;
 			Color backgroundColor = GUI.backgroundColor;
 			GUIStyle gUIStyle = new GUIStyle(GUI.skin.box);
             gUIStyle.normal.background = Texture2D.whiteTexture;
-			Rect rect5 = new Rect(rect.xMin + this.colorBoxMargin, rect.y + this.colorBoxMargin, this.colorBoxSize, this.colorBoxSize);
+			Rect rect5 = new Rect(rect.xMin + colorBoxMargin, rect.y + colorBoxMargin, colorBoxSize, colorBoxSize);
 
             GUI.backgroundColor = (this.visible) ? Color.green : Color.red;
 			GUI.Box(rect5, "", gUIStyle);

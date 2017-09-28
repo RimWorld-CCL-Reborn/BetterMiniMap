@@ -10,19 +10,20 @@ namespace BetterMiniMap
     [StaticConstructorOnStartup]
     class MiniMap_GameComponent : GameComponent
     {
+        // TODO: can we remove most of these?
         private const int defaultMargin = 8;
 
-        private static bool overlayColonists = true;
-        private static bool overlayFog = true;
-        private static bool overlayMining = true;
-        private static bool overlayNoncolonist = true;
-        private static bool overlayBuilding = true;
-        private static bool overlayPower = true;
-        private static bool overlayTerrain = true;
-        private static bool overlayView = true;
-        private static bool overlayWild = true;
-        private static bool overlayShips = true;
-        private static bool overlayRobots = true;
+        public static bool overlayColonists = true;
+        public static bool overlayFog = true;
+        public static bool overlayMining = true;
+        public static bool overlayNoncolonist = true;
+        public static bool overlayBuilding = true;
+        public static bool overlayPower = true;
+        public static bool overlayTerrain = true;
+        public static bool overlayView = true;
+        public static bool overlayWild = true;
+        public static bool overlayShips = true;
+        public static bool overlayRobots = true;
 
         private static int resolutionX;
         private static int resolutionY;
@@ -48,13 +49,14 @@ namespace BetterMiniMap
             harmony.Patch(AccessTools.Method(typeof(MainButtonWorker_ToggleWorld), nameof(MainButtonWorker_ToggleWorld.Activate)), null, new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(ToggleMiniMap_WorldTab)));
         }
         
+        // NOTE: this is done here to avoid lazy loading.
         static void Initilize()
         {
 #if DEBUG
             Log.Message("MiniMap_GameComponent.Initilize");
 #endif
+
             miniMap = new MiniMapWindow();
-            miniMap.MakeOptions();
             Find.WindowStack.Add(miniMap);
 
             // used for toggling minimap 
@@ -94,18 +96,6 @@ namespace BetterMiniMap
             miniMap.Toggle(!WorldRendererUtility.WorldRenderedNow);
         }
 
-        public static bool OverlayColonists { get => overlayColonists; set => overlayColonists = value; }
-        public static bool OverlayFog { get => overlayFog; set => overlayFog = value; }
-        public static bool OverlayMining { get => overlayMining; set => overlayMining = value; }
-        public static bool OverlayNoncolonist { get => overlayNoncolonist; set => overlayNoncolonist = value; }
-        public static bool OverlayBuilding { get => overlayBuilding; set => overlayBuilding = value; }
-        public static bool OverlayPower { get => overlayPower; set => overlayPower = value; }
-        public static bool OverlayTerrain { get => overlayTerrain; set => overlayTerrain = value; }
-        public static bool OverlayView { get => overlayView; set => overlayView = value; }
-        public static bool OverlayWild { get => overlayWild; set => overlayWild = value; }
-        public static bool OverlayShips { get => overlayShips; set => overlayShips = value; }
-        public static bool OverlayRobots { get => overlayRobots; set => overlayRobots = value; }
-
         public static int ResolutionX { get => resolutionX; set => resolutionX = value; }
         public static int ResolutionY { get => resolutionY; set => resolutionY = value; }
 
@@ -120,31 +110,35 @@ namespace BetterMiniMap
                 size = new Vector2(map.Size.x, map.Size.z);
                 initialized = true;
             }
-            UpdateWindow();
+            miniMap.UpdateLocality(position, size);
         }
-
-        private static void UpdateWindow() => miniMap.UpdateWindow(position, size);
 
         public override void ExposeData()
         {
             base.ExposeData();
+#if DEBUG
+            Log.Message($"ExposeData: {Scribe.mode}");
+#endif
+            if (Scribe.mode == LoadSaveMode.Saving)
+                miniMap.UpdateSettings();
+
             Scribe_Values.Look<Vector2>(ref position, "positionY"); // fix this
             Scribe_Values.Look<Vector2>(ref size, "size");
             Scribe_Values.Look<int>(ref resolutionX, "resolutionX", -1, false);
             Scribe_Values.Look<int>(ref resolutionY, "resolutionY", -1, false);
 
             Scribe_Values.Look<bool>(ref overlayColonists, "overlayColonists", true);
-            Scribe_Values.Look<bool>(ref overlayFog, "overlayFog", true);
             Scribe_Values.Look<bool>(ref overlayMining, "overlayMining", true);
             Scribe_Values.Look<bool>(ref overlayNoncolonist, "overlayNoncolonist", true);
             Scribe_Values.Look<bool>(ref overlayBuilding, "overlayBuilding", true);
             Scribe_Values.Look<bool>(ref overlayPower, "overlayPower", true);
             Scribe_Values.Look<bool>(ref overlayTerrain, "overlayTerrain", true);
-            Scribe_Values.Look<bool>(ref overlayView, "overlayView", true);
             Scribe_Values.Look<bool>(ref overlayWild, "overlayWild", true);
             Scribe_Values.Look<bool>(ref overlayShips, "overlayShips", true);
             Scribe_Values.Look<bool>(ref overlayRobots, "overlayRobots", true);
-            initialized = Scribe.mode == LoadSaveMode.LoadingVars;
+
+
+            initialized |= Scribe.mode == LoadSaveMode.LoadingVars;
 #if DEBUG
             Log.Message($"Initialized: {initialized}");
 #endif
@@ -154,7 +148,14 @@ namespace BetterMiniMap
         {
             base.LoadedGame();
             // NOTE: this might need to migrate to MapComp
-            UpdateWindow();
+            miniMap.UpdateLocality(position, size);
+        }
+
+        public override void GameComponentOnGUI()
+        {
+            base.GameComponentOnGUI();
+            if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.F8)
+                miniMap.Toggle(Find.WindowStack.Windows.IndexOf(miniMap) == -1); // TODO: this is a bit nasty...
         }
 
     }

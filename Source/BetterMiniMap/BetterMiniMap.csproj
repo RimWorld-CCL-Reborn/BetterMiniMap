@@ -56,7 +56,8 @@
     <Compile Include="FloatMenuOptionItem.cs" />
     <Compile Include="GameComponent.cs" />
     <Compile Include="MapComponent.cs" />
-    <Compile Include="MiniMapController.cs" />
+    <Compile Include="MiniMapControls.cs" />
+    <Compile Include="MiniMapTextures.cs" />
     <Compile Include="MiniMapWindow.cs" />
     <Compile Include="ModSettings.cs" />
     <Compile Include="Overlays\Overlay.cs" />

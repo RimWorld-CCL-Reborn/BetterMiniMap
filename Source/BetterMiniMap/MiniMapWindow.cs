@@ -1,68 +1,96 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
-using RimWorld;
 
 using BetterMiniMap.Overlays;
 
-// TODO: get rid of these delegates...
-
 namespace BetterMiniMap
 {
-	[StaticConstructorOnStartup]
-    class MiniMapTextures
-    {
-        public static readonly Texture2D config;
-        public static readonly Texture2D dragA;
-        public static readonly Texture2D dragD;
-        public static readonly Texture2D homeA;
-        public static readonly Texture2D resizeA;
-        public static readonly Texture2D resizeD;
-
-        static MiniMapTextures()
-        {
-            MiniMapTextures.config = ContentFinder<Texture2D>.Get("UI/config", true);
-            MiniMapTextures.dragA = ContentFinder<Texture2D>.Get("UI/dragA", true);
-            MiniMapTextures.dragD = ContentFinder<Texture2D>.Get("UI/dragD", true);
-            MiniMapTextures.homeA = ContentFinder<Texture2D>.Get("UI/homeA", true);
-            MiniMapTextures.resizeA = ContentFinder<Texture2D>.Get("UI/resizeA", true);
-            MiniMapTextures.resizeD = ContentFinder<Texture2D>.Get("UI/resizeD", true);
-        }
-    }
 
 	internal class MiniMapWindow : Window
 	{
-		private const float buttonMargin = 15f;
-		private const float buttonWidth = 20f;
-		private const float minimumSize = 40f;
+        private const float minimumSize = 40f;
 
-        private float configx;
-        private float configy;
-        private float dragx;
-        private float dragy;
-        private float homex;
-        private float homey;
-        private float resizex;
-        private float resizey;
+        private readonly Colonists_Overlay overlayColonists = new Colonists_Overlay(MiniMap_GameComponent.overlayColonists);
+        private readonly Fog_Overlay overlayFog = new Fog_Overlay(MiniMap_GameComponent.overlayFog);
+        private readonly Mining_Overlay overlayMining = new Mining_Overlay(MiniMap_GameComponent.overlayMining);
+        private readonly NonColonists_Overlay overlayNoncolonist = new NonColonists_Overlay(MiniMap_GameComponent.overlayNoncolonist);
+        private readonly Buildings_Overlay overlayBuilding = new Buildings_Overlay(MiniMap_GameComponent.overlayBuilding);
+        private readonly PowerGrid_Overlay overlayPower = new PowerGrid_Overlay(MiniMap_GameComponent.overlayPower);
+        private readonly Terrain_Overlay overlayTerrain = new Terrain_Overlay(MiniMap_GameComponent.overlayTerrain);
+        private readonly Viewpoint_Overlay overlayView = new Viewpoint_Overlay(MiniMap_GameComponent.overlayView);
+        private readonly Wildlife_Overlay overlayWild = new Wildlife_Overlay(MiniMap_GameComponent.overlayWild);
+        private readonly Ships_Overlay overlayShips = new Ships_Overlay(MiniMap_GameComponent.overlayShips);
+        private readonly Robots_Overlay overlayRobots = new Robots_Overlay(MiniMap_GameComponent.overlayRobots);
 
-		private List<FloatMenuOption> areasoptions;
-		private List<FloatMenuOption> options;
+        private List<Overlay> overlays;
+        private List<Areas_Overlay> areaOverlays = new List<Areas_Overlay>();
 
-		private FloatMenu floatMenu;
-		private FloatMenu areafloatMenu;
+        private Areas_Overlay selectedArea;
 
-		private MiniMapController mmc;
+		private List<FloatMenuOption> areasOptions;
+		private List<FloatMenuOption> overlayOpions;
+
+		private FloatMenu overlayMenu;
+		private FloatMenu areaMenu;
+
         // TODO: better way to deal with default?
 		private Vector3 prevMousePos = new Vector3(-1f, -1f, -1f);
-        private bool resize = false;
+
+        public bool resize = false; //resizable?
+
 		private int mapID = -1;
+
+        private MiniMapControls controls;
 
         public MiniMapWindow()
         {
             this.closeOnEscapeKey = false;
             this.preventCameraMotion = false;
-            this.mmc = new MiniMapController();
+
+            this.overlays = new List<Overlay>()
+            {
+                this.overlayTerrain,
+                this.overlayColonists,
+                this.overlayMining,
+                this.overlayNoncolonist,
+                this.overlayBuilding,
+                this.overlayPower,
+                this.overlayView,
+                this.overlayWild,
+                this.overlayShips,
+                this.overlayRobots,
+                this.overlayFog
+            };
+
+            // NOTE: some of these could migrate to controls...
+            this.overlayOpions = new List<FloatMenuOption>()
+            {
+                new FloatMenuOptionItem(this.overlayColonists, "BMM_ColonistsOverlayLabel".Translate()),
+                new FloatMenuOptionItem(this.overlayNoncolonist, "overlay_NonColonistPawnst".Translate()),
+                new FloatMenuOptionItem(this.overlayWild, "overlay_Wildlifet".Translate()),
+                new FloatMenuOptionItem(this.overlayBuilding, "BMM_BuildingsOverlayLabel".Translate()),
+                new FloatMenuOptionItem(this.overlayPower, "overlay_PowerGridt".Translate()),
+                new FloatMenuOptionItem(this.overlayMining, "overlay_Miningt".Translate()),
+                new FloatMenuOptionItem(this.overlayFog, "overlay_Fogt".Translate()),
+                new FloatMenuOptionItem(this.overlayTerrain, "overlay_Terraint".Translate()),
+                new FloatMenuOptionItem(this.overlayShips, "overlay_Shipst".Translate()),
+                new FloatMenuOptionItem(this.overlayRobots, "overlay_Robotst".Translate())
+            };
+
+            this.overlayMenu = new FloatMenu(this.overlayOpions)
+            {
+                closeOnEscapeKey = true,
+                preventCameraMotion = false,
+            };
+
+            this.controls = new MiniMapControls(this);
         }
+
+        public List<Overlay> Overlays { get => this.overlays; }
+        public List<Areas_Overlay> AreaOverlays { get => this.areaOverlays; }
+        public FloatMenu OverlayMenu { get => this.overlayMenu; }
 
 		protected override float Margin { get => 0f; }
 
@@ -78,18 +106,19 @@ namespace BetterMiniMap
 			if (Find.VisibleMap.uniqueID != this.mapID)
 			{
 				this.mapID = Find.VisibleMap.uniqueID;
-				this.mmc.Refresh();
+				this.Refresh();
 			}
 
-			new WaitForEndOfFrame();
-			this.mmc.Update();
+            // NOTE: why?
+			//new WaitForEndOfFrame();
+			this.Update();
 
-			foreach (Overlay current in this.mmc.Overlays)
+			foreach (Overlay current in this.Overlays)
 				if (current.Visible)
 					GUI.DrawTexture(inRect, current.Texture);
 
-			if (this.mmc.selectedArea != null)
-				GUI.DrawTexture(inRect, this.mmc.selectedArea.Texture);
+			if (this.selectedArea != null)
+				GUI.DrawTexture(inRect, this.selectedArea.Texture);
 
 			if (!this.draggable && !this.resize && Mouse.IsOver(inRect) && Input.GetMouseButton(0))
 			{
@@ -115,159 +144,51 @@ namespace BetterMiniMap
 			}
 		}
 
-		public void MakeOptions()
-		{
-            this.options = new List<FloatMenuOption>()
-            {
-                new FloatMenuOptionItem(this.mmc.overlayColonists.Visible, "BMM_ColonistsOverlayLabel".Translate(), delegate
-                {
-                    this.mmc.overlayColonists.Visible = !this.mmc.overlayColonists.Visible;
-                    this.MakeOptions();
-                    MiniMap_GameComponent.OverlayColonists = this.mmc.overlayColonists.Visible;
-                }),
-                new FloatMenuOptionItem(this.mmc.overlayNoncolonist.Visible, "overlay_NonColonistPawnst".Translate(), delegate
-                {
-                    this.mmc.overlayNoncolonist.Visible = !this.mmc.overlayNoncolonist.Visible;
-                    this.MakeOptions();
-                    MiniMap_GameComponent.OverlayNoncolonist = this.mmc.overlayNoncolonist.Visible;
-                }),
-                new FloatMenuOptionItem(this.mmc.overlayWild.Visible, "overlay_Wildlifet".Translate(), delegate
-                {
-                    this.mmc.overlayWild.Visible = !this.mmc.overlayWild.Visible;
-                    this.MakeOptions();
-                    MiniMap_GameComponent.OverlayWild = this.mmc.overlayWild.Visible;
-                }),
-                new FloatMenuOptionItem(this.mmc.overlayBuilding.Visible, "BMM_BuildingsOverlayLabel".Translate(),  delegate
-                {
-                    this.mmc.overlayBuilding.Visible = !this.mmc.overlayBuilding.Visible;
-                    this.MakeOptions();
-                    MiniMap_GameComponent.OverlayBuilding = this.mmc.overlayBuilding.Visible;
-                }),
-                new FloatMenuOptionItem(this.mmc.overlayPower.Visible, "overlay_PowerGridt".Translate(), delegate
-                {
-                    this.mmc.overlayPower.Visible = !this.mmc.overlayPower.Visible;
-                    this.MakeOptions();
-                    MiniMap_GameComponent.OverlayPower = this.mmc.overlayPower.Visible;
-                }),
-                new FloatMenuOptionItem(this.mmc.overlayMining.Visible, "overlay_Miningt".Translate(), delegate
-                {
-                    this.mmc.overlayMining.Visible = !this.mmc.overlayMining.Visible;
-                    this.MakeOptions();
-                    MiniMap_GameComponent.OverlayMining = this.mmc.overlayMining.Visible;
-                }),
-                new FloatMenuOptionItem(this.mmc.overlayFog.Visible, "overlay_Fogt".Translate(), delegate
-                {
-                    this.mmc.overlayFog.Visible = !this.mmc.overlayFog.Visible;
-                    this.MakeOptions();
-                    MiniMap_GameComponent.OverlayFog = this.mmc.overlayFog.Visible;
-                }),
-                new FloatMenuOptionItem(this.mmc.overlayTerrain.Visible, "overlay_Terraint".Translate(), delegate
-                {
-                    this.mmc.overlayTerrain.Visible = !this.mmc.overlayTerrain.Visible;
-                    this.MakeOptions();
-                    MiniMap_GameComponent.OverlayTerrain = this.mmc.overlayTerrain.Visible;
-                }),
-                new FloatMenuOptionItem(this.mmc.overlayShips.Visible, "overlay_Shipst".Translate(), delegate
-                {
-                    this.mmc.overlayShips.Visible = !this.mmc.overlayShips.Visible;
-                    this.MakeOptions();
-                    MiniMap_GameComponent.OverlayShips = this.mmc.overlayShips.Visible;
-                }),
-                new FloatMenuOptionItem(this.mmc.overlayRobots.Visible, "overlay_Robotst".Translate(), delegate
-                {
-                    this.mmc.overlayRobots.Visible = !this.mmc.overlayRobots.Visible;
-                    this.MakeOptions();
-                    MiniMap_GameComponent.OverlayRobots = this.mmc.overlayRobots.Visible;
-                })
-
-            };
-			this.floatMenu = new FloatMenu(this.options)
-            {
-                closeOnEscapeKey = true,
-                preventCameraMotion = false,
-            };
-		}
-
-		public void MakeAreaOptions()
-		{
-			if (this.mmc.AreaOverlays?.Count > 0)
-			{
-				this.areasoptions = new List<FloatMenuOption>();
-
-                foreach (Areas_Overlay overlayArea in this.mmc.AreaOverlays)
-                {
-                    this.areasoptions.Add(new FloatMenuOptionItem(overlayArea.Visible, overlayArea.area.Label, delegate
-                    {
-                        overlayArea.Visible = !overlayArea.Visible;
-                        if (this.mmc.selectedArea == null)
-                            this.mmc.selectedArea = overlayArea;
-                        else if (this.mmc.selectedArea == overlayArea)
-                            this.mmc.selectedArea = null;
-                        else
-                        {
-                            this.mmc.selectedArea.Visible = false;
-                            this.mmc.selectedArea = overlayArea;
-                        }
-                        this.MakeAreaOptions();
-                    }));
-                }
-
-				this.areafloatMenu = new FloatMenu(this.areasoptions)
-                {
-                    closeOnEscapeKey = true,
-                    preventCameraMotion = false,
-                };
-			}
-		}
-
 		public override void PostOpen()
 		{
             this.windowRect = new Rect(MiniMap_GameComponent.Position, MiniMap_GameComponent.Size);
-
+            // TODO: what? defaults?
             MiniMap_GameComponent.ResolutionX = UI.screenWidth;
             MiniMap_GameComponent.ResolutionY = UI.screenHeight;
-
-            this.SetLocality();
+            this.controls.SetLocality();
 		}
 
-        public void UpdateWindow(Vector2 position, Vector2 size)
+        public void UpdateLocality(Vector2 position, Vector2 size)
         {
             this.windowRect.position = position;
             this.windowRect.size = size;
-            this.SetLocality();
-        }
-
-        private void SetLocality()
-        {
-            // NOTE: why the +1s here?
-            this.configx = this.windowRect.x + this.windowRect.width - buttonWidth - buttonMargin;
-            this.configy = this.windowRect.y + this.windowRect.height + 1f;
-            this.dragx = this.windowRect.x + this.windowRect.width - (2f * buttonWidth) - (2f * buttonMargin);
-            this.dragy = this.windowRect.y + this.windowRect.height + 1f;
-            this.homex = this.windowRect.x + this.windowRect.width - (3f * buttonWidth) - (3f * buttonMargin);
-            this.homey = this.windowRect.y + this.windowRect.height + 1f;
-            this.resizex = this.windowRect.x + this.windowRect.width - (4f * buttonWidth) - (4f * buttonMargin);
-            this.resizey = this.windowRect.y + this.windowRect.height + 1f;
+            this.controls.SetLocality();
         }
 
 		public override void ExtraOnGUI()
 		{
-			//new WaitForEndOfFrame(); // why?
-			this.ClampWindowToScreen();
-			this.DrawOverlayButtons();
+            if (this.draggable || this.resize)
+                this.controls.SetLocality();
+            this.ClampWindowToScreen();
+			this.controls.DrawOverlayButtons();
 		}
 
-        // TODO: there should be a better way to do this but this helps with the lazy load
-        /*public void OnGui()
+        private void ClampWindowToScreen()
         {
-            if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.F8)
-            {
-                if (Find.WindowStack.Windows.IndexOf(this) == -1)
-                    Find.WindowStack.Add(this);
-                else
-                    Find.WindowStack.TryRemove(this, true);
-            }
-        }*/
+            if (this.windowRect.width < minimumSize)
+                this.windowRect.height = this.windowRect.width = minimumSize;
+
+            if (this.windowRect.xMax > UI.screenWidth)
+                this.windowRect.x = UI.screenWidth - this.windowRect.width;
+
+            if (this.windowRect.yMax > UI.screenHeight - MiniMapControls.buttonWidth - 1)
+                this.windowRect.y = UI.screenHeight - this.windowRect.height - MiniMapControls.buttonWidth - 1;
+
+            if (this.windowRect.xMin < 0f)
+                this.windowRect.x = this.windowRect.x - this.windowRect.xMin;
+
+            if (this.windowRect.yMin < 0f)
+                this.windowRect.y = this.windowRect.y - this.windowRect.yMin;
+
+            MiniMap_GameComponent.Position = this.windowRect.position;
+            MiniMap_GameComponent.Size = this.windowRect.size;
+        }
+
 
         public void Toggle(bool add = false)
         {
@@ -280,71 +201,29 @@ namespace BetterMiniMap
                 Find.WindowStack.TryRemove(this, true);
         }
 
-        private void DrawOverlayButtons()
-		{
-			if (this.draggable || this.resize)
-                this.SetLocality();
-
-			if (Widgets.ButtonImage(new Rect(this.configx, this.configy, buttonWidth, buttonWidth), MiniMapTextures.config))
-			{
-				if (Event.current.button == 1) // right click
-                    Find.WindowStack.Add(this.floatMenu);
-			}
-
-			if (Widgets.ButtonImage(new Rect(this.dragx, this.dragy, buttonWidth, buttonWidth), this.draggable ? MiniMapTextures.dragA : MiniMapTextures.dragD))
-			{
-				if (Event.current.button == 1) // right click
-                {
-					this.draggable = !this.draggable;
-                    if (!this.draggable)
-                        MiniMap_GameComponent.Position = this.windowRect.position;
-					this.resize = false;
-				}
-			}
-
-			if (Widgets.ButtonImage(new Rect(this.homex, this.homey, buttonWidth, buttonWidth), MiniMapTextures.homeA))
-			{
-				if (Event.current.button == 1) // right click
-                {
-					this.UpdateAreaOverlays();
-                    Find.WindowStack.Add(this.areafloatMenu);
-				}
-			}
-
-			if (Widgets.ButtonImage(new Rect(this.resizex, this.resizey, buttonWidth, buttonWidth), this.resize ? MiniMapTextures.resizeA : MiniMapTextures.resizeD))
-			{
-				if (Event.current.button == 1) // right click
-                {
-					this.resize = !this.resize;
-					if (!this.resize)
-                        MiniMap_GameComponent.Size = this.windowRect.size;
-					this.draggable = false;
-				}
-			}
-		}
-
-		private void UpdateAreaOverlays()
+		public FloatMenu UpdateAreaOverlays()
 		{
 			bool remakeOptions = false;
-			if (Find.VisibleMap.areaManager.AllAreas.Count != this.mmc.AreaOverlays.Count)
+			if (Find.VisibleMap.areaManager.AllAreas.Count != this.AreaOverlays.Count)
 			{
                 foreach (Area area in Find.VisibleMap.areaManager.AllAreas)
                 {
-                    if (!this.mmc.AreaOverlays.Any((Areas_Overlay w) => w.area == area))
+                    // TODO: this seems expensive...
+                    if (!this.AreaOverlays.Any((Areas_Overlay w) => w.area == area))
                     {
-                        this.mmc.AreaOverlays.Add(new Areas_Overlay(area, false));
+                        this.AreaOverlays.Add(new Areas_Overlay(area, false));
                         remakeOptions = true;
                     }
                 }
 
-				if (this.mmc.AreaOverlays.Any<Areas_Overlay>())
+				if (this.AreaOverlays.Any<Areas_Overlay>())
 				{
-					for (int i = this.mmc.AreaOverlays.Count - 1; i >= 0; i--)
+					for (int i = this.AreaOverlays.Count - 1; i >= 0; i--)
 					{
-						Area area = this.mmc.AreaOverlays[i].area;
+						Area area = this.AreaOverlays[i].area;
 						if (area == null || !Find.VisibleMap.areaManager.AllAreas.Contains(area))
 						{
-							this.mmc.AreaOverlays.RemoveAt(i);
+							this.AreaOverlays.RemoveAt(i);
                             remakeOptions = true;
 						}
 					}
@@ -353,27 +232,83 @@ namespace BetterMiniMap
 				if (remakeOptions)
 					this.MakeAreaOptions();
 			}
+
+            return this.areaMenu;
 		}
 
-		private void ClampWindowToScreen()
-		{
-			if (this.windowRect.width < minimumSize)
-				this.windowRect.height = this.windowRect.width = minimumSize;
-			
-            if (this.windowRect.xMax > UI.screenWidth)
-                this.windowRect.x = UI.screenWidth - this.windowRect.width;
+        private void MakeAreaOptions()
+        {
+            if (this.AreaOverlays?.Count > 0)
+            {
+                this.areasOptions = new List<FloatMenuOption>();
 
-            if (this.windowRect.yMax > UI.screenHeight - buttonWidth - 1)
-				this.windowRect.y = UI.screenHeight - this.windowRect.height - buttonWidth - 1;
+                foreach (Areas_Overlay overlayArea in this.AreaOverlays)
+                {
+                    this.areasOptions.Add(new FloatMenuOptionItem(overlayArea.Visible, overlayArea.area.Label, delegate
+                    {
+                        overlayArea.Visible = !overlayArea.Visible;
+                        if (this.selectedArea == null)
+                            this.selectedArea = overlayArea;
+                        else if (this.selectedArea == overlayArea)
+                            this.selectedArea = null;
+                        else
+                        {
+                            this.selectedArea.Visible = false;
+                            this.selectedArea = overlayArea;
+                        }
+                        this.MakeAreaOptions();
+                    }));
+                }
 
-			if (this.windowRect.xMin < 0f)
-				this.windowRect.x = this.windowRect.x - this.windowRect.xMin;
+                this.areaMenu = new FloatMenu(this.areasOptions)
+                {
+                    closeOnEscapeKey = true,
+                    preventCameraMotion = false,
+                };
+            }
+        }
 
-			if (this.windowRect.yMin < 0f)
-				this.windowRect.y = this.windowRect.y - this.windowRect.yMin;
+        public void UpdateSettings()
+        {
+            MiniMap_GameComponent.overlayColonists = this.overlayColonists.Visible;
+            MiniMap_GameComponent.overlayBuilding = this.overlayBuilding.Visible;
+            MiniMap_GameComponent.overlayMining = this.overlayMining.Visible;
+            MiniMap_GameComponent.overlayNoncolonist = this.overlayNoncolonist.Visible;
+            MiniMap_GameComponent.overlayPower = this.overlayPower.Visible;
+            MiniMap_GameComponent.overlayShips = this.overlayShips.Visible;
+            MiniMap_GameComponent.overlayRobots = this.overlayRobots.Visible;
+            MiniMap_GameComponent.overlayWild = this.overlayWild.Visible;
+            MiniMap_GameComponent.overlayTerrain = this.overlayTerrain.Visible;
+        }
 
-            MiniMap_GameComponent.Position = this.windowRect.position;
-            MiniMap_GameComponent.Size = this.windowRect.size;
-		}
-	}
+        // TODO: are both UpdateOverlays() and UpdateAll() really needed?
+        public void Update()
+        {
+            if (this.overlays.Any<Overlay>())
+            {
+                foreach (Overlay current in this.overlays)
+                {
+                    if (current.ShouldUpdateOverlay)
+                        current.Update();
+                }
+            }
+            if (this.selectedArea != null)
+            {
+                if (this.selectedArea.ShouldUpdateOverlay)
+                    this.selectedArea.Update();
+            }
+        }
+
+        public void Refresh()
+        {
+            if (this.overlays.Any<Overlay>())
+            {
+                foreach (Overlay current in this.overlays)
+                    current.Update();
+            }
+            if (this.selectedArea != null)
+                this.selectedArea.Update();
+        }
+
+    }
 }

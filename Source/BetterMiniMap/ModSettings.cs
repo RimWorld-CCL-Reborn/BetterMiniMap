@@ -101,7 +101,7 @@ namespace BetterMiniMap
             string text22 = settings.indicatorSizes.wildlifeHostiles.ToString();
             string text23 = settings.indicatorSizes.wildlifeHunting.ToString();
 
-            Listing_Standard listing_Standard = new Listing_Standard(GameFont.Small);
+            Listing_Standard listing_Standard = new Listing_Standard();
 
             listing_Standard.ColumnWidth = rect.width / 2f;
             listing_Standard.Begin(rect);
