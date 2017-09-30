@@ -6,11 +6,11 @@ using RimWorld;
 
 namespace BetterMiniMap.Overlays
 {
-	public class Ships_Overlay : Things_Overlay
+	public class Ships_Overlay : Things_Overlay, IExposable
 	{
 		private static readonly Color shipColor = Color.red;
 
-        public Ships_Overlay(bool visible) : base(visible) { }
+        public Ships_Overlay(bool visible = true) : base(visible) { }
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Ships;
 
@@ -24,5 +24,7 @@ namespace BetterMiniMap.Overlays
             color = shipColor;
             radius = BetterMiniMapMod.settings.indicatorSizes.ships;
         }
+
+        public void ExposeData() => this.ExposeData("overlayShips");
     }
 }

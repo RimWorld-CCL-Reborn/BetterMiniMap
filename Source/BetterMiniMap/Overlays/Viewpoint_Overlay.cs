@@ -9,7 +9,7 @@ namespace BetterMiniMap.Overlays
 	{
 		private static readonly Color color = Color.white;
 
-        public Viewpoint_Overlay(bool visible) : base(visible) { }
+        public Viewpoint_Overlay(bool visible = true) : base(visible) { }
 
         public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_ViewPort;
 

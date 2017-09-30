@@ -7,14 +7,14 @@ using RimWorld;
 
 namespace BetterMiniMap.Overlays
 {
-	public class PowerGrid_Overlay : Overlay
+	public class PowerGrid_Overlay : Overlay, IExposable
 	{
 		private static readonly Color poweredColor = GenUI.MouseoverColor;
 		private static readonly Color poweredByBatteriesColor = Color.green;
 		private static readonly Color notPoweredColor = Color.red;
 		private static readonly Color offColor = Color.grey;
 
-        public PowerGrid_Overlay(bool visible) : base(visible) { }
+        public PowerGrid_Overlay(bool visible = true) : base(visible) { }
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_PowerGrid;
 
@@ -71,5 +71,6 @@ namespace BetterMiniMap.Overlays
 			Utilities.DrawThing(base.Texture, transmitter.parent, color);
 		}
 
+        public void ExposeData() => this.ExposeData("overlayPower");
 	}
 }

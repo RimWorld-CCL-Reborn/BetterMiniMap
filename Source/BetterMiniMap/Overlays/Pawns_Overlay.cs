@@ -8,7 +8,7 @@ namespace BetterMiniMap.Overlays
 {
 	public abstract class Pawns_Overlay : Overlay
 	{
-        protected Pawns_Overlay(bool visible) : base(visible) { }
+        protected Pawns_Overlay(bool visible = true) : base(visible) { }
 
 		public abstract IEnumerable<Pawn> GetPawns();
         public abstract void GetIndicatorProperities(Pawn pawn, out Color color, out float radius);

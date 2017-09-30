@@ -8,7 +8,7 @@ namespace BetterMiniMap.Overlays
 {
 	public abstract class Things_Overlay : Overlay
 	{
-        protected Things_Overlay(bool visible) : base(visible) { }
+        protected Things_Overlay(bool visible = true) : base(visible) { }
 
 		public abstract IEnumerable<Thing> GetThings();
         public abstract void GetIndicatorProperities(Thing thing, out Color color, out float radius);

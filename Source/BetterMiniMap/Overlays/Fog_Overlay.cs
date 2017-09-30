@@ -5,7 +5,7 @@ namespace BetterMiniMap.Overlays
 {
 	public class Fog_Overlay : Overlay
 	{
-        public Fog_Overlay(bool visible) : base(visible) { }
+        public Fog_Overlay(bool visible = true) : base(visible) { }
 
         public void Update() => base.Update(false);
 

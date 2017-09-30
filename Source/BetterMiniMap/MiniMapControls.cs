@@ -58,7 +58,7 @@ namespace BetterMiniMap
                 {
                     window.draggable = !window.draggable;
                     if (!window.draggable)
-                        MiniMap_GameComponent.Position = window.windowRect.position;
+                        window.Position = window.windowRect.position;
                     window.resize = false;
                 }
             }
@@ -78,7 +78,7 @@ namespace BetterMiniMap
                 {
                     window.resize = !window.resize;
                     if (!window.resize)
-                        MiniMap_GameComponent.Size = window.windowRect.size;
+                        window.Size = window.windowRect.size;
                     window.draggable = false;
                 }
             }

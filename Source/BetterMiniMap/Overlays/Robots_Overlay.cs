@@ -5,11 +5,11 @@ using Verse;
 
 namespace BetterMiniMap.Overlays
 {
-	public class Robots_Overlay : Pawns_Overlay
+	public class Robots_Overlay : Pawns_Overlay, IExposable
 	{
 		private static readonly Color robotColor = Color.white;
 
-        public Robots_Overlay(bool visible) : base(visible) { }
+        public Robots_Overlay(bool visible = true) : base(visible) { }
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Robots;
 
@@ -23,5 +23,7 @@ namespace BetterMiniMap.Overlays
             color = robotColor;
             radius = BetterMiniMapMod.settings.indicatorSizes.robots;
         }
+
+        public void ExposeData() => this.ExposeData("overlayRobots");
     }
 }

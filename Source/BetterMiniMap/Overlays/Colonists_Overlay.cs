@@ -6,14 +6,12 @@ using RimWorld;
 
 namespace BetterMiniMap.Overlays
 {
-	public class Colonists_Overlay : Pawns_Overlay
+	public class Colonists_Overlay : Pawns_Overlay, IExposable
 	{
 		private static readonly Color colonistColor = Color.green;
 		private static readonly Color colonistAnimalColor = Color.green;
 
-        //public Colonists_Overlay(bool visible) : base(visible) { }
-
-        public Colonists_Overlay(bool visible) : base(visible) { }
+        public Colonists_Overlay(bool visible = true) : base(visible) { }
 
         public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Colonists;
 
@@ -33,5 +31,6 @@ namespace BetterMiniMap.Overlays
             }
         }
 
+        public void ExposeData() => this.ExposeData("overlayColonists");
 	}
 }

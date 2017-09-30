@@ -4,11 +4,11 @@ using Verse;
 
 namespace BetterMiniMap.Overlays
 {
-    public class Buildings_Overlay : Overlay
+    public class Buildings_Overlay : Overlay, IExposable
     {
         private static readonly Color planningColor = Color.white;
 
-        public Buildings_Overlay(bool visible) : base(visible) { }
+        public Buildings_Overlay(bool visible = true) : base(visible) { }
 
         public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Buildings;
 
@@ -19,5 +19,6 @@ namespace BetterMiniMap.Overlays
                     base.Texture.SetPixel(current.Position.x, current.Position.z, planningColor);
         }
 
+        public void ExposeData() => this.ExposeData("overlayBuilding");
     }
 }

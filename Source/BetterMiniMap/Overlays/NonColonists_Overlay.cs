@@ -6,13 +6,13 @@ using RimWorld;
 
 namespace BetterMiniMap.Overlays
 {
-	public class NonColonists_Overlay : Pawns_Overlay
+	public class NonColonists_Overlay : Pawns_Overlay, IExposable
 	{
 		private static readonly Color enemyColor = Color.red;
 		private static readonly Color traderColor = Color.blue;
 		private static readonly Color visitorColor = Color.green;
 
-        public NonColonists_Overlay(bool visible) : base(visible) { }
+        public NonColonists_Overlay(bool visible = true) : base(visible) { }
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_NonColonistPawns;
 
@@ -40,5 +40,6 @@ namespace BetterMiniMap.Overlays
             }
         }
 
+        public void ExposeData() => this.ExposeData("overlayNoncolonist");
     }
 }

@@ -6,11 +6,11 @@ using RimWorld;
 
 namespace BetterMiniMap.Overlays
 {
-	public class Mining_Overlay : Overlay
+	public class Mining_Overlay : Overlay, IExposable
 	{
 		private static readonly Color miningColor = new Color(0.75f, 0.4f, 0.125f, 1f);
 
-        public Mining_Overlay(bool visible) : base(visible) { }
+        public Mining_Overlay(bool visible = true) : base(visible) { }
 
 		public override void Render()
 		{
@@ -21,9 +21,8 @@ namespace BetterMiniMap.Overlays
 			}
         }
 
-		public override int GetUpdateInterval()
-		{
-			return BetterMiniMapMod.settings.overlay_Mining;
-		}
+		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Mining;
+
+        public void ExposeData() => this.ExposeData("overlayMining");
 	}
 }

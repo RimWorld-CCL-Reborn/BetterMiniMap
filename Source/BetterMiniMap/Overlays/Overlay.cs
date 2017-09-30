@@ -69,8 +69,10 @@ namespace BetterMiniMap.Overlays
         }
 
         public abstract void Render();
-
 		public abstract int GetUpdateInterval();
+
+        // NOTE: there maybe a better place to put this...
+        protected void ExposeData(string overlayName) => Scribe_Values.Look<bool>(ref this.visible, overlayName, true);
 
         public virtual bool ShouldUpdateOverlay
         {

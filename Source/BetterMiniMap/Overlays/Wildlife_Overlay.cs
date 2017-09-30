@@ -6,15 +6,14 @@ using RimWorld;
 
 namespace BetterMiniMap.Overlays
 {
-	public class Wildlife_Overlay : Pawns_Overlay
+	public class Wildlife_Overlay : Pawns_Overlay, IExposable
 	{
 		private static readonly Color wildColor = Color.yellow;
 		private static readonly Color tamingColor = Color.green;
 		private static readonly Color hostileColor = Color.red;
 		private static readonly Color huntingColor = GenUI.MouseoverColor;
-		//private static readonly Color tamingColor = GenUI.MouseoverColor;
 
-        public Wildlife_Overlay(bool visible) : base(visible) { }
+        public Wildlife_Overlay(bool visible = true) : base(visible) { }
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Wildlife;
 
@@ -55,5 +54,6 @@ namespace BetterMiniMap.Overlays
             return; 
         }
 
+        public void ExposeData() => this.ExposeData("overlayWild");
     }
 }

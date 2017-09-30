@@ -55,7 +55,6 @@
   <ItemGroup>
     <Compile Include="FloatMenuOptionItem.cs" />
     <Compile Include="GameComponent.cs" />
-    <Compile Include="MapComponent.cs" />
     <Compile Include="MiniMapControls.cs" />
     <Compile Include="MiniMapTextures.cs" />
     <Compile Include="MiniMapWindow.cs" />
