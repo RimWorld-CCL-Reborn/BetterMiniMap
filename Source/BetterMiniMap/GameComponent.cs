@@ -18,7 +18,11 @@ namespace BetterMiniMap
         private static bool researchPal; 
         private static bool relationsTab;
 
-        public MiniMap_GameComponent(Game g)
+        public MiniMap_GameComponent(Game g) => Initialize();
+
+        public MiniMap_GameComponent() => Initialize();
+
+        private static void Initialize()
         {
             if (!initialized)
             {
@@ -29,25 +33,22 @@ namespace BetterMiniMap
             }
         }
 
-        public MiniMap_GameComponent() { }
-
         // NOTE: not sure if I like this...
         static MiniMap_GameComponent()
         {
             HarmonyInstance harmony = HarmonyInstance.Create("rimworld.whyisthat.betterminimap.gamecomponent");
-            harmony.Patch(AccessTools.Method(typeof(UIRoot_Play), nameof(UIRoot_Play.Init)), null, new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(Initilize)));
+            harmony.Patch(AccessTools.Method(typeof(UIRoot_Play), nameof(UIRoot_Play.Init)), null, new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(AddDefaultWindow)));
             harmony.Patch(AccessTools.Method(typeof(MainTabsRoot), nameof(MainTabsRoot.ToggleTab)), null, new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(ToggleMiniMap)));
             harmony.Patch(AccessTools.Method(typeof(MainButtonWorker_ToggleWorld), nameof(MainButtonWorker_ToggleWorld.Activate)), null, new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(ToggleMiniMap_WorldTab)));
         }
         
         // NOTE: this is done here to avoid lazy loading.
-        static void Initilize()
+        static void AddDefaultWindow()
         {
 #if DEBUG
             Log.Message("MiniMap_GameComponent.Initilize");
 #endif
-            if (miniMap == null)
-                miniMap = new MiniMapWindow();
+            miniMap = new MiniMapWindow();
             Find.WindowStack.Add(miniMap);
         }
 
@@ -101,6 +102,9 @@ namespace BetterMiniMap
         {
             base.ExposeData();
             Scribe_Deep.Look<MiniMapWindow>(ref miniMap, "miniMap");
+            // NOTE: handles adding mod to existing save
+            if (Scribe.mode == LoadSaveMode.PostLoadInit && miniMap == null)
+                AddDefaultWindow();
         }
 
     }

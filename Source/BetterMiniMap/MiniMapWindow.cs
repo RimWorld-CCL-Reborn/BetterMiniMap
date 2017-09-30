@@ -54,7 +54,7 @@ namespace BetterMiniMap
         private int resolutionX;
         private int resolutionY;
 
-        private bool active; // NOTE: do not confuse with toggling (which is a temporary removal of the window)
+        private bool active = true; // NOTE: do not confuse with toggling (which is a temporary removal of the window)
 
         public MiniMapWindow()
         {
