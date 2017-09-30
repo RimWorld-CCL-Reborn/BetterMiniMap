@@ -34,9 +34,7 @@ namespace BetterMiniMap
         private Areas_Overlay selectedArea;
 
 		private List<FloatMenuOption> areasOptions;
-		private List<FloatMenuOption> overlayOptions;
 
-		private FloatMenu overlayMenu;
 		private FloatMenu areaMenu;
 
         // TODO: better way to deal with default?
@@ -55,6 +53,8 @@ namespace BetterMiniMap
         // TODO: are these needed?
         private int resolutionX;
         private int resolutionY;
+
+        private bool active; // NOTE: do not confuse with toggling (which is a temporary removal of the window)
 
         public MiniMapWindow()
         {
@@ -76,14 +76,6 @@ namespace BetterMiniMap
                 this.overlayView
             };
 
-            this.GenerateOverlayOptions();
-
-            this.overlayMenu = new FloatMenu(this.overlayOptions)
-            {
-                closeOnEscapeKey = true,
-                preventCameraMotion = false,
-            };
-
             this.controls = new MiniMapControls(this);
 
             this.resolutionX = UI.screenWidth;
@@ -92,10 +84,11 @@ namespace BetterMiniMap
 
         public List<Overlay> Overlays { get => this.overlays; }
         public List<Areas_Overlay> AreaOverlays { get => this.areaOverlays; }
-        public FloatMenu OverlayMenu { get => this.overlayMenu; }
 
         public Vector2 Position { get => this.position; set => this.position = value; }
         public Vector2 Size { get => this.size; set => this.size = value; }
+
+        public bool Active { get => this.active; set => this.active = value; }
 
         protected override float Margin { get => 0f; }
 
@@ -117,8 +110,6 @@ namespace BetterMiniMap
 				this.Refresh();
 			}
 
-            // NOTE: why?
-			//new WaitForEndOfFrame();
 			this.Update();
 
 			foreach (Overlay current in this.Overlays)
@@ -153,9 +144,9 @@ namespace BetterMiniMap
 			}
 		}
 
-        public void GenerateOverlayOptions()
+        public List<FloatMenuOption> GenerateOverlayMenuItems()
         {
-            this.overlayOptions = new List<FloatMenuOption>()
+            return new List<FloatMenuOption>()
             {
                 new FloatMenuOptionItem(this.overlayColonists, "BMM_ColonistsOverlayLabel".Translate()),
                 new FloatMenuOptionItem(this.overlayNoncolonist, "overlay_NonColonistPawnst".Translate()),
@@ -168,6 +159,7 @@ namespace BetterMiniMap
                 new FloatMenuOptionItem(this.overlayShips, "overlay_Shipst".Translate()),
                 new FloatMenuOptionItem(this.overlayRobots, "overlay_Robotst".Translate())
             };
+
         }
 
         // TODO: is this necessary or helpful? What would be best to go here?
@@ -178,11 +170,6 @@ namespace BetterMiniMap
                 this.Position = new Vector2(UI.screenWidth - defaultSize - defaultMargin, defaultMargin);
                 this.Size = new Vector2(defaultSize, defaultSize);
             }
-            /*if (resolutionX == 0)
-            {
-                resolutionX = UI.screenWidth;
-                resolutionY = UI.screenHeight;
-            }*/
 #if DEBUG
             Log.Message($"PostOpen: {this.position} {this.size}");
 #endif
@@ -218,7 +205,6 @@ namespace BetterMiniMap
             this.Position = this.windowRect.position;
             this.Size = this.windowRect.size;
         }
-
 
         public void Toggle(bool add = false)
         {
@@ -333,11 +319,13 @@ namespace BetterMiniMap
 #if DEBUG
             Log.Message($"ExposeData: {Scribe.mode}");
 #endif
-            Scribe_Values.Look<Vector2>(ref position, "positionY"); // fix this
-            Scribe_Values.Look<Vector2>(ref size, "size");
+            Scribe_Values.Look<Vector2>(ref this.position, "positionY"); // fix this
+            Scribe_Values.Look<Vector2>(ref this.size, "size");
 
-            Scribe_Values.Look<int>(ref resolutionX, "resolutionX", UI.screenWidth, true);
-            Scribe_Values.Look<int>(ref resolutionY, "resolutionY", UI.screenHeight, true);
+            Scribe_Values.Look<int>(ref this.resolutionX, "resolutionX", UI.screenWidth, true);
+            Scribe_Values.Look<int>(ref this.resolutionY, "resolutionY", UI.screenHeight, true);
+
+            Scribe_Values.Look<bool>(ref this.active, "active", true);
 
             foreach (Overlay overlay in this.Overlays)
                 if (overlay is IExposable)
@@ -345,11 +333,13 @@ namespace BetterMiniMap
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
-                Find.WindowStack.Add(this); // replaces default window
-                this.GenerateOverlayOptions();
+                controls.GenerateOverlayMenu();
+                // NOTE: there should be a cleaner way to do this...
+                // Replace default window
+                Find.WindowStack.Add(this); 
+                if (!this.active)
+                    Find.WindowStack.TryRemove(this, true);
             }
-
-            //if (Find.WindowStack.Windows.IndexOf(this) == -1)
         }
 
     }

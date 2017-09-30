@@ -19,6 +19,8 @@ namespace BetterMiniMap
 
         private MiniMapWindow window;
 
+        private FloatMenu overlayMenu;
+
         public MiniMapControls(MiniMapWindow miniMap)
         {
             this.window = miniMap;
@@ -26,6 +28,17 @@ namespace BetterMiniMap
             this.dragButtonRect = new Rect(0, 0, buttonWidth, buttonWidth);
             this.homeButtonRect = new Rect(0, 0, buttonWidth, buttonWidth);
             this.resizeButtonRect = new Rect(0, 0, buttonWidth, buttonWidth);
+
+            this.GenerateOverlayMenu();
+        }
+
+        public void GenerateOverlayMenu()
+        {
+            this.overlayMenu = new FloatMenu(window.GenerateOverlayMenuItems())
+            {
+                closeOnEscapeKey = true,
+                preventCameraMotion = false,
+            };
         }
 
         public void SetLocality()
@@ -49,7 +62,7 @@ namespace BetterMiniMap
             if (Widgets.ButtonImage(this.configButtonRect, MiniMapTextures.config))
             {
                 if (Event.current.button == 1) // right click
-                    Find.WindowStack.Add(window.OverlayMenu);
+                    Find.WindowStack.Add(this.overlayMenu);
             }
 
             if (Widgets.ButtonImage(this.dragButtonRect, window.draggable ? MiniMapTextures.dragA : MiniMapTextures.dragD))

@@ -10,16 +10,24 @@ namespace BetterMiniMap
     [StaticConstructorOnStartup]
     class MiniMap_GameComponent : GameComponent
     {
-        // NOTE: on load this will be overwritten
-        // TODO: can we remove static here
         private static MiniMapWindow miniMap;
-        //private static bool initialized;
+
+        private static bool initialized;
 
         // used to toggle minimap
         private static bool researchPal; 
-        private static bool relationsTab; 
+        private static bool relationsTab;
 
-        public MiniMap_GameComponent(Game g) { }
+        public MiniMap_GameComponent(Game g)
+        {
+            if (!initialized)
+            {
+                // used for toggling minimap 
+                researchPal = ModLister.AllInstalledMods.FirstOrDefault(m => m.Name == "ResearchPal")?.Active == true;
+                relationsTab = ModLister.AllInstalledMods.FirstOrDefault(m => m.Name == "Relations Tab")?.Active == true;
+                initialized = true;
+            }
+        }
 
         public MiniMap_GameComponent() { }
 
@@ -39,15 +47,8 @@ namespace BetterMiniMap
             Log.Message("MiniMap_GameComponent.Initilize");
 #endif
             if (miniMap == null)
-            {
-                Log.Message("Initializing MiniMap");
                 miniMap = new MiniMapWindow();
-            }
             Find.WindowStack.Add(miniMap);
-
-            // used for toggling minimap 
-            researchPal = ModLister.AllInstalledMods.FirstOrDefault(m => m.Name == "ResearchPal")?.Active == true;
-            relationsTab = ModLister.AllInstalledMods.FirstOrDefault(m => m.Name == "Relations Tab")?.Active == true;
         }
 
         static void ToggleMiniMap(MainTabsRoot __instance, MainButtonDef newTab)
@@ -55,23 +56,26 @@ namespace BetterMiniMap
 #if DEBUG
             Log.Message($"MainTabsRoot.ToggleTab: {newTab} {__instance.OpenTab != null}");
 #endif
-            if (__instance.OpenTab != null)
+            if (miniMap.Active)
             {
-                switch (newTab.defName)
+                if (__instance.OpenTab != null)
                 {
-                    case "Research":
-                        if (researchPal) miniMap.Toggle(false);
-                        break;
-                    case "Factions":
-                        if (relationsTab) miniMap.Toggle(false);
-                        break;
-                    default:
-                        miniMap.Toggle(!WorldRendererUtility.WorldRenderedNow);
-                        break;
+                    switch (newTab.defName)
+                    {
+                        case "Research":
+                            if (researchPal) miniMap.Toggle(false);
+                            break;
+                        case "Factions":
+                            if (relationsTab) miniMap.Toggle(false);
+                            break;
+                        default:
+                            miniMap.Toggle(!WorldRendererUtility.WorldRenderedNow);
+                            break;
+                    }
                 }
+                else
+                    miniMap.Toggle(!WorldRendererUtility.WorldRenderedNow);
             }
-            else
-                miniMap.Toggle(!WorldRendererUtility.WorldRenderedNow);
         }
 
         static void ToggleMiniMap_WorldTab()
@@ -79,20 +83,24 @@ namespace BetterMiniMap
 #if DEBUG
             Log.Message($"MainButtonWorker_ToggleWorld.Activate: {Find.World.renderer.wantedMode}");
 #endif
-            miniMap.Toggle(!WorldRendererUtility.WorldRenderedNow);
-        }
-
-        public override void ExposeData()
-        {
-            base.ExposeData();
-            Scribe_Deep.Look<MiniMapWindow>(ref miniMap, "miniMap");
+            if (miniMap.Active)
+                miniMap.Toggle(!WorldRendererUtility.WorldRenderedNow);
         }
 
         public override void GameComponentOnGUI()
         {
             base.GameComponentOnGUI();
             if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.F8)
+            {
                 miniMap.Toggle(Find.WindowStack.Windows.IndexOf(miniMap) == -1); // TODO: this is a bit nasty...
+                miniMap.Active = false;
+            }
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Deep.Look<MiniMapWindow>(ref miniMap, "miniMap");
         }
 
     }
