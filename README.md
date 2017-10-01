@@ -1,6 +1,14 @@
 # BetterMiniMap [![RimWorld Alpha 17](https://img.shields.io/badge/RimWorld-Alpha%2017-brightgreen.svg)](http://rimworldgame.com/)
 
-FirstPass for those who want to try it out. Please do not judge me from this code. It's a work in progress from some code that was a real mess.
+Provides a minimap for RimWorld using the overlays provided from Community Core Library. A simular mod exists that attempted to do the same but had numerous issues and bug.
+
+## Features
+- Overlays for the following: Areas, Buildings, Colonists, Mining, Noncolonists, Power Grid, Ships, Terrain, and Wildlife
+- Forced overlays exist for viewpoint and fog.
+- F8 can show/hide the the minimap
+- Minimap will hide when in world tab
+- Minimap will hide when in Fluffy's Relationship Tab
+- Minimap will hide when in ResearchPal
 
 ## Acknowledgements
 
