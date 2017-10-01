@@ -13,17 +13,17 @@ namespace BetterMiniMap
         private const float defaultSize = 300f;
         private const int defaultMargin = 8;
 
-        private readonly Colonists_Overlay overlayColonists = new Colonists_Overlay();
-        private readonly Fog_Overlay overlayFog = new Fog_Overlay();
-        private readonly Mining_Overlay overlayMining = new Mining_Overlay();
-        private readonly NonColonists_Overlay overlayNoncolonist = new NonColonists_Overlay();
-        private readonly Buildings_Overlay overlayBuilding = new Buildings_Overlay();
-        private readonly PowerGrid_Overlay overlayPower = new PowerGrid_Overlay();
-        private readonly Terrain_Overlay overlayTerrain = new Terrain_Overlay();
-        private readonly Viewpoint_Overlay overlayView = new Viewpoint_Overlay();
-        private readonly Wildlife_Overlay overlayWild = new Wildlife_Overlay();
-        private readonly Ships_Overlay overlayShips = new Ships_Overlay();
-        private readonly Robots_Overlay overlayRobots = new Robots_Overlay();
+        private Colonists_Overlay overlayColonists;
+        private Fog_Overlay overlayFog;
+        private Mining_Overlay overlayMining;
+        private NonColonists_Overlay overlayNoncolonist;
+        private Buildings_Overlay overlayBuilding;
+        private PowerGrid_Overlay overlayPower;
+        private Terrain_Overlay overlayTerrain;
+        private Viewpoint_Overlay overlayView;
+        private Wildlife_Overlay overlayWild;
+        private Ships_Overlay overlayShips;
+        private Robots_Overlay overlayRobots;
 
         private List<Overlay> overlays;
         private List<Area_Overlay> areaOverlays = new List<Area_Overlay>();
@@ -49,22 +49,7 @@ namespace BetterMiniMap
         {
             this.closeOnEscapeKey = false;
             this.preventCameraMotion = false;
-
-            this.overlays = new List<Overlay>()
-            {
-                this.overlayTerrain,
-                this.overlayColonists,
-                this.overlayMining,
-                this.overlayNoncolonist,
-                this.overlayBuilding,
-                this.overlayPower,
-                this.overlayWild,
-                this.overlayShips,
-                this.overlayRobots,
-                this.overlayFog,
-                this.overlayView
-            };
-
+            this.GenerateOverlays();
             this.controls = new MiniMapControls(this);
 
             //this.resolutionX = UI.screenWidth;
@@ -80,27 +65,48 @@ namespace BetterMiniMap
 
         protected override float Margin { get => 0f; }
 
-        // TODO: we can probably be smarter here...
-        public override void Notify_ResolutionChanged()
-		{
-#if DEBUG
-            Log.Message("Notify_ResolutionChanged");
-#endif
-            base.Notify_ResolutionChanged();
-			this.PostOpen();
-		}
+        public void GenerateOverlays()
+        {
+            this.overlayColonists = new Colonists_Overlay();
+            this.overlayFog = new Fog_Overlay();
+            this.overlayMining = new Mining_Overlay();
+            this.overlayNoncolonist = new NonColonists_Overlay();
+            this.overlayBuilding = new Buildings_Overlay();
+            this.overlayPower = new PowerGrid_Overlay();
+            this.overlayTerrain = new Terrain_Overlay();
+            this.overlayView = new Viewpoint_Overlay();
+            this.overlayWild = new Wildlife_Overlay();
+            this.overlayShips = new Ships_Overlay();
+            this.overlayRobots = new Robots_Overlay();
 
-		public override void DoWindowContents(Rect inRect)
+            this.overlays = new List<Overlay>()
+            {
+                this.overlayTerrain,
+                this.overlayColonists,
+                this.overlayMining,
+                this.overlayNoncolonist,
+                this.overlayBuilding,
+                this.overlayPower,
+                this.overlayWild,
+                this.overlayShips,
+                this.overlayRobots,
+                this.overlayFog,
+                this.overlayView
+            };
+        }
+
+        public override void DoWindowContents(Rect inRect)
 		{
-            //TODO: lazy loading...
-			if (Find.VisibleMap.uniqueID != this.mapID)
-			{
-				this.mapID = Find.VisibleMap.uniqueID;
-				this.Refresh();
+            // NOTE: lazy load but do not see a good way to do redraw otherwise (yet)
+            if (Find.VisibleMap.uniqueID != this.mapID)
+            {
+                this.mapID = Find.VisibleMap.uniqueID;
+                this.GenerateOverlays();
+                this.Refresh();
                 this.controls.UpdateAreaOverlays();
-			}
+            }
 
-			this.Update();
+            this.Update();
 
 			foreach (Overlay current in this.Overlays)
 				if (current.Visible)
