@@ -11,7 +11,7 @@ namespace BetterMiniMap.Overlays
 
         public Viewpoint_Overlay(bool visible = true) : base(visible) { }
 
-        public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_ViewPort;
+        public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.viewpoint;
 
 		public override void Render()
 		{

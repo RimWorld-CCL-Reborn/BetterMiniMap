@@ -4,58 +4,34 @@
     <BMM_SettingsCategoryLabel>BetterMiniMap</BMM_SettingsCategoryLabel>
 
     <BMM_TimeUpdateLabel>Updates from X to X Frames</BMM_TimeUpdateLabel>
+
     <BMM_AreasOverlayLabel>Area</BMM_AreasOverlayLabel>
     <BMM_BuildingsOverlayLabel>Buildings</BMM_BuildingsOverlayLabel>
     <BMM_ColonistsOverlayLabel>Colonists</BMM_ColonistsOverlayLabel>
-    <overlay_Fogt>Mountains</overlay_Fogt>
-    <overlay_Miningt>Mining</overlay_Miningt>
-    <overlay_NonColonistPawnst>Non Colonist</overlay_NonColonistPawnst>
-    <overlay_PowerGridt>Energy Grid</overlay_PowerGridt>
-    <overlay_Robotst>Robots</overlay_Robotst>
-    <overlay_Shipst>Ships</overlay_Shipst>
-    <overlay_Terraint>Terrain</overlay_Terraint>
-    <overlay_ViewPortt>ViewPort</overlay_ViewPortt>
-    <overlay_Wildlifet>Wild Life</overlay_Wildlifet>
+    <BMM_MiningOverlayLabel>Mining</BMM_MiningOverlayLabel>
+    <BMM_NoncolonistOverlayLabel>Non-colonist</BMM_NoncolonistOverlayLabel>
+    <BMM_PowerGridOverlayLabel>Energy grid</BMM_PowerGridOverlayLabel>
+    <BMM_RobotsOverlayLabel>Robots</BMM_RobotsOverlayLabel>
+    <BMM_ShipsOverlayLabel>Ships</BMM_ShipsOverlayLabel>
+    <BMM_TerrainOverlayLabel>Terrain</BMM_TerrainOverlayLabel>
+    <BMM_WildlifeOverlayLabel>Wildlife</BMM_WildlifeOverlayLabel>
 
-    <labeltimeupdated></labeltimeupdated>
-    <overlay_Aread></overlay_Aread>
-    <overlay_Buildingsd></overlay_Buildingsd>
-    <overlay_Colonistsd></overlay_Colonistsd>
-    <overlay_Fogd></overlay_Fogd>
-    <overlay_Miningd></overlay_Miningd>
-    <overlay_NonColonistPawnsd></overlay_NonColonistPawnsd>
-    <overlay_PowerGridd></overlay_PowerGridd>
-    <overlay_Robotsd></overlay_Robotsd>
-    <overlay_Shipsd></overlay_Shipsd>
-    <overlay_Terraind></overlay_Terraind>
-    <overlay_ViewPortd></overlay_ViewPortd>
-    <overlay_Wildlifed></overlay_Wildlifed>
+    <!--These are only for adjust settings update-->
+    <BMM_FogOverlayLabel>Fog</BMM_FogOverlayLabel>
+    <BMM_ViewpointOverlayLabel>Viewpoint</BMM_ViewpointOverlayLabel>
 
-    <labelradiust>Circle Radius</labelradiust>
-    <radiu_Colonistst>Colonists</radiu_Colonistst>
-    <radiu_ColonistsAnimalt>Colonists (Animal)</radiu_ColonistsAnimalt>
-    <radiu_NonColonistPawnsEnemyt>Enemy</radiu_NonColonistPawnsEnemyt>
-    <radiu_NonColonistPawnsTradert>Trader</radiu_NonColonistPawnsTradert>
-    <radiu_NonColonistPawnsVisitort>Visitor</radiu_NonColonistPawnsVisitort>
-    <radiu_Robotst>Robots</radiu_Robotst>
-    <radiu_Shipst>Ships</radiu_Shipst>
-    <radiu_Wildlifewildt>Wild Animal</radiu_Wildlifewildt>
-    <radiu_Wildlifetamet>Tamed Animal</radiu_Wildlifetamet>
-    <radiu_Wildlifehostilet>Hostile Animal</radiu_Wildlifehostilet>
-    <radiu_Wildlifehuntingt>Hunter Animal</radiu_Wildlifehuntingt>
+    <BMM_IndicatorSizeLabel>Indicator Size</BMM_IndicatorSizeLabel>
 
-    <labelradiusd></labelradiusd>
-    <radiu_Buildingsd></radiu_Buildingsd>
-    <radiu_Colonistsd></radiu_Colonistsd>
-    <radiu_ColonistsAnimald></radiu_ColonistsAnimald>
-    <radiu_NonColonistPawnsEnemyd></radiu_NonColonistPawnsEnemyd>
-    <radiu_NonColonistPawnsTraderd></radiu_NonColonistPawnsTraderd>
-    <radiu_NonColonistPawnsVisitord></radiu_NonColonistPawnsVisitord>
-    <radiu_Robotsd></radiu_Robotsd>
-    <radiu_Shipsd></radiu_Shipsd>
-    <radiu_Wildlifewildd></radiu_Wildlifewildd>
-    <radiu_Wildlifetamed></radiu_Wildlifetamed>
-    <radiu_Wildlifehostiled></radiu_Wildlifehostiled>
-    <radiu_Wildlifehuntingd></radiu_Wildlifehuntingd>
+    <BMM_ColonistIndicatorSizeLabel>Colonists</BMM_ColonistIndicatorSizeLabel>
+    <BMM_AnimalIndicatorSizeLabel>Animal</BMM_AnimalIndicatorSizeLabel>
+    <BMM_EnemyIndicatorSizeLabel>Enemy</BMM_EnemyIndicatorSizeLabel>
+    <BMM_TraderIndicatorSizeLabel>Trader</BMM_TraderIndicatorSizeLabel>
+    <BMM_VisitorIndicatorSizeLabel>Visitor</BMM_VisitorIndicatorSizeLabel>
+    <BMM_RobotsIndicatorSizeLabel>Robots</BMM_RobotsIndicatorSizeLabel>
+    <BMM_ShipsIndicatorSizeLabel>Ships</BMM_ShipsIndicatorSizeLabel>
+    <BMM_WildlifeIndicatorSizeLabel>Wildlife</BMM_WildlifeIndicatorSizeLabel>
+    <BMM_TamingIndicatorSizeLabel>Wildlife marked for taming</BMM_TamingIndicatorSizeLabel>
+    <BMM_HostileAnimalIndicatorSizeLabel>Hostile wildlife</BMM_HostileAnimalIndicatorSizeLabel>
+    <BMM_HuntingIndicatorSizeLabel>Wildlife marked for hunting</BMM_HuntingIndicatorSizeLabel>
 
 </LanguageData>

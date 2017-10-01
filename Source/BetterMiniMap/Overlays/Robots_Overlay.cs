@@ -11,7 +11,7 @@ namespace BetterMiniMap.Overlays
 
         public Robots_Overlay(bool visible = true) : base(visible) { }
 
-		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Robots;
+		public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.robots;
 
 		public override IEnumerable<Pawn> GetPawns()
 		{

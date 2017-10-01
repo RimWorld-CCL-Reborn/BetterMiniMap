@@ -16,7 +16,7 @@ namespace BetterMiniMap.Overlays
 
         public PowerGrid_Overlay(bool visible = true) : base(visible) { }
 
-		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_PowerGrid;
+		public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.powerGrid;
 
 		public override void Render()
 		{

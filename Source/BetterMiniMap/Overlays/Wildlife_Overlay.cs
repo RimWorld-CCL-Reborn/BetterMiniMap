@@ -15,7 +15,7 @@ namespace BetterMiniMap.Overlays
 
         public Wildlife_Overlay(bool visible = true) : base(visible) { }
 
-		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Wildlife;
+		public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.wildlife;
 
 		public override IEnumerable<Pawn> GetPawns()
 		{

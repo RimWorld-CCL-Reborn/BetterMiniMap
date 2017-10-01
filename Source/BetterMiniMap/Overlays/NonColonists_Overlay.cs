@@ -14,7 +14,7 @@ namespace BetterMiniMap.Overlays
 
         public NonColonists_Overlay(bool visible = true) : base(visible) { }
 
-		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_NonColonistPawns;
+		public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.noncolonists;
 
 		public override IEnumerable<Pawn> GetPawns()
 		{

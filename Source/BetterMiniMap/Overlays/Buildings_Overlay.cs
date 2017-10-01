@@ -10,7 +10,7 @@ namespace BetterMiniMap.Overlays
 
         public Buildings_Overlay(bool visible = true) : base(visible) { }
 
-        public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Buildings;
+        public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.buildings;
 
         public override void Render()
         {

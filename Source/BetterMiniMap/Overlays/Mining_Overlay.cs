@@ -21,7 +21,7 @@ namespace BetterMiniMap.Overlays
 			}
         }
 
-		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Mining;
+		public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.mining;
 
         public void ExposeData() => this.ExposeData("overlayMining");
 	}

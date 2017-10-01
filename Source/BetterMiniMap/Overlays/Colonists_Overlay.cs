@@ -13,7 +13,7 @@ namespace BetterMiniMap.Overlays
 
         public Colonists_Overlay(bool visible = true) : base(visible) { }
 
-        public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Colonists;
+        public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.colonists;
 
 		public override IEnumerable<Pawn> GetPawns() => Find.VisibleMap.mapPawns.AllPawns.Where(p => p.Faction == Faction.OfPlayer);
 

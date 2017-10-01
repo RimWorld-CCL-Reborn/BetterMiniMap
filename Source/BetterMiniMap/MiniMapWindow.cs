@@ -7,9 +7,6 @@ using BetterMiniMap.Overlays;
 
 namespace BetterMiniMap
 {
-
-    // TODO: track weather the minimap is currently shown or not...
-
 	internal class MiniMapWindow : Window, IExposable
 	{
         private const float minimumSize = 150f;
@@ -29,31 +26,23 @@ namespace BetterMiniMap
         private readonly Robots_Overlay overlayRobots = new Robots_Overlay();
 
         private List<Overlay> overlays;
-        private List<Areas_Overlay> areaOverlays = new List<Areas_Overlay>();
+        private List<Area_Overlay> areaOverlays = new List<Area_Overlay>();
 
-        private Areas_Overlay selectedArea;
+        private Area_Overlay selectedArea;
 
-		private List<FloatMenuOption> areasOptions;
-
-		private FloatMenu areaMenu;
-
-        // TODO: better way to deal with default?
-		private Vector3 prevMousePos = new Vector3(-1f, -1f, -1f);
-
-        public bool resize = false; //TODO: resizable from base?
-
-		private int mapID = -1;
+        private int mapID = -1;
 
         private MiniMapControls controls;
 
-        // TODO: these values are in this.windowRect, do we really need another copy?
         private Vector2 position;
         private Vector2 size;
 
-        // TODO: are these needed?
-        private int resolutionX;
-        private int resolutionY;
+        private Vector3 prevMousePos; 
 
+        //private int resolutionX;
+        //private int resolutionY;
+
+        public bool resizing = false; // NOTE: could potential use resizable from base but sticking with this for now...
         private bool active = true; // NOTE: do not confuse with toggling (which is a temporary removal of the window)
 
         public MiniMapWindow()
@@ -78,22 +67,21 @@ namespace BetterMiniMap
 
             this.controls = new MiniMapControls(this);
 
-            this.resolutionX = UI.screenWidth;
-            this.resolutionY = UI.screenHeight;
+            //this.resolutionX = UI.screenWidth;
+            //this.resolutionY = UI.screenHeight;
         }
 
         public List<Overlay> Overlays { get => this.overlays; }
-        public List<Areas_Overlay> AreaOverlays { get => this.areaOverlays; }
-
-        public Vector2 Position { get => this.position; set => this.position = value; }
-        public Vector2 Size { get => this.size; set => this.size = value; }
-
+        public List<Area_Overlay> AreaOverlays { get => this.areaOverlays; }
+        public Vector2 Position { get => position; set => position = value; }
+        public Vector2 Size { get => size; set => size = value; }
         public bool Active { get => this.active; set => this.active = value; }
+        public Area_Overlay SelectedArea { get => selectedArea; set => selectedArea = value; }
 
         protected override float Margin { get => 0f; }
 
         // TODO: we can probably be smarter here...
-		public override void Notify_ResolutionChanged()
+        public override void Notify_ResolutionChanged()
 		{
 #if DEBUG
             Log.Message("Notify_ResolutionChanged");
@@ -104,10 +92,12 @@ namespace BetterMiniMap
 
 		public override void DoWindowContents(Rect inRect)
 		{
+            //TODO: lazy loading...
 			if (Find.VisibleMap.uniqueID != this.mapID)
 			{
 				this.mapID = Find.VisibleMap.uniqueID;
 				this.Refresh();
+                this.controls.UpdateAreaOverlays();
 			}
 
 			this.Update();
@@ -116,48 +106,46 @@ namespace BetterMiniMap
 				if (current.Visible)
 					GUI.DrawTexture(inRect, current.Texture);
 
-			if (this.selectedArea != null)
-				GUI.DrawTexture(inRect, this.selectedArea.Texture);
+			if (this.SelectedArea != null)
+				GUI.DrawTexture(inRect, this.SelectedArea.Texture);
 
-			if (!this.draggable && !this.resize && Mouse.IsOver(inRect) && Input.GetMouseButton(0))
+			if (!this.draggable && !this.resizing && Mouse.IsOver(inRect) && Input.GetMouseButton(0))
 			{
 				Vector2 mousePosition = Event.current.mousePosition;
 				Vector2 vector = new Vector2(mousePosition.x, inRect.height - mousePosition.y);
-                //TODO: what's going on here..
 				Vector2 vector2 = new Vector2((float)Find.VisibleMap.Size.x / inRect.width, (float)Find.VisibleMap.Size.z / inRect.height);
 				Find.CameraDriver.JumpToVisibleMapLoc(new Vector3(vector.x * vector2.x, 0f, vector.y * vector2.y));
 			}
 			else
 			{
-				if (this.resize && Mouse.IsOver(inRect) && Input.GetMouseButton(0))
-				{
-					if (this.prevMousePos.x == -1f)
-					{
-						this.prevMousePos = Input.mousePosition;
-					}
-					this.windowRect.width = this.windowRect.width + (this.prevMousePos.x - Input.mousePosition.x);
-					this.windowRect.height = this.windowRect.width;
-					this.prevMousePos = Input.mousePosition;
-				}
-                else if (this.resize && Mouse.IsOver(inRect) && !Input.GetMouseButton(0))
-                    this.prevMousePos = new Vector3(-1f, -1f, -1f);
-			}
-		}
+                if (this.resizing && Mouse.IsOver(inRect))
+                {
+                    // NOTE: look at Event.current.type == EventType.MouseDown ... unsure why this doesn't seem to work right now.
+                    if (Input.GetMouseButtonDown(0))
+                        this.prevMousePos = Input.mousePosition;
+                        //isResizing
+                    if (Input.GetMouseButton(0))
+                    {
+                        this.windowRect.height = this.windowRect.width = this.windowRect.width + (this.prevMousePos.x - Input.mousePosition.x);
+                        this.prevMousePos = Input.mousePosition;
+                    }
+                }
+            }
+        }
 
         public List<FloatMenuOption> GenerateOverlayMenuItems()
         {
             return new List<FloatMenuOption>()
             {
                 new FloatMenuOptionItem(this.overlayColonists, "BMM_ColonistsOverlayLabel".Translate()),
-                new FloatMenuOptionItem(this.overlayNoncolonist, "overlay_NonColonistPawnst".Translate()),
-                new FloatMenuOptionItem(this.overlayWild, "overlay_Wildlifet".Translate()),
+                new FloatMenuOptionItem(this.overlayNoncolonist, "BMM_NoncolonistOverlayLabel".Translate()),
+                new FloatMenuOptionItem(this.overlayWild, "BMM_WildlifeOverlayLabel".Translate()),
                 new FloatMenuOptionItem(this.overlayBuilding, "BMM_BuildingsOverlayLabel".Translate()),
-                new FloatMenuOptionItem(this.overlayPower, "overlay_PowerGridt".Translate()),
-                new FloatMenuOptionItem(this.overlayMining, "overlay_Miningt".Translate()),
-                new FloatMenuOptionItem(this.overlayFog, "overlay_Fogt".Translate()),
-                new FloatMenuOptionItem(this.overlayTerrain, "overlay_Terraint".Translate()),
-                new FloatMenuOptionItem(this.overlayShips, "overlay_Shipst".Translate()),
-                new FloatMenuOptionItem(this.overlayRobots, "overlay_Robotst".Translate())
+                new FloatMenuOptionItem(this.overlayPower, "BMM_PowerGridOverlayLabel".Translate()),
+                new FloatMenuOptionItem(this.overlayMining, "BMM_MiningOverlayLabel".Translate()),
+                new FloatMenuOptionItem(this.overlayTerrain, "BMM_TerrainOverlayLabel".Translate()),
+                new FloatMenuOptionItem(this.overlayShips, "BMM_ShipsOverlayLabel".Translate()),
+                new FloatMenuOptionItem(this.overlayRobots, "BMM_RobotsOverlayLabel".Translate())
             };
 
         }
@@ -173,16 +161,16 @@ namespace BetterMiniMap
 #if DEBUG
             Log.Message($"PostOpen: {this.position} {this.size}");
 #endif
-            this.windowRect = new Rect(this.position, this.size);
+            this.windowRect = new Rect(this.Position, this.Size);
             this.controls.SetLocality();
 		}
 
 		public override void ExtraOnGUI()
 		{
-            if (this.draggable || this.resize)
+            if (this.draggable || this.resizing)
                 this.controls.SetLocality();
             this.ClampWindowToScreen();
-			this.controls.DrawOverlayButtons();
+			this.controls.DoOverlayButtons();
 		}
 
         private void ClampWindowToScreen()
@@ -217,73 +205,6 @@ namespace BetterMiniMap
                 Find.WindowStack.TryRemove(this, true);
         }
 
-		public FloatMenu UpdateAreaOverlays()
-		{
-			bool remakeOptions = false;
-			if (Find.VisibleMap.areaManager.AllAreas.Count != this.AreaOverlays.Count)
-			{
-                foreach (Area area in Find.VisibleMap.areaManager.AllAreas)
-                {
-                    // TODO: this seems expensive...
-                    if (!this.AreaOverlays.Any((Areas_Overlay w) => w.area == area))
-                    {
-                        this.AreaOverlays.Add(new Areas_Overlay(area, false));
-                        remakeOptions = true;
-                    }
-                }
-
-				if (this.AreaOverlays.Any<Areas_Overlay>())
-				{
-					for (int i = this.AreaOverlays.Count - 1; i >= 0; i--)
-					{
-						Area area = this.AreaOverlays[i].area;
-						if (area == null || !Find.VisibleMap.areaManager.AllAreas.Contains(area))
-						{
-							this.AreaOverlays.RemoveAt(i);
-                            remakeOptions = true;
-						}
-					}
-				}
-
-				if (remakeOptions)
-					this.MakeAreaOptions();
-			}
-
-            return this.areaMenu;
-		}
-
-        private void MakeAreaOptions()
-        {
-            if (this.AreaOverlays?.Count > 0)
-            {
-                this.areasOptions = new List<FloatMenuOption>();
-
-                foreach (Areas_Overlay overlayArea in this.AreaOverlays)
-                {
-                    this.areasOptions.Add(new FloatMenuOptionItem(overlayArea.Visible, overlayArea.area.Label, delegate
-                    {
-                        overlayArea.Visible = !overlayArea.Visible;
-                        if (this.selectedArea == null)
-                            this.selectedArea = overlayArea;
-                        else if (this.selectedArea == overlayArea)
-                            this.selectedArea = null;
-                        else
-                        {
-                            this.selectedArea.Visible = false;
-                            this.selectedArea = overlayArea;
-                        }
-                        this.MakeAreaOptions();
-                    }));
-                }
-
-                this.areaMenu = new FloatMenu(this.areasOptions)
-                {
-                    closeOnEscapeKey = true,
-                    preventCameraMotion = false,
-                };
-            }
-        }
-
         // TODO: are both UpdateOverlays() and UpdateAll() really needed?
         public void Update()
         {
@@ -295,10 +216,10 @@ namespace BetterMiniMap
                         current.Update();
                 }
             }
-            if (this.selectedArea != null)
+            if (this.SelectedArea != null)
             {
-                if (this.selectedArea.ShouldUpdateOverlay)
-                    this.selectedArea.Update();
+                if (this.SelectedArea.ShouldUpdateOverlay)
+                    this.SelectedArea.Update();
             }
         }
 
@@ -309,8 +230,8 @@ namespace BetterMiniMap
                 foreach (Overlay current in this.overlays)
                     current.Update();
             }
-            if (this.selectedArea != null)
-                this.selectedArea.Update();
+            if (this.SelectedArea != null)
+                this.SelectedArea.Update();
         }
 
         // NOTE: this is kind of nasty...
@@ -319,11 +240,11 @@ namespace BetterMiniMap
 #if DEBUG
             Log.Message($"ExposeData: {Scribe.mode}");
 #endif
-            Scribe_Values.Look<Vector2>(ref this.position, "positionY"); // fix this
+            Scribe_Values.Look<Vector2>(ref this.position, "position"); // fix this
             Scribe_Values.Look<Vector2>(ref this.size, "size");
 
-            Scribe_Values.Look<int>(ref this.resolutionX, "resolutionX", UI.screenWidth, true);
-            Scribe_Values.Look<int>(ref this.resolutionY, "resolutionY", UI.screenHeight, true);
+            //Scribe_Values.Look<int>(ref this.resolutionX, "resolutionX", UI.screenWidth, true);
+            //Scribe_Values.Look<int>(ref this.resolutionY, "resolutionY", UI.screenHeight, true);
 
             Scribe_Values.Look<bool>(ref this.active, "active", true);
 
@@ -331,14 +252,35 @@ namespace BetterMiniMap
                 if (overlay is IExposable)
                     ((IExposable)overlay).ExposeData();
 
-            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            switch(Scribe.mode)
             {
-                controls.GenerateOverlayMenu();
-                // NOTE: there should be a cleaner way to do this...
-                // Replace default window
-                Find.WindowStack.Add(this); 
-                if (!this.active)
-                    Find.WindowStack.TryRemove(this, true);
+                case LoadSaveMode.LoadingVars: this.LoadingVars(); break;
+                case LoadSaveMode.PostLoadInit: this.PostLoadInit(); break;
+                case LoadSaveMode.Saving: this.Saving(); break;
+            }
+        }
+
+        private void LoadingVars()
+        {
+            Scribe_Values.Look<string>(ref MiniMapControls.selectedAreaLabel, "selectedAreaLabel");
+        }
+
+        private void PostLoadInit()
+        {
+            this.controls.GenerateOverlayMenu();
+            // NOTE: there should be a cleaner way to do this...
+            // Replace default window
+            Find.WindowStack.Add(this);
+            if (!this.active)
+                Find.WindowStack.TryRemove(this, true);
+        }
+
+        private void Saving()
+        {
+            if (selectedArea != null)
+            {
+                string selectedAreaLabel = selectedArea.area.Label;
+                Scribe_Values.Look<string>(ref selectedAreaLabel, "selectedAreaLabel");
             }
         }
 

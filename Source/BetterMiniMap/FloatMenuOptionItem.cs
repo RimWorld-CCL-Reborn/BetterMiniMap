@@ -34,6 +34,12 @@ namespace BetterMiniMap
             this.action = this.FloatMenuAction(overlay);
         }
 
+        public FloatMenuOptionItem(Overlay overlay) : base("", null)
+        {
+            this.visible = overlay.Visible;
+            this.action = this.FloatMenuAction(overlay);
+        }
+
         private Action FloatMenuAction(Overlay overlay) => () => this.visible = overlay.Visible = !overlay.Visible;
 
 		public override bool DoGUI(Rect rect, bool colonistOrdering)

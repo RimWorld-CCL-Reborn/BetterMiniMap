@@ -19,7 +19,7 @@ namespace BetterMiniMap.Overlays
 			}
         }
 
-		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Fog;
+		public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.fog;
 
 	}
 }

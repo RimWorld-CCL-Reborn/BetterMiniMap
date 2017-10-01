@@ -12,7 +12,7 @@ namespace BetterMiniMap.Overlays
 
         public Ships_Overlay(bool visible = true) : base(visible) { }
 
-		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Ships;
+		public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.ships;
 
 		public override IEnumerable<Thing> GetThings()
 		{

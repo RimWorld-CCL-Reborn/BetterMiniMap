@@ -8,7 +8,7 @@ namespace BetterMiniMap.Overlays
 	{
         public Terrain_Overlay(bool visible = true) : base(visible) { }
 
-		public override int GetUpdateInterval() => BetterMiniMapMod.settings.overlay_Terrain;
+		public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.terrain;
 
         public void Update() => base.Update(false);
 
