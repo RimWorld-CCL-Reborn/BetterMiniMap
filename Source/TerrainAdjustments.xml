@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <!-- Terrain colors for water terrains -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>/TerrainDefs/TerrainDef[defName = "WaterMovingDeep"]</xpath>
+    <value>
+      <color>(0,160,224)</color>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>/TerrainDefs/TerrainDef[defName = "WaterOceanDeep"]</xpath>
+    <value>
+      <color>(17,37,110)</color>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>/TerrainDefs/TerrainDef[defName = "WaterDeep"]</xpath>
+    <value>
+      <color>(4,119,186)</color>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>/TerrainDefs/TerrainDef[defName = "WaterMovingShallow"]</xpath>
+    <value>
+      <color>(163,206,231)</color>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>/TerrainDefs/TerrainDef[defName = "WaterOceanShallow"]</xpath>
+    <value>
+      <color>(85,195,220)</color>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>/TerrainDefs/TerrainDef[defName = "WaterShallow"]</xpath>
+    <value>
+      <color>(115,189,248)</color>
+    </value>
+  </Operation>
+
+  <!-- Terrain colors for road terrains -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>/TerrainDefs/TerrainDef[defName = "BrokenAsphalt"]</xpath>
+    <value>
+      <color>(0,255,255)</color>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>/TerrainDefs/TerrainDef[defName = "PackedDirt"]</xpath>
+    <value>
+      <color>(80,80,80)</color>
+    </value>
+  </Operation>
+
+</Patch>

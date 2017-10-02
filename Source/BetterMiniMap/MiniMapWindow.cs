@@ -47,9 +47,10 @@ namespace BetterMiniMap
 
         public MiniMapWindow()
         {
+            //this.layer = WindowLayer.SubSuper;
             this.closeOnEscapeKey = false;
             this.preventCameraMotion = false;
-            this.GenerateOverlays();
+            this.GenerateOverlays(); // NOTE: needed for controls to generate properly
             this.controls = new MiniMapControls(this);
 
             //this.resolutionX = UI.screenWidth;
@@ -159,6 +160,7 @@ namespace BetterMiniMap
         // TODO: is this necessary or helpful? What would be best to go here?
 		public override void PostOpen()
 		{
+            base.PostOpen();
             if (this.Size.x == 0)
             {
                 this.Position = new Vector2(UI.screenWidth - defaultSize - defaultMargin, defaultMargin);
@@ -169,6 +171,7 @@ namespace BetterMiniMap
 #endif
             this.windowRect = new Rect(this.Position, this.Size);
             this.controls.SetLocality();
+            Find.WindowStack.Add(this.controls);
 		}
 
 		public override void ExtraOnGUI()
@@ -176,7 +179,7 @@ namespace BetterMiniMap
             if (this.draggable || this.resizing)
                 this.controls.SetLocality();
             this.ClampWindowToScreen();
-			this.controls.DoOverlayButtons();
+			//this.controls.DoOverlayButtons();
 		}
 
         private void ClampWindowToScreen()
