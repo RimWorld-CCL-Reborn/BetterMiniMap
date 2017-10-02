@@ -51,7 +51,10 @@ namespace BetterMiniMap
             this.closeOnEscapeKey = false;
             this.preventCameraMotion = false;
             this.GenerateOverlays(); // NOTE: needed for controls to generate properly
+>>>>>>> master
             this.controls = new MiniMapControls(this);
+
+            this.GenerateOverlays();
 
             //this.resolutionX = UI.screenWidth;
             //this.resolutionY = UI.screenHeight;
@@ -94,6 +97,8 @@ namespace BetterMiniMap
                 this.overlayFog,
                 this.overlayView
             };
+
+            controls.GenerateOverlayMenu();
         }
 
         public override void DoWindowContents(Rect inRect)

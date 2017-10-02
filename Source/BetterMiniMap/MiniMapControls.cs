@@ -38,8 +38,6 @@ namespace BetterMiniMap
             this.dragButtonRect = new Rect(0, 0, buttonWidth, buttonWidth);
             this.homeButtonRect = new Rect(0, 0, buttonWidth, buttonWidth);
             this.resizeButtonRect = new Rect(0, 0, buttonWidth, buttonWidth);
-
-            this.GenerateOverlayMenu();
         }
 
         public void GenerateOverlayMenu()
