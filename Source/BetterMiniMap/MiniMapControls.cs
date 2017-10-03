@@ -10,7 +10,7 @@ namespace BetterMiniMap
     internal class MiniMapControls : Window
     {
 		public const float buttonWidth = 20f;
-		private const float buttonMargin = 7f;
+		private const float buttonMargin = 6f;
 
         private Rect configButtonRect;
         private Rect dragButtonRect;
@@ -33,11 +33,19 @@ namespace BetterMiniMap
 
             this.closeOnEscapeKey = false;
             this.preventCameraMotion = false;
+            this.layer = WindowLayer.GameUI;
 
-            this.configButtonRect = new Rect(0, 0, buttonWidth, buttonWidth);
-            this.dragButtonRect = new Rect(0, 0, buttonWidth, buttonWidth);
-            this.homeButtonRect = new Rect(0, 0, buttonWidth, buttonWidth);
-            this.resizeButtonRect = new Rect(0, 0, buttonWidth, buttonWidth);
+            float xPos = buttonMargin;
+            this.homeButtonRect = new Rect(buttonMargin, buttonMargin, buttonWidth, buttonWidth);
+            this.configButtonRect = new Rect(0 , buttonMargin, buttonWidth, buttonWidth);
+            this.resizeButtonRect = new Rect(0, buttonMargin, buttonWidth, buttonWidth);
+            this.dragButtonRect = new Rect(0, buttonMargin, buttonWidth, buttonWidth);
+
+            float xDiff = buttonWidth + 2f * buttonMargin;
+
+            this.configButtonRect.x = xPos += xDiff;
+            this.resizeButtonRect.x = xPos += xDiff;
+            this.dragButtonRect.x = xPos += xDiff;
         }
 
         public void GenerateOverlayMenu()
@@ -53,20 +61,11 @@ namespace BetterMiniMap
 
         public void SetLocality()
         {
-            float doubleMargin = 2f * buttonMargin;
-            this.windowRect = new Rect(miniMap.windowRect.x, miniMap.windowRect.y + miniMap.windowRect.height, miniMap.windowRect.width, buttonWidth + doubleMargin);
-
-            float yPos = buttonMargin;
-            this.configButtonRect.y = this.dragButtonRect.y = this.homeButtonRect.y = this.resizeButtonRect.y = yPos;
-
-            float xPos = buttonMargin;
-            float xDiff = buttonWidth + doubleMargin;
-
-            this.homeButtonRect.x = xPos;
-            this.configButtonRect.x = xPos += xDiff;
-            this.resizeButtonRect.x = xPos += xDiff;
-            this.dragButtonRect.x = xPos += xDiff;
+            float width = this.dragButtonRect.x + buttonWidth + buttonMargin;
+            this.windowRect = new Rect(miniMap.windowRect.x + miniMap.windowRect.width - width, miniMap.windowRect.y + miniMap.windowRect.height, width, this.DefaultHeight);
         }
+
+        public float DefaultHeight => buttonWidth + 2f * buttonMargin;
 
         public override void PostOpen()
         {

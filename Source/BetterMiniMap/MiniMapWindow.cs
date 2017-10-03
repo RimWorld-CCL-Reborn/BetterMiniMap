@@ -4,11 +4,13 @@ using UnityEngine;
 using Verse;
 
 using BetterMiniMap.Overlays;
+using RimWorld;
 
 namespace BetterMiniMap
 {
 	internal class MiniMapWindow : Window, IExposable
 	{
+
         private const float minimumSize = 150f;
         private const float defaultSize = 300f;
         private const int defaultMargin = 8;
@@ -42,12 +44,17 @@ namespace BetterMiniMap
         public bool resizing = false; // NOTE: could potential use resizable from base but sticking with this for now...
         private bool active = true; // NOTE: do not confuse with toggling (which is a temporary removal of the window)
 
+        private float clampHeight;
+
         public MiniMapWindow()
         {
             this.closeOnEscapeKey = false;
             this.preventCameraMotion = false;
+            this.layer = WindowLayer.GameUI;
+
             this.controls = new MiniMapControls(this);
             this.GenerateOverlays();
+            this.clampHeight = UI.screenHeight - MainButtonDef.ButtonHeight - this.controls.DefaultHeight; 
         }
 
         public List<Overlay> Overlays { get => this.overlays; }
@@ -91,6 +98,14 @@ namespace BetterMiniMap
             controls.GenerateOverlayMenu();
         }
 
+        public override void Notify_ResolutionChanged()
+        {
+            // TODO: utilize this method
+            //this.SetInitialSizeAndPosition();
+            this.clampHeight = UI.screenHeight - MainButtonDef.ButtonHeight - this.controls.DefaultHeight; 
+        }
+
+
         public override void DoWindowContents(Rect inRect)
 		{
             // NOTE: lazy load but do not see a good way to do redraw otherwise (yet)
@@ -127,7 +142,9 @@ namespace BetterMiniMap
                         //isResizing
                     if (Input.GetMouseButton(0))
                     {
-                        this.windowRect.height = this.windowRect.width = this.windowRect.width + (this.prevMousePos.x - Input.mousePosition.x);
+                        float delta = this.prevMousePos.x - Input.mousePosition.x;
+                        this.windowRect.x -= delta;
+                        this.windowRect.height = this.windowRect.width = this.windowRect.width + delta;
                         this.prevMousePos = Input.mousePosition;
                     }
                 }
@@ -182,14 +199,14 @@ namespace BetterMiniMap
             if (this.windowRect.xMax > UI.screenWidth)
                 this.windowRect.x = UI.screenWidth - this.windowRect.width;
 
-            if (this.windowRect.yMax > UI.screenHeight - MiniMapControls.buttonWidth - 1)
-                this.windowRect.y = UI.screenHeight - this.windowRect.height - MiniMapControls.buttonWidth - 1;
+            if (this.windowRect.yMax > this.clampHeight)
+                this.windowRect.y = this.clampHeight - this.windowRect.height;
 
             if (this.windowRect.xMin < 0f)
-                this.windowRect.x = this.windowRect.x - this.windowRect.xMin;
+                this.windowRect.x = 0f; 
 
             if (this.windowRect.yMin < 0f)
-                this.windowRect.y = this.windowRect.y - this.windowRect.yMin;
+                this.windowRect.y = 0f;
 
             this.Position = this.windowRect.position;
             this.Size = this.windowRect.size;
