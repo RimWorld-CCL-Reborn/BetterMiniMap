@@ -39,25 +39,15 @@ namespace BetterMiniMap
 
         private Vector3 prevMousePos; 
 
-        //private int resolutionX;
-        //private int resolutionY;
-
         public bool resizing = false; // NOTE: could potential use resizable from base but sticking with this for now...
         private bool active = true; // NOTE: do not confuse with toggling (which is a temporary removal of the window)
 
         public MiniMapWindow()
         {
-            //this.layer = WindowLayer.SubSuper;
             this.closeOnEscapeKey = false;
             this.preventCameraMotion = false;
-            this.GenerateOverlays(); // NOTE: needed for controls to generate properly
->>>>>>> master
             this.controls = new MiniMapControls(this);
-
             this.GenerateOverlays();
-
-            //this.resolutionX = UI.screenWidth;
-            //this.resolutionY = UI.screenHeight;
         }
 
         public List<Overlay> Overlays { get => this.overlays; }
@@ -109,7 +99,6 @@ namespace BetterMiniMap
                 this.mapID = Find.VisibleMap.uniqueID;
                 this.GenerateOverlays();
                 this.Refresh();
-                this.controls.UpdateAreaOverlays();
             }
 
             this.Update();
@@ -175,20 +164,18 @@ namespace BetterMiniMap
             Log.Message($"PostOpen: {this.position} {this.size}");
 #endif
             this.windowRect = new Rect(this.Position, this.Size);
-            this.controls.SetLocality();
             Find.WindowStack.Add(this.controls);
 		}
 
-		public override void ExtraOnGUI()
-		{
-            if (this.draggable || this.resizing)
-                this.controls.SetLocality();
-            this.ClampWindowToScreen();
-			//this.controls.DoOverlayButtons();
-		}
-
-        private void ClampWindowToScreen()
+        public override void PreClose()
         {
+            base.PreClose();
+            Find.WindowStack.TryRemove(this.controls, false);
+        }
+
+        public override void ExtraOnGUI() 
+        {
+            // ClampWindowToScreen
             if (this.windowRect.width < minimumSize)
                 this.windowRect.height = this.windowRect.width = minimumSize;
 
@@ -256,9 +243,6 @@ namespace BetterMiniMap
 #endif
             Scribe_Values.Look<Vector2>(ref this.position, "position"); // fix this
             Scribe_Values.Look<Vector2>(ref this.size, "size");
-
-            //Scribe_Values.Look<int>(ref this.resolutionX, "resolutionX", UI.screenWidth, true);
-            //Scribe_Values.Look<int>(ref this.resolutionY, "resolutionY", UI.screenHeight, true);
 
             Scribe_Values.Look<bool>(ref this.active, "active", true);
 

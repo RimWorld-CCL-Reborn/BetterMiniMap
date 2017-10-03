@@ -10,7 +10,7 @@ namespace BetterMiniMap
     internal class MiniMapControls : Window
     {
 		public const float buttonWidth = 20f;
-		private const float buttonMargin = 15f;
+		private const float buttonMargin = 7f;
 
         private Rect configButtonRect;
         private Rect dragButtonRect;
@@ -53,17 +53,25 @@ namespace BetterMiniMap
 
         public void SetLocality()
         {
-            float yPos = miniMap.windowRect.y + miniMap.windowRect.height + 1f; // WHY: +1?
+            float doubleMargin = 2f * buttonMargin;
+            this.windowRect = new Rect(miniMap.windowRect.x, miniMap.windowRect.y + miniMap.windowRect.height, miniMap.windowRect.width, buttonWidth + doubleMargin);
+
+            float yPos = buttonMargin;
             this.configButtonRect.y = this.dragButtonRect.y = this.homeButtonRect.y = this.resizeButtonRect.y = yPos;
 
-            float xDiff = buttonWidth + buttonMargin;
-            float xPos = miniMap.windowRect.x + miniMap.windowRect.width - xDiff;
-            this.configButtonRect.x = xPos;
-            this.dragButtonRect.x = xPos -= xDiff;
-            this.homeButtonRect.x = xPos -= xDiff;
-            this.resizeButtonRect.x = xPos -= xDiff;
+            float xPos = buttonMargin;
+            float xDiff = buttonWidth + doubleMargin;
 
-            this.windowRect = new Rect(miniMap.windowRect.x, miniMap.windowRect.y + miniMap.windowRect.height, miniMap.windowRect.width, buttonWidth + 10f);
+            this.homeButtonRect.x = xPos;
+            this.configButtonRect.x = xPos += xDiff;
+            this.resizeButtonRect.x = xPos += xDiff;
+            this.dragButtonRect.x = xPos += xDiff;
+        }
+
+        public override void PostOpen()
+        {
+            base.PostOpen();
+            this.SetLocality();
         }
 
         public override void DoWindowContents(Rect inRect)
@@ -71,73 +79,45 @@ namespace BetterMiniMap
             if (miniMap.draggable || miniMap.resizing)
                 this.SetLocality();
 
-            Listing_Standard listing_Standard = new Listing_Standard() { ColumnWidth = inRect.width / 4f };
-            listing_Standard.Begin(inRect);
-
-            if (listing_Standard.ButtonImage(MiniMapTextures.config, buttonWidth, buttonWidth))
-            {
-                if (Event.current.button == 1) // right click
-                    Find.WindowStack.Add(this.overlayMenu);
-            }
-
-            listing_Standard.NewColumn();
-
-            if (listing_Standard.ButtonImage(miniMap.draggable ? MiniMapTextures.dragA : MiniMapTextures.dragD, buttonWidth, buttonWidth))
-            {
-                if (Event.current.button == 1) // right click
-                {
-                    miniMap.draggable = !miniMap.draggable;
-                    if (!miniMap.draggable)
-                        miniMap.Position = miniMap.windowRect.position;
-                    miniMap.resizing = false;
-                }
-            }
-
-            listing_Standard.End();
-        }
-
-        public override void PostOpen()
-        {
-            base.PostOpen();
-            this.windowRect = new Rect(miniMap.windowRect.x, miniMap.windowRect.y + miniMap.windowRect.height, miniMap.windowRect.width, buttonWidth + 10f);
-        }
-
-        public void DoOverlayButtons()
-        {
-            if (miniMap.draggable || miniMap.resizing)
-                this.SetLocality();
-
-            if (Widgets.ButtonImage(this.configButtonRect, MiniMapTextures.config))
-            {
-                if (Event.current.button == 1) // right click
-                    Find.WindowStack.Add(this.overlayMenu);
-            }
-
-            if (Widgets.ButtonImage(this.dragButtonRect, miniMap.draggable ? MiniMapTextures.dragA : MiniMapTextures.dragD))
-            {
-                if (Event.current.button == 1) // right click
-                {
-                    miniMap.draggable = !miniMap.draggable;
-                    if (!miniMap.draggable)
-                        miniMap.Position = miniMap.windowRect.position;
-                    miniMap.resizing = false;
-                }
-            }
-
+            Widgets.DrawHighlightIfMouseover(this.homeButtonRect);
+            TooltipHandler.TipRegion(this.homeButtonRect, "BMM_HomeButtonTooltip".Translate());
             if (Widgets.ButtonImage(this.homeButtonRect, MiniMapTextures.homeA))
             {
-                if (Event.current.button == 1) // right click
+                if (Event.current.button == 0 || Event.current.button == 1) // left/right click
                     Find.WindowStack.Add(this.UpdateAreaOverlays());
             }
 
+            Widgets.DrawHighlightIfMouseover(this.configButtonRect);
+            TooltipHandler.TipRegion(this.configButtonRect, "BMM_ConfigButtonTooltip".Translate());
+            if (Widgets.ButtonImage(this.configButtonRect, MiniMapTextures.config))
+            {
+                if (Event.current.button == 0 || Event.current.button == 1) // left/right click
+                    Find.WindowStack.Add(this.overlayMenu);
+            }
+
+            Widgets.DrawHighlightIfMouseover(this.resizeButtonRect);
+            TooltipHandler.TipRegion(this.resizeButtonRect, "BMM_ResizeButtonTooltip".Translate());
             if (Widgets.ButtonImage(this.resizeButtonRect, miniMap.resizing ? MiniMapTextures.resizeA : MiniMapTextures.resizeD))
             {
-                if (Event.current.button == 1) // right click
+                if (Event.current.button == 0 || Event.current.button == 1) // left/right click
                 {
                     miniMap.resizing = !miniMap.resizing;
-                    if (!miniMap.resizing)
+                    if (!miniMap.resizing) // TODO: is this needed?
                         miniMap.Size = miniMap.windowRect.size;
                     miniMap.draggable = false;
+                }
+            }
+
+            Widgets.DrawHighlightIfMouseover(this.dragButtonRect);
+            TooltipHandler.TipRegion(this.dragButtonRect, "BMM_DragButtonTooltip".Translate());
+            if (Widgets.ButtonImage(this.dragButtonRect, miniMap.draggable ? MiniMapTextures.dragA : MiniMapTextures.dragD))
+            {
+                if (Event.current.button == 0 || Event.current.button == 1) // left/right click
+                {
+                    miniMap.draggable = !miniMap.draggable;
+                    if (!miniMap.draggable) // TODO: is this needed?
+                        miniMap.Position = miniMap.windowRect.position;
+                    miniMap.resizing = false;
                 }
             }
         }

@@ -93,8 +93,9 @@ namespace BetterMiniMap
             base.GameComponentOnGUI();
             if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.F8)
             {
-                miniMap.Toggle(Find.WindowStack.Windows.IndexOf(miniMap) == -1); // TODO: this is a bit nasty...
-                miniMap.Active = false;
+                bool add = Find.WindowStack.Windows.IndexOf(miniMap) == -1;
+                miniMap.Toggle(add); // TODO: this is a bit nasty...
+                miniMap.Active = add;
             }
         }
 
