@@ -12,8 +12,10 @@ Provides a minimap for RimWorld using the overlays provided from Community Core 
 
 ## Translations
 - English
+- Chinese Simplified (by nizhuan-jjr)
 - Portuguese Brazilian (partial)
 - Russian (by Garr Incorporated)
+
 
 ## Acknowledgements
 Thanks to Xen for helping with terrain color selection.
