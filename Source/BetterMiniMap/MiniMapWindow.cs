@@ -10,7 +10,6 @@ namespace BetterMiniMap
 {
 	internal class MiniMapWindow : Window, IExposable
 	{
-
         private const float minimumSize = 150f;
         private const float defaultSize = 300f;
         private const int defaultMargin = 8;

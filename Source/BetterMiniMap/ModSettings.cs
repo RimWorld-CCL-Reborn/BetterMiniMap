@@ -12,12 +12,12 @@ namespace BetterMiniMap
             public int colonists = 5;
             public int noncolonists = 5;
             public int robots = 5;
-            public int ships = 5; // TODO: this seems too often?
-            public int powerGrid = 50;
+            public int ships = 60;
+            public int powerGrid = 60;
             public int wildlife = 80;
-            public int buildings = 240;
-            public int mining = 240;
-            public int areas = 240;
+            public int buildings = 250;
+            public int mining = 250;
+            public int areas = 250;
             public int terrain = 2500;
             public int fog = 2500;
         }
