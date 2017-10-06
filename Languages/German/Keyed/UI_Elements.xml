@@ -3,7 +3,7 @@
 
     <BMM_SettingsCategoryLabel>BetterMiniMap</BMM_SettingsCategoryLabel>
 
-    <BMM_TimeUpdateLabel>Updates from X to X Frames</BMM_TimeUpdateLabel>
+    <BMM_TimeUpdateLabel>Aktualisierungsrate (Aktualisierung der Anzeige alle X Frames)</BMM_TimeUpdateLabel>
 
     <BMM_AreasOverlayLabel>Bereich</BMM_AreasOverlayLabel>
     <BMM_BuildingsOverlayLabel>Bauwerke</BMM_BuildingsOverlayLabel>
