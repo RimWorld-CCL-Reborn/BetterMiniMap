@@ -3,7 +3,7 @@
 
     <BMM_SettingsCategoryLabel>BetterMiniMap</BMM_SettingsCategoryLabel>
 
-    <BMM_TimeUpdateLabel>Обновляет от X до X Кадров</BMM_TimeUpdateLabel>
+    <BMM_TimeUpdateLabel>Частота обновления (оверлей обновляется каждые X кадров)</BMM_TimeUpdateLabel>
 
     <BMM_AreasOverlayLabel>Зоны</BMM_AreasOverlayLabel>
     <BMM_BuildingsOverlayLabel>Постройки</BMM_BuildingsOverlayLabel>

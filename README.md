@@ -5,15 +5,18 @@ Provides a minimap for RimWorld using the overlays provided from Community Core 
 ## Features
 - Overlays for the following: Areas, Buildings, Colonists, Mining, Noncolonists, Power Grid, Ships, Terrain, and Wildlife
 - Forced overlays exist for viewpoint and fog.
-- F8 can show/hide the the minimap
+- F8 can show/hide the minimap
+- F9 can show/hide the minimap controls
+- Mouse wheel over minimap for zoom
 - Minimap will hide when in world tab
 - Minimap will hide when in Fluffy's Relationship Tab
 - Minimap will hide when in ResearchPal
 
 ## Translations
 - English
-- Chinese Simplified (by nizhuan-jjr)
+- Chinese Simplified (by Nizhuan-jjr)
 - Japanese (by Proxyer)
+- Korean (by Totobrother)
 - German (by Nostra)
 - Portuguese Brazilian (partial)
 - Russian (by Garr Incorporated)
