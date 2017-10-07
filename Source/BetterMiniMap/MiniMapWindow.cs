@@ -285,7 +285,7 @@ namespace BetterMiniMap
 
         public void ToggleControls()
         {
-            if (Find.WindowStack.Windows.IndexOf(this) == -1)
+            if (Find.WindowStack.Windows.IndexOf(this.controls) == -1)
                 Find.WindowStack.Add(this.controls);
             else
                 Find.WindowStack.TryRemove(this.controls, true);
