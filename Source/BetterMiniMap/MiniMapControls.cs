@@ -46,6 +46,8 @@ namespace BetterMiniMap
             this.configButtonRect.x = xPos += xDiff;
             this.resizeButtonRect.x = xPos += xDiff;
             this.dragButtonRect.x = xPos += xDiff;
+
+            this.SetLocality();
         }
 
         public void GenerateOverlayMenu()
