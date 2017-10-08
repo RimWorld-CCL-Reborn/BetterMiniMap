@@ -34,7 +34,7 @@ namespace BetterMiniMap.Overlays
             {
                 if (this.texture == null)
                 {
-                    this.texture = new Texture2D(Find.VisibleMap.Size.x, Find.VisibleMap.Size.z);
+                    this.texture = new Texture2D(Find.VisibleMap.Size.x, Find.VisibleMap.Size.z, TextureFormat.RGBA32, false);
                     this.texture.SetPixels(Utilities.GetClearPixelArray);
                     this.texture.Apply();
                 }

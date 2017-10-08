@@ -91,11 +91,16 @@ namespace BetterMiniMap
         public override void GameComponentOnGUI()
         {
             base.GameComponentOnGUI();
-            if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.F8)
+            if (Event.current.type == EventType.KeyDown)
             {
-                bool add = Find.WindowStack.Windows.IndexOf(miniMap) == -1;
-                miniMap.Toggle(add); // TODO: this is a bit nasty...
-                miniMap.Active = add;
+                if (Event.current.keyCode == KeyCode.F8)
+                {
+                    bool add = Find.WindowStack.Windows.IndexOf(miniMap) == -1;
+                    miniMap.Toggle(add); // TODO: this is a bit nasty...
+                    miniMap.Active = add;
+                }
+                if (Event.current.keyCode == KeyCode.F9)
+                    miniMap.ToggleControls();
             }
         }
 

@@ -13,6 +13,7 @@ namespace BetterMiniMap
         private const float minimumSize = 150f;
         private const float defaultSize = 300f;
         private const int defaultMargin = 8;
+        private const float scrollWheelZoomRate = 0.015f;
 
         private Colonists_Overlay overlayColonists;
         private Fog_Overlay overlayFog;
@@ -45,6 +46,8 @@ namespace BetterMiniMap
 
         private float clampHeight;
 
+        private Rect coords;
+
         public MiniMapWindow()
         {
             this.closeOnEscapeKey = false;
@@ -53,7 +56,9 @@ namespace BetterMiniMap
 
             this.controls = new MiniMapControls(this);
             this.GenerateOverlays();
-            this.clampHeight = UI.screenHeight - MainButtonDef.ButtonHeight - this.controls.DefaultHeight; 
+            this.clampHeight = UI.screenHeight - MainButtonDef.ButtonHeight - this.controls.DefaultHeight;
+
+            this.coords = new Rect(0f, 0f, 1f, 1f);
         }
 
         public List<Overlay> Overlays { get => this.overlays; }
@@ -119,26 +124,21 @@ namespace BetterMiniMap
 
 			foreach (Overlay current in this.Overlays)
 				if (current.Visible)
-					GUI.DrawTexture(inRect, current.Texture);
+					GUI.DrawTextureWithTexCoords(inRect, current.Texture, this.coords);
 
 			if (this.SelectedArea != null)
-				GUI.DrawTexture(inRect, this.SelectedArea.Texture);
+				GUI.DrawTextureWithTexCoords(inRect, this.SelectedArea.Texture, this.coords);
 
-			if (!this.draggable && !this.resizing && Mouse.IsOver(inRect) && Input.GetMouseButton(0))
-			{
-				Vector2 mousePosition = Event.current.mousePosition;
-				Vector2 vector = new Vector2(mousePosition.x, inRect.height - mousePosition.y);
-				Vector2 vector2 = new Vector2((float)Find.VisibleMap.Size.x / inRect.width, (float)Find.VisibleMap.Size.z / inRect.height);
-				Find.CameraDriver.JumpToVisibleMapLoc(new Vector3(vector.x * vector2.x, 0f, vector.y * vector2.y));
-			}
-			else
-			{
-                if (this.resizing && Mouse.IsOver(inRect))
+            if (Mouse.IsOver(inRect))
+            {
+                this.preventCameraMotion = true;
+                if (this.resizing)
                 {
+                    //NOTE: why no use Input.mouseScrollDelta?
                     // NOTE: look at Event.current.type == EventType.MouseDown ... unsure why this doesn't seem to work right now.
                     if (Input.GetMouseButtonDown(0))
                         this.prevMousePos = Input.mousePosition;
-                        //isResizing
+                    //isResizing
                     if (Input.GetMouseButton(0))
                     {
                         float delta = this.prevMousePos.x - Input.mousePosition.x;
@@ -147,7 +147,68 @@ namespace BetterMiniMap
                         this.prevMousePos = Input.mousePosition;
                     }
                 }
+                else if (!this.draggable)
+                {
+                    if (Input.GetMouseButton(0))
+                    {
+                        Vector2 mousePosition = Event.current.mousePosition;
+                        Vector2 vector = new Vector2(mousePosition.x, inRect.height - mousePosition.y);
+                        Vector2 vector2 = new Vector2((float)Find.VisibleMap.Size.x / inRect.width, (float)Find.VisibleMap.Size.z / inRect.height);
+                        Find.CameraDriver.JumpToVisibleMapLoc(new Vector3(vector.x * vector2.x, 0f, vector.y * vector2.y));
+                    }
+                    if (Event.current.type == EventType.ScrollWheel)
+                    {
+                        // TODO: clean this section up
+                        Vector2 mousePosition = Event.current.mousePosition;
+                        Vector2 vector = new Vector2(mousePosition.x, inRect.height - mousePosition.y);
+
+                        float rectDelta = 0f;
+                        rectDelta += Event.current.delta.y * scrollWheelZoomRate;
+                        this.coords.width += rectDelta;
+
+                        if (this.coords.width < 0.1f)
+                            this.coords.width = 0.1f;
+                        if (this.coords.width > 1f)
+                            this.coords.width = 1f;
+                        this.coords.height = this.coords.width;
+
+                        if (this.coords.width < 1f)
+                        {
+                            if (rectDelta < 0) // zooming in
+                            {
+                                this.coords.x -= rectDelta * (vector.x / this.windowRect.width);
+                                this.coords.y -= rectDelta * (vector.y / this.windowRect.height);
+                            }
+                            else // zooming out
+                            {
+                                // TODO: what to call this?
+                                float num = this.coords.x + this.coords.width;
+                                if (num > 1)
+                                    this.coords.x -= rectDelta;
+                                else
+                                    this.coords.x -= rectDelta * (num * 0.5f);
+                                if (this.coords.x < 0)
+                                    this.coords.x = 0;
+
+                                num = this.coords.y + this.coords.height;
+                                if (num > 1)
+                                    this.coords.y -= rectDelta;
+                                else
+                                    this.coords.y -= rectDelta * (num * 0.5f);
+                                if (this.coords.y < 0)
+                                    this.coords.y = 0;
+                            }
+                        }
+                        else
+                        {
+                            this.coords.x = this.coords.y = 0f;
+                        }
+                    }
+                }
             }
+            else
+                this.preventCameraMotion = false;
+
         }
 
         public List<FloatMenuOption> GenerateOverlayMenuItems()
@@ -222,6 +283,14 @@ namespace BetterMiniMap
                 Find.WindowStack.TryRemove(this, true);
         }
 
+        public void ToggleControls()
+        {
+            if (Find.WindowStack.Windows.IndexOf(this.controls) == -1)
+                Find.WindowStack.Add(this.controls);
+            else
+                Find.WindowStack.TryRemove(this.controls, true);
+        }
+
         // TODO: are both UpdateOverlays() and UpdateAll() really needed?
         public void Update()
         {
@@ -278,6 +347,7 @@ namespace BetterMiniMap
         {
             Scribe_Values.Look<string>(ref MiniMapControls.selectedAreaLabel, "selectedAreaLabel");
         }
+
 
         private void PostLoadInit()
         {
