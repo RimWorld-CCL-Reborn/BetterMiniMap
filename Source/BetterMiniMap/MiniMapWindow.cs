@@ -109,7 +109,6 @@ namespace BetterMiniMap
             this.clampHeight = UI.screenHeight - MainButtonDef.ButtonHeight - this.controls.DefaultHeight; 
         }
 
-
         public override void DoWindowContents(Rect inRect)
 		{
             // NOTE: lazy load but do not see a good way to do redraw otherwise (yet)
@@ -326,14 +325,18 @@ namespace BetterMiniMap
 #if DEBUG
             Log.Message($"ExposeData: {Scribe.mode}");
 #endif
-            Scribe_Values.Look<Vector2>(ref this.position, "position"); // fix this
+            Scribe_Values.Look<Vector2>(ref this.position, "position");
             Scribe_Values.Look<Vector2>(ref this.size, "size");
 
             Scribe_Values.Look<bool>(ref this.active, "active", true);
 
+            Scribe_Deep.Look<Rect>(ref this.coords, "coords"); // save zoom
+
             foreach (Overlay overlay in this.Overlays)
                 if (overlay is IExposable)
                     ((IExposable)overlay).ExposeData();
+
+            Log.Message($"{this.coords}");
 
             switch(Scribe.mode)
             {
@@ -341,6 +344,9 @@ namespace BetterMiniMap
                 case LoadSaveMode.PostLoadInit: this.PostLoadInit(); break;
                 case LoadSaveMode.Saving: this.Saving(); break;
             }
+
+            Log.Message($"{MiniMapControls.selectedAreaLabel}");
+
         }
 
         private void LoadingVars()
