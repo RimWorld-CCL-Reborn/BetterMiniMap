@@ -49,8 +49,6 @@ namespace BetterMiniMap
 
     class BetterMiniMapMod : Mod
     {
-        
-
         public static BetterMiniMapSettings settings;
 
         public BetterMiniMapMod(ModContentPack content) : base(content)
@@ -101,6 +99,7 @@ namespace BetterMiniMap
             listing_Standard.AddSettingsLine<float>("BMM_HuntingIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.wildlifeHunting);
 
             listing_Standard.End();
+            settings.Write();
         }
 
     }

@@ -47,7 +47,7 @@ namespace BetterMiniMap
             this.resizeButtonRect.x = xPos += xDiff;
             this.dragButtonRect.x = xPos += xDiff;
 
-            this.SetLocality();
+            //this.SetLocality();
         }
 
         public void GenerateOverlayMenu()
@@ -74,6 +74,8 @@ namespace BetterMiniMap
             base.PostOpen();
             this.SetLocality();
         }
+
+        public override void Notify_ResolutionChanged() => this.SetLocality();
 
         public override void DoWindowContents(Rect inRect)
         {
