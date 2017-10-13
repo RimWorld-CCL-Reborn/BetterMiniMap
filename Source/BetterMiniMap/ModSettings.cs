@@ -68,12 +68,17 @@ namespace BetterMiniMap
             }
         }
 
+        public BetterMiniMapSettings()
+        {
+            this.updatePeriods = new UpdatePeriods();
+            this.indicatorSizes = new IndicatorSizes();
+        }
+
         public UpdatePeriods updatePeriods;
         public IndicatorSizes indicatorSizes;
 
         public override void ExposeData()
         {
-            Log.Message("ExposeData");
             base.ExposeData();
             Scribe_Deep.Look(ref this.updatePeriods, "updatePeriods");
             Scribe_Deep.Look(ref this.indicatorSizes, "indicatorSizes");
