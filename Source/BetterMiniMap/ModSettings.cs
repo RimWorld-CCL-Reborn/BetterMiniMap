@@ -6,7 +6,7 @@ namespace BetterMiniMap
     class BetterMiniMapSettings : ModSettings
     {
         // NOTE: consider singletons?
-        public class UpdatePeriods
+        public class UpdatePeriods : IExposable
         {
             public int viewpoint = 5; // should this be variable?
             public int colonists = 5;
@@ -20,9 +20,25 @@ namespace BetterMiniMap
             public int areas = 250;
             public int terrain = 2500;
             public int fog = 2500;
+
+            public void ExposeData()
+            {
+                Scribe_Values.Look(ref this.viewpoint, "viewpoint", 5);
+                Scribe_Values.Look(ref this.colonists, "colonists", 5);
+                Scribe_Values.Look(ref this.noncolonists, "noncolonists", 5);
+                Scribe_Values.Look(ref this.robots, "robots", 5);
+                Scribe_Values.Look(ref this.ships, "ships", 60);
+                Scribe_Values.Look(ref this.powerGrid, "powerGrid", 60);
+                Scribe_Values.Look(ref this.wildlife, "wildlife", 80);
+                Scribe_Values.Look(ref this.buildings, "buildings", 250);
+                Scribe_Values.Look(ref this.mining, "mining", 250);
+                Scribe_Values.Look(ref this.areas, "areas", 250);
+                Scribe_Values.Look(ref this.terrain, "terrain", 2500);
+                Scribe_Values.Look(ref this.fog, "fog", 2500);
+            }
         }
 
-        public class IndicatorSizes
+        public class IndicatorSizes : IExposable
         {
             public float colonists = 3f;
             public float tamedAnimals = 2f;
@@ -35,16 +51,42 @@ namespace BetterMiniMap
             public float wildlifeTaming = 1f;
             public float wildlifeHunting = 1f;
             public float wildlifeHostiles = 1f;
-        }
 
-        public BetterMiniMapSettings()
-        {
-            this.updatePeriods = new UpdatePeriods();
-            this.indicatorSizes = new IndicatorSizes();
+            public void ExposeData()
+            {
+                Scribe_Values.Look(ref this.colonists, "colonists", 3f);
+                Scribe_Values.Look(ref this.tamedAnimals, "tamedAnimals", 2f);
+                Scribe_Values.Look(ref this.enemyPawns, "enemyPawns", 2f);
+                Scribe_Values.Look(ref this.traderPawns, "traderPawns", 2f);
+                Scribe_Values.Look(ref this.visitorPawns, "visitorPawns", 2f);
+                Scribe_Values.Look(ref this.robots, "robots", 3f);
+                Scribe_Values.Look(ref this.ships, "ships", 3f);
+                Scribe_Values.Look(ref this.wildlife, "wildlife", 1f);
+                Scribe_Values.Look(ref this.wildlifeTaming, "wildlifeTaming", 1f);
+                Scribe_Values.Look(ref this.wildlifeHunting, "wildlifeHunting", 1f);
+                Scribe_Values.Look(ref this.wildlifeHostiles, "wildlifeHostiles", 1f);
+            }
         }
 
         public UpdatePeriods updatePeriods;
         public IndicatorSizes indicatorSizes;
+
+        public override void ExposeData()
+        {
+            Log.Message("ExposeData");
+            base.ExposeData();
+            Scribe_Deep.Look(ref this.updatePeriods, "updatePeriods");
+            Scribe_Deep.Look(ref this.indicatorSizes, "indicatorSizes");
+
+            if (Scribe.mode == LoadSaveMode.LoadingVars)
+            {
+                if (this.updatePeriods == null)
+                    this.updatePeriods = new UpdatePeriods();
+                if (this.indicatorSizes == null)
+                    this.indicatorSizes = new IndicatorSizes();
+            }
+        }
+
     }
 
     class BetterMiniMapMod : Mod
