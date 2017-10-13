@@ -3,6 +3,7 @@ using Verse;
 
 namespace BetterMiniMap.Overlays
 {
+    // TODO: this overlay needs to be rework... why multiple?
 	public class Area_Overlay : Overlay
 	{
 		private const float opacity = 0.5f;

@@ -7,7 +7,6 @@ namespace BetterMiniMap.Overlays
 {
     public abstract class Overlay
     {
-        //private bool visible;
         private bool visible;
         private Texture2D texture;
 
@@ -32,14 +31,20 @@ namespace BetterMiniMap.Overlays
         {
             get
             {
+                // NOTE: is this lazy load necessary?
                 if (this.texture == null)
-                {
-                    this.texture = new Texture2D(Find.VisibleMap.Size.x, Find.VisibleMap.Size.z, TextureFormat.RGBA32, false);
-                    this.texture.SetPixels(Utilities.GetClearPixelArray);
-                    this.texture.Apply();
-                }
+                    this.GenerateTexture();
                 return this.texture;
             }
+        }
+
+        public void GenerateTexture()
+        {
+            if (this.texture != null)
+                Texture2D.Destroy(this.texture);
+            this.texture = new Texture2D(Find.VisibleMap.Size.x, Find.VisibleMap.Size.z, TextureFormat.RGBA32, false);
+            this.texture.SetPixels(Utilities.GetClearPixelArray);
+            this.texture.Apply();
         }
 
         // NOTE: consider splitting this into two methods...

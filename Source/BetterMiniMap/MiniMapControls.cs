@@ -125,6 +125,7 @@ namespace BetterMiniMap
             }
         }
 
+        // TODO: super serious... rework this.
         public FloatMenu UpdateAreaOverlays()
         {
             bool remakeOptions = false;
@@ -165,11 +166,12 @@ namespace BetterMiniMap
                 {
                     if (areaOverlay.area.Label == selectedAreaLabel)
                     {
-                        miniMap.SelectedArea = areaOverlay;
+                        this.miniMap.SelectedArea = areaOverlay;
                         areaOverlay.Visible = true;
                         break;
                     }
                 }
+                this.MakeAreaOptions();
                 selectedAreaLabel = "";
             }
 
@@ -187,14 +189,14 @@ namespace BetterMiniMap
                     this.areasOptions.Add(new FloatMenuOptionItem(overlayArea.Visible, overlayArea.area.Label, delegate
                     {
                         overlayArea.Visible = !overlayArea.Visible;
-                        if (miniMap.SelectedArea == null)
-                            miniMap.SelectedArea = overlayArea;
-                        else if (miniMap.SelectedArea == overlayArea)
-                            miniMap.SelectedArea = null;
+                        if (this.miniMap.SelectedArea == null)
+                            this.miniMap.SelectedArea = overlayArea;
+                        else if (this.miniMap.SelectedArea == overlayArea)
+                            this.miniMap.SelectedArea = null;
                         else
                         {
-                            miniMap.SelectedArea.Visible = false;
-                            miniMap.SelectedArea = overlayArea;
+                            this.miniMap.SelectedArea.Visible = false;
+                            this.miniMap.SelectedArea = overlayArea;
                         }
                         // TODO: fix this...
                         this.MakeAreaOptions();

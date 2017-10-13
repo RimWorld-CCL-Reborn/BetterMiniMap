@@ -20,7 +20,7 @@ namespace BetterMiniMap
         private Mining_Overlay overlayMining;
         private NonColonists_Overlay overlayNoncolonist;
         private Buildings_Overlay overlayBuilding;
-        private PowerGrid_Overlay overlayPower;
+        private PowerGrid_Overlay overlayPower; 
         private Terrain_Overlay overlayTerrain;
         private Viewpoint_Overlay overlayView;
         private Wildlife_Overlay overlayWild;
@@ -112,10 +112,15 @@ namespace BetterMiniMap
         public override void DoWindowContents(Rect inRect)
 		{
             // NOTE: lazy load but do not see a good way to do redraw otherwise (yet)
+            // NOTE: this could be part of a mapcomponent perhaps?
             if (Find.VisibleMap.uniqueID != this.mapID)
             {
                 this.mapID = Find.VisibleMap.uniqueID;
-                this.GenerateOverlays();
+                //this.GenerateOverlays();
+
+                for (int i = 0; i < this.overlays.Count; i++)
+                    this.overlays[i].GenerateTexture();
+
                 this.Refresh();
             }
 
@@ -290,7 +295,6 @@ namespace BetterMiniMap
                 Find.WindowStack.TryRemove(this.controls, true);
         }
 
-        // TODO: are both UpdateOverlays() and UpdateAll() really needed?
         public void Update()
         {
             if (this.overlays.Any<Overlay>())
@@ -330,13 +334,12 @@ namespace BetterMiniMap
 
             Scribe_Values.Look<bool>(ref this.active, "active", true);
 
-            Scribe_Deep.Look<Rect>(ref this.coords, "coords"); // save zoom
+            // TODO: finish this.
+            //Scribe_Values.Look<float>(ref this.coords, "coords");
 
             foreach (Overlay overlay in this.Overlays)
                 if (overlay is IExposable)
                     ((IExposable)overlay).ExposeData();
-
-            Log.Message($"{this.coords}");
 
             switch(Scribe.mode)
             {
@@ -344,9 +347,6 @@ namespace BetterMiniMap
                 case LoadSaveMode.PostLoadInit: this.PostLoadInit(); break;
                 case LoadSaveMode.Saving: this.Saving(); break;
             }
-
-            Log.Message($"{MiniMapControls.selectedAreaLabel}");
-
         }
 
         private void LoadingVars()

@@ -69,7 +69,6 @@ namespace BetterMiniMap
             else
                 GUI.color = FloatMenuOptionItem.colorBackgroundActive * color;
 			
-
 			GUI.DrawTexture(rect, BaseContent.WhiteTex);
 			GUI.color = (base.Disabled ? FloatMenuOptionItem.colorTextDisabled : FloatMenuOptionItem.colorTextActive) * color;
 
