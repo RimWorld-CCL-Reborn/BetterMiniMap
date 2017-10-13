@@ -113,7 +113,7 @@ namespace BetterMiniMap
         public static void AddLabelLine(this Listing_Standard listing_Standard, string label)
         {
             listing_Standard.Gap(gap);
-            Rect lineRect = listing_Standard.GetRect(Text.LineHeight);
+            Rect lineRect = listing_Standard.GetRect(2f*Text.LineHeight);
             Rect leftHalf = lineRect.LeftHalf().Rounded();
 
             // TODO: tooltips
