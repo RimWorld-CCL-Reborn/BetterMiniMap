@@ -4,6 +4,7 @@ using RimWorld;
 using Harmony;
 using RimWorld.Planet;
 using System.Linq;
+using Verse.Profile;
 
 namespace BetterMiniMap
 {
@@ -33,13 +34,17 @@ namespace BetterMiniMap
             }
         }
 
-        // NOTE: not sure if I like this...
+        #region HarmonyPatches
+
         static MiniMap_GameComponent()
         {
             HarmonyInstance harmony = HarmonyInstance.Create("rimworld.whyisthat.betterminimap.gamecomponent");
             harmony.Patch(AccessTools.Method(typeof(UIRoot_Play), nameof(UIRoot_Play.Init)), null, new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(AddDefaultWindow)));
             harmony.Patch(AccessTools.Method(typeof(MainTabsRoot), nameof(MainTabsRoot.ToggleTab)), null, new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(ToggleMiniMap)));
             harmony.Patch(AccessTools.Method(typeof(MainButtonWorker_ToggleWorld), nameof(MainButtonWorker_ToggleWorld.Activate)), null, new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(ToggleMiniMap_WorldTab)));
+
+            // NOTE: may be a better home for this.
+            //harmony.Patch(AccessTools.Method(typeof(MemoryUtility), nameof(MemoryUtility.ClearAllMapsAndWorld)), new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(AssetCleanup)), null);
         }
         
         // NOTE: this is done here to avoid lazy loading.
@@ -87,6 +92,12 @@ namespace BetterMiniMap
             if (miniMap.Active)
                 miniMap.Toggle(!WorldRendererUtility.WorldRenderedNow);
         }
+
+        static void AssetCleanup()
+        {
+        }
+
+        #endregion HarmonyPatches
 
         public override void GameComponentOnGUI()
         {

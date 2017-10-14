@@ -13,7 +13,6 @@ namespace BetterMiniMap
 		private const float colorBoxSize = 15f;
 		private const float colorBoxMargin = 4f;
         private const float horizontalMargin = 6f;
-        //private const float verticalMargin = 4f;
 
 		private static readonly Color colorBackgroundActive = new ColorInt(21, 25, 29).ToColor;
 		private static readonly Color colorBackgroundActiveMouseover = new ColorInt(29, 45, 50).ToColor;
@@ -21,26 +20,27 @@ namespace BetterMiniMap
 		private static readonly Color colorTextActive = Color.white;
 		private static readonly Color colorTextDisabled = new Color(0.9f, 0.9f, 0.9f);
 
-		private bool visible;
+		protected bool visible;
 
-        public FloatMenuOptionItem(bool visible, string label, Action action) : base($"XXXX{label}", action)
+        public FloatMenuOptionItem(Area area, MiniMapWindow miniMap) : base($"XXXX{area.Label}", null)
         {
-            this.visible = visible;
+            this.visible = miniMap.OverlayArea.area?.Label == area.Label;
+            Log.Message($"{area}");
+            this.action = delegate
+            {
+                if (miniMap.OverlayArea.area?.Label == area.Label)
+                    miniMap.OverlayArea.area = null;
+                else
+                    miniMap.OverlayArea.area = area;
+                miniMap.OverlayArea.Update();
+            };
         }
 
         public FloatMenuOptionItem(Overlay overlay, string label) : base($"XXXX{label}", null)
         {
             this.visible = overlay.Visible;
-            this.action = this.FloatMenuAction(overlay);
+            this.action = () => this.visible = overlay.Visible = !overlay.Visible;
         }
-
-        public FloatMenuOptionItem(Overlay overlay) : base("", null)
-        {
-            this.visible = overlay.Visible;
-            this.action = this.FloatMenuAction(overlay);
-        }
-
-        private Action FloatMenuAction(Overlay overlay) => () => this.visible = overlay.Visible = !overlay.Visible;
 
 		public override bool DoGUI(Rect rect, bool colonistOrdering)
 		{

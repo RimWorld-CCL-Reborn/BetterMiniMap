@@ -5,10 +5,9 @@ namespace BetterMiniMap
 {
     class BetterMiniMapSettings : ModSettings
     {
-        // NOTE: consider singletons?
         public class UpdatePeriods : IExposable
         {
-            public int viewpoint = 5; // should this be variable?
+            public int viewpoint = 5;
             public int colonists = 5;
             public int noncolonists = 5;
             public int robots = 5;
@@ -68,6 +67,7 @@ namespace BetterMiniMap
             }
         }
 
+        // Initializes settings for users without config file
         public BetterMiniMapSettings()
         {
             this.updatePeriods = new UpdatePeriods();
@@ -83,6 +83,7 @@ namespace BetterMiniMap
             Scribe_Deep.Look(ref this.updatePeriods, "updatePeriods");
             Scribe_Deep.Look(ref this.indicatorSizes, "indicatorSizes");
 
+            // Handles upgrading settings
             if (Scribe.mode == LoadSaveMode.LoadingVars)
             {
                 if (this.updatePeriods == null)

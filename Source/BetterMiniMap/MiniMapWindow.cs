@@ -26,11 +26,9 @@ namespace BetterMiniMap
         private Wildlife_Overlay overlayWild;
         private Ships_Overlay overlayShips;
         private Robots_Overlay overlayRobots;
+        private Area_Overlay overlayArea;
 
         private List<Overlay> overlays;
-        private List<Area_Overlay> areaOverlays = new List<Area_Overlay>();
-
-        private Area_Overlay selectedArea;
 
         private int mapID = -1;
 
@@ -39,14 +37,15 @@ namespace BetterMiniMap
         private Vector2 position;
         private Vector2 size;
 
-        private Vector3 prevMousePos; 
+        private Vector3 prevMousePos;
 
-        public bool resizing = false; // NOTE: could potential use resizable from base but sticking with this for now...
+        public bool resizing = false;
         private bool active = true; // NOTE: do not confuse with toggling (which is a temporary removal of the window)
 
         private float clampHeight;
 
         private Rect coords;
+        private string selectedAreaLabel = "";
 
         public MiniMapWindow()
         {
@@ -62,11 +61,10 @@ namespace BetterMiniMap
         }
 
         public List<Overlay> Overlays { get => this.overlays; }
-        public List<Area_Overlay> AreaOverlays { get => this.areaOverlays; }
         public Vector2 Position { get => position; set => position = value; }
         public Vector2 Size { get => size; set => size = value; }
         public bool Active { get => this.active; set => this.active = value; }
-        public Area_Overlay SelectedArea { get => selectedArea; set => selectedArea = value; }
+        public Area_Overlay OverlayArea { get => overlayArea;  }
 
         protected override float Margin { get => 0f; }
 
@@ -83,6 +81,7 @@ namespace BetterMiniMap
             this.overlayWild = new Wildlife_Overlay();
             this.overlayShips = new Ships_Overlay();
             this.overlayRobots = new Robots_Overlay();
+            this.overlayArea = new Area_Overlay();
 
             this.overlays = new List<Overlay>()
             {
@@ -121,6 +120,20 @@ namespace BetterMiniMap
                 for (int i = 0; i < this.overlays.Count; i++)
                     this.overlays[i].GenerateTexture();
 
+                if (selectedAreaLabel != "")
+                {
+                    List<Area> allAreas = Find.VisibleMap.areaManager.AllAreas;
+                    for (int i = 0; i < allAreas.Count; i++)
+                    {
+                        if (allAreas[i].Label == selectedAreaLabel)
+                        {
+                            this.overlayArea.area = allAreas[i];
+                            break;
+                        }
+                    }
+                    selectedAreaLabel = "";
+                }
+
                 this.Refresh();
             }
 
@@ -130,8 +143,8 @@ namespace BetterMiniMap
 				if (current.Visible)
 					GUI.DrawTextureWithTexCoords(inRect, current.Texture, this.coords);
 
-			if (this.SelectedArea != null)
-				GUI.DrawTextureWithTexCoords(inRect, this.SelectedArea.Texture, this.coords);
+			if (this.OverlayArea.area != null)
+				GUI.DrawTextureWithTexCoords(inRect, this.OverlayArea.Texture, this.coords);
 
             if (Mouse.IsOver(inRect))
             {
@@ -185,7 +198,6 @@ namespace BetterMiniMap
                             }
                             else // zooming out
                             {
-                                // TODO: what to call this?
                                 float num = this.coords.x + this.coords.width;
                                 if (num > 1)
                                     this.coords.x -= rectDelta;
@@ -232,7 +244,6 @@ namespace BetterMiniMap
 
         }
 
-        // TODO: is this necessary or helpful? What would be best to go here?
 		public override void PostOpen()
 		{
             base.PostOpen();
@@ -297,30 +308,21 @@ namespace BetterMiniMap
 
         public void Update()
         {
-            if (this.overlays.Any<Overlay>())
-            {
-                foreach (Overlay current in this.overlays)
-                {
-                    if (current.ShouldUpdateOverlay)
-                        current.Update();
-                }
-            }
-            if (this.SelectedArea != null)
-            {
-                if (this.SelectedArea.ShouldUpdateOverlay)
-                    this.SelectedArea.Update();
-            }
+            foreach (Overlay current in this.overlays)
+                if (current.ShouldUpdateOverlay)
+                    current.Update();
+
+            if (this.OverlayArea.ShouldUpdateOverlay)
+                this.OverlayArea.Update();
         }
 
-        public void Refresh()
+        public void Refresh() // initialize
         {
-            if (this.overlays.Any<Overlay>())
-            {
-                foreach (Overlay current in this.overlays)
-                    current.Update();
-            }
-            if (this.SelectedArea != null)
-                this.SelectedArea.Update();
+            foreach (Overlay current in this.overlays)
+                current.Update();
+
+            if (this.OverlayArea.area != null)
+                this.OverlayArea.Update();
         }
 
         // NOTE: this is kind of nasty...
@@ -333,9 +335,6 @@ namespace BetterMiniMap
             Scribe_Values.Look<Vector2>(ref this.size, "size");
 
             Scribe_Values.Look<bool>(ref this.active, "active", true);
-
-            // TODO: finish this.
-            //Scribe_Values.Look<float>(ref this.coords, "coords");
 
             foreach (Overlay overlay in this.Overlays)
                 if (overlay is IExposable)
@@ -351,9 +350,16 @@ namespace BetterMiniMap
 
         private void LoadingVars()
         {
-            Scribe_Values.Look<string>(ref MiniMapControls.selectedAreaLabel, "selectedAreaLabel");
+            Scribe_Values.Look<string>(ref this.selectedAreaLabel, "selectedAreaLabel");
+            Vector2 coordsPosition = this.coords.position;
+            Vector2 coordsSize = this.coords.size;
+            Scribe_Values.Look<Vector2>(ref coordsPosition, "coordsPosition");
+            Scribe_Values.Look<Vector2>(ref coordsSize, "coordsSize");
+            this.coords.position = coordsPosition;
+            this.coords.size = coordsSize;
+            if (this.coords.width == 0 && this.coords.height == 0) // null -> default case
+                this.coords.size = new Vector2(1f, 1f);
         }
-
 
         private void PostLoadInit()
         {
@@ -367,11 +373,16 @@ namespace BetterMiniMap
 
         private void Saving()
         {
-            if (selectedArea != null)
+            if (this.overlayArea.area != null)
             {
-                string selectedAreaLabel = selectedArea.area.Label;
+                string selectedAreaLabel = this.overlayArea.area.Label;
                 Scribe_Values.Look<string>(ref selectedAreaLabel, "selectedAreaLabel");
             }
+
+            Vector2 coordsPosition = this.coords.position;
+            Vector2 coordsSize = this.coords.size; 
+            Scribe_Values.Look<Vector2>(ref coordsPosition, "coordsPosition");
+            Scribe_Values.Look<Vector2>(ref coordsSize, "coordsSize");
         }
 
     }

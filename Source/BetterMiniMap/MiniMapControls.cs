@@ -22,11 +22,7 @@ namespace BetterMiniMap
         private List<FloatMenuOption> areasOptions;
 
         private FloatMenu overlayMenu;
-		private FloatMenu areaMenu;
         
-        // TODO: there should be a better way to handle this...
-        public static string selectedAreaLabel = ""; // used to initialize selectedArea
-
         public MiniMapControls(MiniMapWindow miniMap)
         {
             this.miniMap = miniMap;
@@ -87,7 +83,7 @@ namespace BetterMiniMap
             if (Widgets.ButtonImage(this.homeButtonRect, MiniMapTextures.homeA))
             {
                 if (Event.current.button == 0 || Event.current.button == 1) // left/right click
-                    Find.WindowStack.Add(this.UpdateAreaOverlays());
+                    Find.WindowStack.Add(this.GetAreaOptions());
             }
 
             Widgets.DrawHighlightIfMouseover(this.configButtonRect);
@@ -105,8 +101,6 @@ namespace BetterMiniMap
                 if (Event.current.button == 0 || Event.current.button == 1) // left/right click
                 {
                     miniMap.resizing = !miniMap.resizing;
-                    if (!miniMap.resizing) // TODO: is this needed?
-                        miniMap.Size = miniMap.windowRect.size;
                     miniMap.draggable = false;
                 }
             }
@@ -118,97 +112,25 @@ namespace BetterMiniMap
                 if (Event.current.button == 0 || Event.current.button == 1) // left/right click
                 {
                     miniMap.draggable = !miniMap.draggable;
-                    if (!miniMap.draggable) // TODO: is this needed?
-                        miniMap.Position = miniMap.windowRect.position;
                     miniMap.resizing = false;
                 }
             }
         }
 
-        // TODO: super serious... rework this.
-        public FloatMenu UpdateAreaOverlays()
+        private FloatMenu GetAreaOptions()
         {
-            bool remakeOptions = false;
-            // TODO: is this a good check?
-            if (Find.VisibleMap.areaManager.AllAreas.Count != miniMap.AreaOverlays.Count)
+            this.areasOptions = new List<FloatMenuOption>();
+
+            List<Area> allAreas = Find.VisibleMap.areaManager.AllAreas;
+
+            for (int i=0; i < allAreas.Count; i++)
+                this.areasOptions.Add(new FloatMenuOptionItem(allAreas[i], this.miniMap));
+
+            return new FloatMenu(this.areasOptions)
             {
-                foreach (Area area in Find.VisibleMap.areaManager.AllAreas)
-                {
-                    // TODO: this seems expensive...
-                    if (!miniMap.AreaOverlays.Any((Area_Overlay w) => w.area == area))
-                    {
-                        miniMap.AreaOverlays.Add(new Area_Overlay(area, false));
-                        remakeOptions = true;
-                    }
-                }
-
-                if (miniMap.AreaOverlays.Any<Area_Overlay>())
-                {
-                    for (int i = miniMap.AreaOverlays.Count - 1; i >= 0; i--)
-                    {
-                        Area area = miniMap.AreaOverlays[i].area;
-                        if (area == null || !Find.VisibleMap.areaManager.AllAreas.Contains(area))
-                        {
-                            miniMap.AreaOverlays.RemoveAt(i);
-                            remakeOptions = true;
-                        }
-                    }
-                }
-
-                if (remakeOptions)
-                    this.MakeAreaOptions();
-            }
-
-            // NOTE: this only happens on load
-            if (selectedAreaLabel != "")
-            {
-                foreach (Area_Overlay areaOverlay in miniMap.AreaOverlays)
-                {
-                    if (areaOverlay.area.Label == selectedAreaLabel)
-                    {
-                        this.miniMap.SelectedArea = areaOverlay;
-                        areaOverlay.Visible = true;
-                        break;
-                    }
-                }
-                this.MakeAreaOptions();
-                selectedAreaLabel = "";
-            }
-
-            return this.areaMenu;
-        }
-
-        private void MakeAreaOptions()
-        {
-            if (miniMap.AreaOverlays?.Count > 0)
-            {
-                this.areasOptions = new List<FloatMenuOption>();
-
-                foreach (Area_Overlay overlayArea in miniMap.AreaOverlays)
-                {
-                    this.areasOptions.Add(new FloatMenuOptionItem(overlayArea.Visible, overlayArea.area.Label, delegate
-                    {
-                        overlayArea.Visible = !overlayArea.Visible;
-                        if (this.miniMap.SelectedArea == null)
-                            this.miniMap.SelectedArea = overlayArea;
-                        else if (this.miniMap.SelectedArea == overlayArea)
-                            this.miniMap.SelectedArea = null;
-                        else
-                        {
-                            this.miniMap.SelectedArea.Visible = false;
-                            this.miniMap.SelectedArea = overlayArea;
-                        }
-                        // TODO: fix this...
-                        this.MakeAreaOptions();
-                    }));
-                }
-
-                this.areaMenu = new FloatMenu(this.areasOptions)
-                {
-                    closeOnEscapeKey = true,
-                    preventCameraMotion = false,
-                };
-            }
+                closeOnEscapeKey = true,
+                preventCameraMotion = false,
+            };
         }
 
     }
