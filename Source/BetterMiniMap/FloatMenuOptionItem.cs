@@ -25,7 +25,6 @@ namespace BetterMiniMap
         public FloatMenuOptionItem(Area area, MiniMapWindow miniMap) : base($"XXXX{area.Label}", null)
         {
             this.visible = miniMap.OverlayArea.area?.Label == area.Label;
-            Log.Message($"{area}");
             this.action = delegate
             {
                 if (miniMap.OverlayArea.area?.Label == area.Label)
