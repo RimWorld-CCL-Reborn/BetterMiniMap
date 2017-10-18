@@ -75,17 +75,7 @@ namespace BetterMiniMap.Overlays
 			{
 				IntVec3 cell = Find.VisibleMap.cellIndices.IndexToCell(i);
                 TerrainDef terrainDef = Find.VisibleMap.terrainGrid.TerrainAt(i);
-                //Color color = terrainDef.color;
-
-                /*if (color == Color.white)
-                {
-                    colorMapping.TryGetValue(terrainDef.shortHash, out color);
-                    if (color == null)
-                        color = Color.clear;
-                }*/
-
                 Color color = TerrainColors.colorMapping[terrainDef.shortHash];
-
                 base.Texture.SetPixel(cell.x, cell.z, color);
 			}
         }
