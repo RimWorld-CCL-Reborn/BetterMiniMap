@@ -1,5 +1,6 @@
-﻿using Verse;
-using UnityEngine;
+﻿using UnityEngine;
+using Verse;
+using SettingsHelper;
 
 namespace BetterMiniMap
 {
@@ -111,40 +112,40 @@ namespace BetterMiniMap
             Listing_Standard listing_Standard = new Listing_Standard() { ColumnWidth = rect.width / 2f };
             listing_Standard.Begin(rect);
 
-            listing_Standard.AddLabelLine("BMM_TimeUpdateLabel".Translate());
+            listing_Standard.AddLabelLine("BMM_TimeUpdateLabel".Translate(), 2f * Text.LineHeight);
 
-            listing_Standard.AddSettingsLine<int>("BMM_AreasOverlayLabel".Translate(), ref settings.updatePeriods.areas);
-            listing_Standard.AddSettingsLine<int>("BMM_BuildingsOverlayLabel".Translate(), ref settings.updatePeriods.buildings);
-            listing_Standard.AddSettingsLine<int>("BMM_ColonistsOverlayLabel".Translate(), ref settings.updatePeriods.colonists);
-            listing_Standard.AddSettingsLine<int>("BMM_MiningOverlayLabel".Translate(), ref settings.updatePeriods.mining);
-            listing_Standard.AddSettingsLine<int>("BMM_NoncolonistOverlayLabel".Translate(), ref settings.updatePeriods.noncolonists);
-            listing_Standard.AddSettingsLine<int>("BMM_PowerGridOverlayLabel".Translate(), ref settings.updatePeriods.powerGrid);
-            listing_Standard.AddSettingsLine<int>("BMM_RobotsOverlayLabel".Translate(), ref settings.updatePeriods.robots);
-            listing_Standard.AddSettingsLine<int>("BMM_ShipsOverlayLabel".Translate(), ref settings.updatePeriods.ships);
-            listing_Standard.AddSettingsLine<int>("BMM_TerrainOverlayLabel".Translate(), ref settings.updatePeriods.terrain);
-            listing_Standard.AddSettingsLine<int>("BMM_WildlifeOverlayLabel".Translate(), ref settings.updatePeriods.wildlife);
+            listing_Standard.AddLabeledNumericalTextField<int>("BMM_AreasOverlayLabel".Translate(), ref settings.updatePeriods.areas);
+            listing_Standard.AddLabeledNumericalTextField<int>("BMM_BuildingsOverlayLabel".Translate(), ref settings.updatePeriods.buildings);
+            listing_Standard.AddLabeledNumericalTextField<int>("BMM_ColonistsOverlayLabel".Translate(), ref settings.updatePeriods.colonists);
+            listing_Standard.AddLabeledNumericalTextField<int>("BMM_MiningOverlayLabel".Translate(), ref settings.updatePeriods.mining);
+            listing_Standard.AddLabeledNumericalTextField<int>("BMM_NoncolonistOverlayLabel".Translate(), ref settings.updatePeriods.noncolonists);
+            listing_Standard.AddLabeledNumericalTextField<int>("BMM_PowerGridOverlayLabel".Translate(), ref settings.updatePeriods.powerGrid);
+            listing_Standard.AddLabeledNumericalTextField<int>("BMM_RobotsOverlayLabel".Translate(), ref settings.updatePeriods.robots);
+            listing_Standard.AddLabeledNumericalTextField<int>("BMM_ShipsOverlayLabel".Translate(), ref settings.updatePeriods.ships);
+            listing_Standard.AddLabeledNumericalTextField<int>("BMM_TerrainOverlayLabel".Translate(), ref settings.updatePeriods.terrain);
+            listing_Standard.AddLabeledNumericalTextField<int>("BMM_WildlifeOverlayLabel".Translate(), ref settings.updatePeriods.wildlife);
 
-            listing_Standard.AddSettingsLine<int>("BMM_FogOverlayLabel".Translate(), ref settings.updatePeriods.fog);
-            listing_Standard.AddSettingsLine<int>("BMM_ViewpointOverlayLabel".Translate(), ref settings.updatePeriods.viewpoint);
+            listing_Standard.AddLabeledNumericalTextField<int>("BMM_FogOverlayLabel".Translate(), ref settings.updatePeriods.fog);
+            listing_Standard.AddLabeledNumericalTextField<int>("BMM_ViewpointOverlayLabel".Translate(), ref settings.updatePeriods.viewpoint);
 
             listing_Standard.NewColumn();
 
-            listing_Standard.AddLabelLine("BMM_IndicatorSizeLabel".Translate());
+            listing_Standard.AddLabelLine("BMM_IndicatorSizeLabel".Translate(), 2f * Text.LineHeight);
 
-            listing_Standard.AddSettingsLine<float>("BMM_ColonistIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.colonists);
-            listing_Standard.AddSettingsLine<float>("BMM_AnimalIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.tamedAnimals);
-            listing_Standard.AddSettingsLine<float>("BMM_RobotsIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.robots);
+            listing_Standard.AddLabeledNumericalTextField<float>("BMM_ColonistIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.colonists);
+            listing_Standard.AddLabeledNumericalTextField<float>("BMM_AnimalIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.tamedAnimals);
+            listing_Standard.AddLabeledNumericalTextField<float>("BMM_RobotsIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.robots);
 
-            listing_Standard.AddSettingsLine<float>("BMM_EnemyIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.enemyPawns);
-            listing_Standard.AddSettingsLine<float>("BMM_TraderIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.traderPawns);
-            listing_Standard.AddSettingsLine<float>("BMM_VisitorIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.visitorPawns);
+            listing_Standard.AddLabeledNumericalTextField<float>("BMM_EnemyIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.enemyPawns);
+            listing_Standard.AddLabeledNumericalTextField<float>("BMM_TraderIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.traderPawns);
+            listing_Standard.AddLabeledNumericalTextField<float>("BMM_VisitorIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.visitorPawns);
 
-            listing_Standard.AddSettingsLine<float>("BMM_ShipsIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.ships);
+            listing_Standard.AddLabeledNumericalTextField<float>("BMM_ShipsIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.ships);
 
-            listing_Standard.AddSettingsLine<float>("BMM_WildlifeIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.wildlife);
-            listing_Standard.AddSettingsLine<float>("BMM_TamingIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.wildlifeTaming);
-            listing_Standard.AddSettingsLine<float>("BMM_HostileAnimalIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.wildlifeHostiles);
-            listing_Standard.AddSettingsLine<float>("BMM_HuntingIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.wildlifeHunting);
+            listing_Standard.AddLabeledNumericalTextField<float>("BMM_WildlifeIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.wildlife);
+            listing_Standard.AddLabeledNumericalTextField<float>("BMM_TamingIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.wildlifeTaming);
+            listing_Standard.AddLabeledNumericalTextField<float>("BMM_HostileAnimalIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.wildlifeHostiles);
+            listing_Standard.AddLabeledNumericalTextField<float>("BMM_HuntingIndicatorSizeLabel".Translate(), ref settings.indicatorSizes.wildlifeHunting);
 
             listing_Standard.End();
             settings.Write();
@@ -152,46 +153,4 @@ namespace BetterMiniMap
 
     }
 
-    internal static class ListingStandardHelper
-    {
-        const float gap = 12f;
-
-        // TODO: reuse this in in AddSettingsLine 
-        public static void AddLabelLine(this Listing_Standard listing_Standard, string label)
-        {
-            listing_Standard.Gap(gap);
-            Rect lineRect = listing_Standard.GetRect(2f*Text.LineHeight);
-            Rect leftHalf = lineRect.LeftHalf().Rounded();
-
-            // TODO: tooltips
-            //Widgets.DrawHighlightIfMouseover(lineRect);
-            //TooltipHandler.TipRegion(lineRect, "TODO: TIP GOES HERE");
-
-            TextAnchor anchor = Text.Anchor;
-            Text.Anchor = TextAnchor.MiddleLeft;
-            Widgets.Label(leftHalf, label);
-            Text.Anchor = anchor;
-        }
-
-        public static void AddSettingsLine<T>(this Listing_Standard listing_Standard, string label, ref T settingsValue) where T : struct
-        {
-            listing_Standard.Gap(gap);
-            Rect lineRect = listing_Standard.GetRect(Text.LineHeight);
-            Rect leftHalf = lineRect.LeftHalf().Rounded();
-            Rect rightHalf = lineRect.RightHalf().Rounded();
-            rightHalf = rightHalf.LeftPartPixels(rightHalf.width - Text.LineHeight);
-
-            // TODO: tooltips
-            //Widgets.DrawHighlightIfMouseover(lineRect);
-            //TooltipHandler.TipRegion(lineRect, "TODO: TIP GOES HERE");
-
-            TextAnchor anchor = Text.Anchor;
-            Text.Anchor = TextAnchor.MiddleLeft;
-            Widgets.Label(leftHalf, label);
-            Text.Anchor = anchor;
-
-            string buffer = settingsValue.ToString();
-            Widgets.TextFieldNumeric<T>(rightHalf, ref settingsValue, ref buffer, 1f, 100000f);
-        }
-    }
 }

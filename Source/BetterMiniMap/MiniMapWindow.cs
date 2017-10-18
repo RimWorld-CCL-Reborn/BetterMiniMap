@@ -169,9 +169,19 @@ namespace BetterMiniMap
                     if (Input.GetMouseButton(0))
                     {
                         Vector2 mousePosition = Event.current.mousePosition;
-                        Vector2 vector = new Vector2(mousePosition.x, inRect.height - mousePosition.y);
-                        Vector2 vector2 = new Vector2((float)Find.VisibleMap.Size.x / inRect.width, (float)Find.VisibleMap.Size.z / inRect.height);
-                        Find.CameraDriver.JumpToVisibleMapLoc(new Vector3(vector.x * vector2.x, 0f, vector.y * vector2.y));
+                        mousePosition = new Vector2(mousePosition.x, inRect.height - mousePosition.y);
+                        float scaleFactor = (float)Find.VisibleMap.Size.x / inRect.width; // NOTE: this could be cached
+                        Vector3 globalPos = new Vector3(mousePosition.x * scaleFactor, 0f, mousePosition.y * scaleFactor);
+
+                        if (this.coords.width != 0 || this.coords.height != 0) // NOTE: redudant check here but `or` makes it okay bae
+                        {
+                            Vector3 zoomedPos = new Vector3();
+                            zoomedPos.x = (float)Find.VisibleMap.Size.x * this.coords.x + globalPos.x * this.coords.width;
+                            zoomedPos.z = (float)Find.VisibleMap.Size.z * this.coords.y + globalPos.z * this.coords.height;
+                            Find.CameraDriver.JumpToVisibleMapLoc(zoomedPos);
+                        }
+                        else
+                            Find.CameraDriver.JumpToVisibleMapLoc(globalPos);
                     }
                     if (Event.current.type == EventType.ScrollWheel)
                     {
