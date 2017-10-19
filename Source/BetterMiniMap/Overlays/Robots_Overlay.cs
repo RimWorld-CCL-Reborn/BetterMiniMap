@@ -7,8 +7,6 @@ namespace BetterMiniMap.Overlays
 {
 	public class Robots_Overlay : Pawns_Overlay, IExposable
 	{
-		private static readonly Color robotColor = Color.white;
-
         public Robots_Overlay(bool visible = true) : base(visible) { }
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.robots;
@@ -20,7 +18,7 @@ namespace BetterMiniMap.Overlays
 
         public override void GetIndicatorProperities(Pawn pawn, out Color color, out float radius)
         {
-            color = robotColor;
+            color = BetterMiniMapMod.settings.overlayColors.robots;
             radius = BetterMiniMapMod.settings.indicatorSizes.robots;
         }
 

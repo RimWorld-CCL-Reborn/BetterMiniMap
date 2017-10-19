@@ -62,7 +62,6 @@ namespace BetterMiniMap.Overlays
 
 	public class Terrain_Overlay : Overlay, IExposable
 	{
-
         public Terrain_Overlay(bool visible = true) : base(visible) { }
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.terrain;

@@ -8,10 +8,6 @@ namespace BetterMiniMap.Overlays
 {
 	public class NonColonists_Overlay : Pawns_Overlay, IExposable
 	{
-		private static readonly Color enemyColor = Color.red;
-		private static readonly Color traderColor = Color.blue;
-		private static readonly Color visitorColor = Color.green;
-
         public NonColonists_Overlay(bool visible = true) : base(visible) { }
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.noncolonists;
@@ -25,17 +21,17 @@ namespace BetterMiniMap.Overlays
         {
             if (pawn.HostileTo(Faction.OfPlayer))
             {
-                color = enemyColor;
+                color = BetterMiniMapMod.settings.overlayColors.enemyPawns;
                 radius = BetterMiniMapMod.settings.indicatorSizes.enemyPawns;
             }
             else if (pawn.trader != null)
             {
-                color = traderColor;
+                color = BetterMiniMapMod.settings.overlayColors.traderPawns;
                 radius = BetterMiniMapMod.settings.indicatorSizes.traderPawns;
             }
             else
             {
-                color = visitorColor;
+                color = BetterMiniMapMod.settings.overlayColors.visitorPawns;
                 radius = BetterMiniMapMod.settings.indicatorSizes.visitorPawns;
             }
         }

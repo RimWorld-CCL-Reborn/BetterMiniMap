@@ -32,24 +32,22 @@ namespace SettingsHelper
             Widgets.Label(lineRect, label);
         }
 
-        private static Rect GetRect(this Listing_Standard listing_Standard,  float? height = null)
+        public static Rect GetRect(this Listing_Standard listing_Standard,  float? height = null)
         {
             return listing_Standard.GetRect(height ?? Text.LineHeight);
         }
 
-        private static Rect LineRectSpilter(this Listing_Standard listing_Standard, out Rect leftHalf, float? height = null)
+        public static Rect LineRectSpilter(this Listing_Standard listing_Standard, out Rect leftHalf, float leftPartPct = 0.5f, float? height = null)
         {
             Rect lineRect = listing_Standard.GetRect(height);
-            leftHalf = lineRect.LeftHalf().Rounded();
+            leftHalf = lineRect.LeftPart(leftPartPct).Rounded();
             return lineRect;
         }
 
-        private static Rect LineRectSpilter(this Listing_Standard listing_Standard, out Rect leftHalf, out Rect rightHalf, float? height = null)
+        public static Rect LineRectSpilter(this Listing_Standard listing_Standard, out Rect leftHalf, out Rect rightHalf, float leftPartPct = 0.5f, float? height = null)
         {
-            Rect lineRect = listing_Standard.LineRectSpilter(out leftHalf, height);
-
-            rightHalf = lineRect.RightHalf().Rounded();
-
+            Rect lineRect = listing_Standard.LineRectSpilter(out leftHalf, leftPartPct, height);
+            rightHalf = lineRect.RightPart(1f-leftPartPct).Rounded();
             return lineRect;
         }
 
@@ -116,10 +114,10 @@ namespace SettingsHelper
             }
         }
 
-        public static void AddLabeledTextField(this Listing_Standard listing_Standard, string label, ref string settingsValue)
+        public static void AddLabeledTextField(this Listing_Standard listing_Standard, string label, ref string settingsValue, float leftPartPct = 0.5f)
         {
             listing_Standard.Gap(Gap);
-            listing_Standard.LineRectSpilter(out Rect leftHalf, out Rect rightHalf);
+            listing_Standard.LineRectSpilter(out Rect leftHalf, out Rect rightHalf, leftPartPct);
 
             // TODO: tooltips
             //Widgets.DrawHighlightIfMouseover(lineRect);
@@ -131,10 +129,10 @@ namespace SettingsHelper
             settingsValue = Widgets.TextField(rightHalf, buffer);
         }
 
-        public static void AddLabeledNumericalTextField<T>(this Listing_Standard listing_Standard, string label, ref T settingsValue) where T : struct
+        public static void AddLabeledNumericalTextField<T>(this Listing_Standard listing_Standard, string label, ref T settingsValue, float leftPartPct = 0.5f, float minValue = 1f, float maxValue = 100000f) where T : struct
         {
             listing_Standard.Gap(Gap);
-            listing_Standard.LineRectSpilter(out Rect leftHalf, out Rect rightHalf);
+            listing_Standard.LineRectSpilter(out Rect leftHalf, out Rect rightHalf, leftPartPct);
 
             // TODO: tooltips
             //Widgets.DrawHighlightIfMouseover(lineRect);
@@ -143,7 +141,7 @@ namespace SettingsHelper
             Widgets.Label(leftHalf, label);
 
             string buffer = settingsValue.ToString();
-            Widgets.TextFieldNumeric<T>(rightHalf, ref settingsValue, ref buffer, 1f, 100000f);
+            Widgets.TextFieldNumeric<T>(rightHalf, ref settingsValue, ref buffer, minValue, maxValue);
         }
 
         public static void AddLabeledCheckbox(this Listing_Standard listing_Standard, string label, ref bool settingsValue)

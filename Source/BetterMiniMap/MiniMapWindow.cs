@@ -175,9 +175,7 @@ namespace BetterMiniMap
 
                         if (this.coords.width != 0 || this.coords.height != 0) // NOTE: redudant check here but `or` makes it okay bae
                         {
-                            Vector3 zoomedPos = new Vector3();
-                            zoomedPos.x = (float)Find.VisibleMap.Size.x * this.coords.x + globalPos.x * this.coords.width;
-                            zoomedPos.z = (float)Find.VisibleMap.Size.z * this.coords.y + globalPos.z * this.coords.height;
+                            Vector3 zoomedPos = new Vector3((float)Find.VisibleMap.Size.x * this.coords.x + globalPos.x * this.coords.width, 0, (float)Find.VisibleMap.Size.z * this.coords.y + globalPos.z * this.coords.height);
                             Find.CameraDriver.JumpToVisibleMapLoc(zoomedPos);
                         }
                         else
@@ -201,7 +199,7 @@ namespace BetterMiniMap
 
                         if (this.coords.width < 1f)
                         {
-                            if (rectDelta < 0) // zooming in
+                            if (rectDelta < 0 && this.coords.width > 0.1f) // zooming in
                             {
                                 this.coords.x -= rectDelta * (vector.x / this.windowRect.width);
                                 this.coords.y -= rectDelta * (vector.y / this.windowRect.height);

@@ -8,8 +8,6 @@ namespace BetterMiniMap.Overlays
 {
 	public class Ships_Overlay : Things_Overlay, IExposable
 	{
-		private static readonly Color shipColor = Color.red;
-
         public Ships_Overlay(bool visible = true) : base(visible) { }
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.ships;
@@ -21,7 +19,7 @@ namespace BetterMiniMap.Overlays
 
         public override void GetIndicatorProperities(Thing thing, out Color color, out float radius)
         {
-            color = shipColor;
+            color = BetterMiniMapMod.settings.overlayColors.ships;
             radius = BetterMiniMapMod.settings.indicatorSizes.ships;
         }
 

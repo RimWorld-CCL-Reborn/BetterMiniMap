@@ -8,9 +8,6 @@ namespace BetterMiniMap.Overlays
 {
 	public class Colonists_Overlay : Pawns_Overlay, IExposable
 	{
-		private static readonly Color colonistColor = Color.green;
-		private static readonly Color colonistAnimalColor = Color.green;
-
         public Colonists_Overlay(bool visible = true) : base(visible) { }
 
         public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.colonists;
@@ -21,12 +18,12 @@ namespace BetterMiniMap.Overlays
         {
             if (pawn.RaceProps.Animal)
             {
-                color = colonistAnimalColor;
+                color = BetterMiniMapMod.settings.overlayColors.tamedAnimals;
                 radius = BetterMiniMapMod.settings.indicatorSizes.tamedAnimals;
             }
             else
             {
-                color = colonistColor;
+                color = BetterMiniMapMod.settings.overlayColors.colonists;
                 radius = BetterMiniMapMod.settings.indicatorSizes.colonists;
             }
         }

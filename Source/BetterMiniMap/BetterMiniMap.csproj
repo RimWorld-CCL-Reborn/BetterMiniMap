@@ -53,6 +53,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColorPickerTexture.cs" />
+    <Compile Include="ColorPicker\ColorPresets.cs" />
+    <Compile Include="ColorPicker\ColorSelectDialog.cs" />
+    <Compile Include="ColorPicker\IOUtil.cs" />
+    <Compile Include="ColorPicker\SelectionColorWidget.cs" />
     <Compile Include="FloatMenuOptionItem.cs" />
     <Compile Include="GameComponent.cs" />
     <Compile Include="MiniMapControls.cs" />

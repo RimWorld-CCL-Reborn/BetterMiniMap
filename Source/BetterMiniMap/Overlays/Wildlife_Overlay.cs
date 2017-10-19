@@ -8,11 +8,6 @@ namespace BetterMiniMap.Overlays
 {
 	public class Wildlife_Overlay : Pawns_Overlay, IExposable
 	{
-		private static readonly Color wildColor = Color.yellow;
-		private static readonly Color tamingColor = Color.green;
-		private static readonly Color hostileColor = Color.red;
-		private static readonly Color huntingColor = GenUI.MouseoverColor;
-
         public Wildlife_Overlay(bool visible = true) : base(visible) { }
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.wildlife;
@@ -26,7 +21,7 @@ namespace BetterMiniMap.Overlays
         {
             if (pawn.HostileTo(Faction.OfPlayer))
             {
-                color = hostileColor;
+                color = BetterMiniMapMod.settings.overlayColors.wildlifeHostiles;
                 radius = BetterMiniMapMod.settings.indicatorSizes.wildlifeHostiles;
                 return;
             }
@@ -37,19 +32,19 @@ namespace BetterMiniMap.Overlays
                 DesignationDef designationDef = designation.def;
                 if (designationDef == DesignationDefOf.Hunt)
                 {
-                    color = huntingColor;
+                    color = BetterMiniMapMod.settings.overlayColors.wildlifeHunting;
                     radius = BetterMiniMapMod.settings.indicatorSizes.wildlifeHunting;
                     return;
                 }
                 if (designationDef == DesignationDefOf.Tame)
                 {
-                    color = tamingColor;
+                    color = BetterMiniMapMod.settings.overlayColors.wildlifeTaming;
                     radius = BetterMiniMapMod.settings.indicatorSizes.wildlifeTaming;
                     return; 
                 }
             }
 
-            color = wildColor;
+            color = BetterMiniMapMod.settings.overlayColors.wildlife;
             radius = BetterMiniMapMod.settings.indicatorSizes.wildlife;
             return; 
         }

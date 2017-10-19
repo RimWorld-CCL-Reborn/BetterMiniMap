@@ -15,7 +15,7 @@ namespace BetterMiniMap.Overlays
 			for (int i = 0; i < Find.VisibleMap.cellIndices.NumGridCells; i++)
 			{
 				IntVec3 intVec = Find.VisibleMap.cellIndices.IndexToCell(i);
-				base.Texture.SetPixel(intVec.x, intVec.z, fogGrid[i] ? Color.gray : Color.clear);
+				base.Texture.SetPixel(intVec.x, intVec.z, fogGrid[i] ? BetterMiniMapMod.settings.overlayColors.fog : Color.clear);
 			}
         }
 

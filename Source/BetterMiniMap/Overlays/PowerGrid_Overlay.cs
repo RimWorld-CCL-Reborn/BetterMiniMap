@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Verse;
@@ -9,11 +7,6 @@ namespace BetterMiniMap.Overlays
 {
 	public class PowerGrid_Overlay : Overlay, IExposable
 	{
-		private static readonly Color poweredColor = GenUI.MouseoverColor;
-		private static readonly Color poweredByBatteriesColor = Color.green;
-		private static readonly Color notPoweredColor = Color.red;
-		private static readonly Color offColor = Color.grey;
-
         public PowerGrid_Overlay(bool visible = true) : base(visible) { }
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.powerGrid;
@@ -26,13 +19,13 @@ namespace BetterMiniMap.Overlays
 
 		private void DrawBattery(CompPowerBattery battery)
 		{
-			Color color = notPoweredColor;
-			if (battery.PowerNet?.CurrentEnergyGainRate() > 1f)
-				color = poweredColor;
+			Color color = BetterMiniMapMod.settings.overlayColors.notPowered;
+            if (battery.PowerNet?.CurrentEnergyGainRate() > 1f)
+                color = BetterMiniMapMod.settings.overlayColors.poweredOn;
             else if (battery.StoredEnergy > 1f)
-                color = poweredByBatteriesColor;
+                color = BetterMiniMapMod.settings.overlayColors.poweredByBatteries;
 
-			Utilities.DrawThing(base.Texture, battery.parent, color);
+            Utilities.DrawThing(base.Texture, battery.parent, color);
 		}
 
 		private void DrawConnection(CompPower powerComp)
@@ -49,24 +42,24 @@ namespace BetterMiniMap.Overlays
 
 		private void DrawTrader(CompPowerTrader trader)
 		{
-			Color color = offColor;
-			if (trader.PowerOn)
-				color = poweredColor;
-			else if (trader.PowerOutput == 0f)
-                color = notPoweredColor;
+            Color color = BetterMiniMapMod.settings.overlayColors.powererOff;
+            if (trader.PowerOn)
+				color = BetterMiniMapMod.settings.overlayColors.poweredOn;
+            else if (trader.PowerOutput == 0f)
+                color = BetterMiniMapMod.settings.overlayColors.notPowered;
 
-			Utilities.DrawThing(base.Texture, trader.parent, color);
+            Utilities.DrawThing(base.Texture, trader.parent, color);
 		}
 
 		private void DrawTransmitter(CompPowerTransmitter transmitter)
 		{
-			Color color = notPoweredColor;
-			if (transmitter.transNet != null)
+			Color color = BetterMiniMapMod.settings.overlayColors.notPowered;
+            if (transmitter.transNet != null)
 			{
                 if (transmitter.transNet.CurrentEnergyGainRate() > 0f)
-                    color = poweredColor;
+                    color = BetterMiniMapMod.settings.overlayColors.poweredOn;
                 else if (transmitter.transNet.CurrentStoredEnergy() > 1f)
-                    color = poweredByBatteriesColor;
+                    color = BetterMiniMapMod.settings.overlayColors.poweredByBatteries;
             }
 			Utilities.DrawThing(base.Texture, transmitter.parent, color);
 		}
