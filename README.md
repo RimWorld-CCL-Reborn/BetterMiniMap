@@ -23,9 +23,11 @@ Provides a minimap for RimWorld using the overlays provided from Community Core 
 - Russian (by Garr Incorporated)
 
 ## Acknowledgements
-Thanks to Brrainz and DoctorVanGogh for help reworking terrain overlay.
-Thanks to Xen for helping with terrain color selection (deprecated feature).
-Special thanks to Pardeike's amazing non-destructive patching library, Harmony.
+- Common Core Library for the initial overlays
+- Brrainz and DoctorVanGogh for help reworking terrain overlay.
+- Xen for helping with terrain color selection (deprecated feature).
+- KiameV for [ColorPicker](https://github.com/KiameV/rimworld-recolorzones).
+- Pardeike/Brrainz for amazing non-destructive patching library, Harmony.
 <p align="center">
   <a href="https://github.com/pardeike/Harmony">
     <img src="https://s24.postimg.org/58bl1rz39/logo.png" alt="Harmony" />
