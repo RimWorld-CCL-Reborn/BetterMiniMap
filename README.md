@@ -11,6 +11,7 @@ Provides a minimap for RimWorld using the overlays provided from Community Core 
 - Minimap will hide when in world tab
 - Minimap will hide when in Fluffy's Relationship Tab
 - Minimap will hide when in ResearchPal
+- Customizable colors for indicators and other overlays
 
 ## Translations
 - English
@@ -22,7 +23,8 @@ Provides a minimap for RimWorld using the overlays provided from Community Core 
 - Russian (by Garr Incorporated)
 
 ## Acknowledgements
-Thanks to Xen for helping with terrain color selection.
+Thanks to Brrainz and DoctorVanGogh for help reworking terrain overlay.
+Thanks to Xen for helping with terrain color selection (deprecated feature).
 Special thanks to Pardeike's amazing non-destructive patching library, Harmony.
 <p align="center">
   <a href="https://github.com/pardeike/Harmony">
