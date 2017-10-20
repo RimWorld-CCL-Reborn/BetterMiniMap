@@ -52,6 +52,8 @@ namespace BetterMiniMap.Overlays
 
                 RenderTexture.active = null;
                 RenderTexture.ReleaseTemporary(tmp);
+
+                Texture2D.DestroyImmediate(textureCopy);
             }
 
             // restore
