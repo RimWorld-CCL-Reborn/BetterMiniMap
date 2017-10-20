@@ -7,13 +7,14 @@ namespace BetterMiniMap
 {
     class BetterMiniMapSettings : ModSettings
     {
+        // TODO: look at clustering these parameters better in a struct/class => fix GetIndicatorProperities()
         #region NestedClasses
         public class UpdatePeriods : IExposable
         {
             public int viewpoint = 5;
-            public int colonists = 5;
-            public int noncolonists = 5;
-            public int robots = 5;
+            public int colonists = 15;
+            public int noncolonists = 15;
+            public int robots = 15;
             public int ships = 60;
             public int powerGrid = 60;
             public int wildlife = 80;
@@ -26,9 +27,9 @@ namespace BetterMiniMap
             public void ExposeData()
             {
                 Scribe_Values.Look(ref this.viewpoint, "viewpoint", 5);
-                Scribe_Values.Look(ref this.colonists, "colonists", 5);
-                Scribe_Values.Look(ref this.noncolonists, "noncolonists", 5);
-                Scribe_Values.Look(ref this.robots, "robots", 5);
+                Scribe_Values.Look(ref this.colonists, "colonists", 15);
+                Scribe_Values.Look(ref this.noncolonists, "noncolonists", 15);
+                Scribe_Values.Look(ref this.robots, "robots", 15);
                 Scribe_Values.Look(ref this.ships, "ships", 60);
                 Scribe_Values.Look(ref this.powerGrid, "powerGrid", 60);
                 Scribe_Values.Look(ref this.wildlife, "wildlife", 80);
@@ -50,9 +51,9 @@ namespace BetterMiniMap
             public float robots = 3f;
             public float ships = 3f;
             public float wildlife = 1f;
-            public float wildlifeTaming = 1f;
-            public float wildlifeHunting = 1f;
-            public float wildlifeHostiles = 1f;
+            public float wildlifeTaming = 2f;
+            public float wildlifeHunting = 2f;
+            public float wildlifeHostiles = 2f;
 
             public void ExposeData()
             {
@@ -73,13 +74,13 @@ namespace BetterMiniMap
         public class OverlayColors : IExposable
         {
             private static readonly Color miningColorDefault = new Color(0.75f, 0.4f, 0.125f, 1f);
-            private static readonly Color fadedBlack = new Color(0, 0, 0, 0.25f);
+            //private static readonly Color fadedBlack = new Color(0, 0, 0, 0.25f);
             private static readonly Color darkGray = new Color(0.65f, 0.65f, 0.65f, 1f);
 
             public Color viewpoint = Color.black;
-            public Color viewpointFaded = fadedBlack;
+            //public Color viewpointFaded = fadedBlack; // TODO: is fadedBlack needed?
             public Color fog = darkGray;
-            public Color planning = Color.white;
+            public Color buildings = Color.white;
 
             public Color colonists = Color.green;
             public Color tamedAnimals = Color.green;
@@ -93,6 +94,20 @@ namespace BetterMiniMap
             public Color wildlifeHunting = Color.red;
             public Color wildlifeHostiles = Color.red;
 
+            // used for edge colors
+            public Color viewpointFaded;
+            public Color colonistsFaded;
+            public Color tamedAnimalsFaded;
+            public Color enemyPawnsFaded;
+            public Color traderPawnsFaded;
+            public Color visitorPawnsFaded;
+            public Color robotsFaded;
+            public Color shipsFaded;
+            public Color wildlifeFaded;
+            public Color wildlifeTamingFaded;
+            public Color wildlifeHuntingFaded;
+            public Color wildlifeHostilesFaded;
+
             public Color poweredOn = Color.yellow;
             public Color poweredByBatteries = Color.green;
             public Color notPowered = Color.red;
@@ -100,13 +115,14 @@ namespace BetterMiniMap
 
             public Color mining = miningColorDefault;
 
+            public OverlayColors() => this.SetFadedColors();
+
             public void ExposeData()
             {
                 Scribe_Values.Look(ref viewpoint, "viewpoint", Color.black);
                 //Scribe_Values.Look(ref viewpointFaded, "viewpointFaded", Color.black);
-                this.viewpointFaded = BetterMiniMapSettings.FadedColor(this.viewpoint);
                 Scribe_Values.Look(ref fog, "fog", Color.gray);
-                Scribe_Values.Look(ref planning, "planning", Color.white);
+                Scribe_Values.Look(ref buildings, "buildings", Color.white);
 
                 Scribe_Values.Look(ref colonists, "colonists", Color.green);
                 Scribe_Values.Look(ref tamedAnimals, "tamedAnimals", Color.green);
@@ -126,6 +142,25 @@ namespace BetterMiniMap
                 Scribe_Values.Look(ref powererOff, "powererOff", Color.gray);
 
                 Scribe_Values.Look(ref mining, "mining", miningColorDefault);
+
+                this.SetFadedColors();
+            }
+
+            private void SetFadedColors()
+            {
+                this.viewpointFaded = BetterMiniMapSettings.FadedColor(this.viewpoint, 0.25f);
+
+                this.colonistsFaded = BetterMiniMapSettings.FadedColor(this.colonists);
+                this.tamedAnimalsFaded = BetterMiniMapSettings.FadedColor(this.tamedAnimals);
+                this.enemyPawnsFaded = BetterMiniMapSettings.FadedColor(this.enemyPawns);
+                this.traderPawnsFaded = BetterMiniMapSettings.FadedColor(this.traderPawns);
+                this.visitorPawnsFaded = BetterMiniMapSettings.FadedColor(this.visitorPawns);
+                this.robotsFaded = BetterMiniMapSettings.FadedColor(this.robots);
+                this.shipsFaded = BetterMiniMapSettings.FadedColor(this.ships);
+                this.wildlifeFaded = BetterMiniMapSettings.FadedColor(this.wildlife);
+                this.wildlifeTamingFaded = BetterMiniMapSettings.FadedColor(this.wildlifeTaming);
+                this.wildlifeHuntingFaded = BetterMiniMapSettings.FadedColor(this.wildlifeHunting);
+                this.wildlifeHostilesFaded = BetterMiniMapSettings.FadedColor(this.wildlifeHostiles);
             }
         }
         #endregion NestedClasses
@@ -162,7 +197,7 @@ namespace BetterMiniMap
             }
         }
 
-        public static Color FadedColor(Color inColor, float alpha = 0.25f)
+        public static Color FadedColor(Color inColor, float alpha = 0.5f)
         {
             Color faded = inColor;
             faded.a = alpha;
@@ -229,22 +264,56 @@ namespace BetterMiniMap
             // ColorPicker
             listing_Standard.AddColorPickerButton("BMM_ViewpointOverlayLabel".Translate(), settings.overlayColors.viewpoint, (SelectionColorWidget scw) => {
                 settings.overlayColors.viewpoint = scw.SelectedColor;
-                settings.overlayColors.viewpointFaded = BetterMiniMapSettings.FadedColor(scw.SelectedColor);
+                settings.overlayColors.viewpointFaded = BetterMiniMapSettings.FadedColor(scw.SelectedColor, 0.25f);
             });
-            //listing_Standard.AddColorPickerButton("BMM_FogOverlayLabel".Translate(), settings.overlayColors.fog, (SelectionColorWidget scw) => { settings.overlayColors.fog = scw.SelectedColor; });
-            listing_Standard.AddColorPickerButton("BMM_PlanningLabel".Translate(), settings.overlayColors.planning, (SelectionColorWidget scw) => { settings.overlayColors.planning = scw.SelectedColor; });
 
-            listing_Standard.AddColorPickerButton("BMM_ColonistIndicatorSizeLabel".Translate(), settings.overlayColors.colonists, (SelectionColorWidget scw) => { settings.overlayColors.colonists = scw.SelectedColor; });
-            listing_Standard.AddColorPickerButton("BMM_AnimalIndicatorSizeLabel".Translate(), settings.overlayColors.tamedAnimals, (SelectionColorWidget scw) => { settings.overlayColors.tamedAnimals = scw.SelectedColor; });
-            listing_Standard.AddColorPickerButton("BMM_EnemyIndicatorSizeLabel".Translate(), settings.overlayColors.enemyPawns, (SelectionColorWidget scw) => { settings.overlayColors.enemyPawns = scw.SelectedColor; });
-            listing_Standard.AddColorPickerButton("BMM_TraderIndicatorSizeLabel".Translate(), settings.overlayColors.traderPawns, (SelectionColorWidget scw) => { settings.overlayColors.traderPawns = scw.SelectedColor; });
-            listing_Standard.AddColorPickerButton("BMM_VisitorIndicatorSizeLabel".Translate(), settings.overlayColors.visitorPawns, (SelectionColorWidget scw) => { settings.overlayColors.visitorPawns = scw.SelectedColor; });
-            listing_Standard.AddColorPickerButton("BMM_RobotsIndicatorSizeLabel".Translate(), settings.overlayColors.robots, (SelectionColorWidget scw) => { settings.overlayColors.robots = scw.SelectedColor; });
-            listing_Standard.AddColorPickerButton("BMM_ShipsIndicatorSizeLabel".Translate(), settings.overlayColors.ships, (SelectionColorWidget scw) => { settings.overlayColors.ships = scw.SelectedColor; });
-            listing_Standard.AddColorPickerButton("BMM_WildlifeIndicatorSizeLabel".Translate(), settings.overlayColors.wildlife, (SelectionColorWidget scw) => { settings.overlayColors.wildlife = scw.SelectedColor; });
-            listing_Standard.AddColorPickerButton("BMM_TamingIndicatorSizeLabel".Translate(), settings.overlayColors.wildlifeTaming, (SelectionColorWidget scw) => { settings.overlayColors.wildlifeTaming = scw.SelectedColor; });
-            listing_Standard.AddColorPickerButton("BMM_HostileAnimalIndicatorSizeLabel".Translate(), settings.overlayColors.wildlifeHunting, (SelectionColorWidget scw) => { settings.overlayColors.wildlifeHunting = scw.SelectedColor; });
-            listing_Standard.AddColorPickerButton("BMM_HuntingIndicatorSizeLabel".Translate(), settings.overlayColors.wildlifeHostiles, (SelectionColorWidget scw) => { settings.overlayColors.wildlifeHostiles = scw.SelectedColor; });
+            //listing_Standard.AddColorPickerButton("BMM_FogOverlayLabel".Translate(), settings.overlayColors.fog, (SelectionColorWidget scw) => { settings.overlayColors.fog = scw.SelectedColor; });
+            listing_Standard.AddColorPickerButton("BMM_BuildingsOverlayLabel".Translate(), settings.overlayColors.buildings, (SelectionColorWidget scw) => { settings.overlayColors.buildings = scw.SelectedColor; });
+
+            listing_Standard.AddColorPickerButton("BMM_ColonistIndicatorSizeLabel".Translate(), settings.overlayColors.colonists, (SelectionColorWidget scw) => {
+                settings.overlayColors.colonists = scw.SelectedColor;
+                settings.overlayColors.colonistsFaded = BetterMiniMapSettings.FadedColor(scw.SelectedColor);
+            });
+            listing_Standard.AddColorPickerButton("BMM_AnimalIndicatorSizeLabel".Translate(), settings.overlayColors.tamedAnimals, (SelectionColorWidget scw) => {
+                settings.overlayColors.tamedAnimals = scw.SelectedColor;
+                settings.overlayColors.tamedAnimalsFaded = BetterMiniMapSettings.FadedColor(scw.SelectedColor);
+            });
+            listing_Standard.AddColorPickerButton("BMM_EnemyIndicatorSizeLabel".Translate(), settings.overlayColors.enemyPawns, (SelectionColorWidget scw) => {
+                settings.overlayColors.enemyPawns = scw.SelectedColor;
+                settings.overlayColors.enemyPawnsFaded = BetterMiniMapSettings.FadedColor(scw.SelectedColor);
+            });
+            listing_Standard.AddColorPickerButton("BMM_TraderIndicatorSizeLabel".Translate(), settings.overlayColors.traderPawns, (SelectionColorWidget scw) => {
+                settings.overlayColors.traderPawns = scw.SelectedColor;
+                settings.overlayColors.traderPawnsFaded = BetterMiniMapSettings.FadedColor(scw.SelectedColor);
+            });
+            listing_Standard.AddColorPickerButton("BMM_VisitorIndicatorSizeLabel".Translate(), settings.overlayColors.visitorPawns, (SelectionColorWidget scw) => {
+                settings.overlayColors.visitorPawns = scw.SelectedColor;
+                settings.overlayColors.visitorPawnsFaded = BetterMiniMapSettings.FadedColor(scw.SelectedColor);
+            });
+            listing_Standard.AddColorPickerButton("BMM_RobotsIndicatorSizeLabel".Translate(), settings.overlayColors.robots, (SelectionColorWidget scw) => {
+                settings.overlayColors.robots = scw.SelectedColor;
+                settings.overlayColors.robotsFaded = BetterMiniMapSettings.FadedColor(scw.SelectedColor);
+            });
+            listing_Standard.AddColorPickerButton("BMM_ShipsIndicatorSizeLabel".Translate(), settings.overlayColors.ships, (SelectionColorWidget scw) => {
+                settings.overlayColors.ships = scw.SelectedColor;
+                settings.overlayColors.shipsFaded = BetterMiniMapSettings.FadedColor(scw.SelectedColor);
+            });
+            listing_Standard.AddColorPickerButton("BMM_WildlifeIndicatorSizeLabel".Translate(), settings.overlayColors.wildlife, (SelectionColorWidget scw) => {
+                settings.overlayColors.wildlife = scw.SelectedColor;
+                settings.overlayColors.wildlifeFaded = BetterMiniMapSettings.FadedColor(scw.SelectedColor);
+            });
+            listing_Standard.AddColorPickerButton("BMM_TamingIndicatorSizeLabel".Translate(), settings.overlayColors.wildlifeTaming, (SelectionColorWidget scw) => {
+                settings.overlayColors.wildlifeTaming = scw.SelectedColor;
+                settings.overlayColors.wildlifeTamingFaded = BetterMiniMapSettings.FadedColor(scw.SelectedColor);
+            });
+            listing_Standard.AddColorPickerButton("BMM_HostileAnimalIndicatorSizeLabel".Translate(), settings.overlayColors.wildlifeHunting, (SelectionColorWidget scw) => {
+                settings.overlayColors.wildlifeHunting = scw.SelectedColor;
+                settings.overlayColors.wildlifeHuntingFaded = BetterMiniMapSettings.FadedColor(scw.SelectedColor);
+            });
+            listing_Standard.AddColorPickerButton("BMM_HuntingIndicatorSizeLabel".Translate(), settings.overlayColors.wildlifeHostiles, (SelectionColorWidget scw) => {
+                settings.overlayColors.wildlifeHostiles = scw.SelectedColor;
+                settings.overlayColors.wildlifeHostilesFaded = BetterMiniMapSettings.FadedColor(scw.SelectedColor);
+            });
 
             listing_Standard.AddColorPickerButton("BMM_PoweredOnLabel".Translate(), settings.overlayColors.poweredOn, (SelectionColorWidget scw) => { settings.overlayColors.poweredOn = scw.SelectedColor; });
             listing_Standard.AddColorPickerButton("BMM_PoweredByBatteriesLabel".Translate(), settings.overlayColors.poweredByBatteries, (SelectionColorWidget scw) => { settings.overlayColors.poweredByBatteries = scw.SelectedColor; });

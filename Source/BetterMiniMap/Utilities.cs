@@ -22,11 +22,5 @@ namespace BetterMiniMap
 			}
 		}
 
-		public static void DrawThing(Texture2D texture, Thing thing, Color color)
-		{
-            foreach (IntVec3 current in thing.OccupiedRect().Cells)
-                if (current.InBounds(Find.VisibleMap))
-                    texture.SetPixel(current.x, current.z, color);
-		}
 	}
 }

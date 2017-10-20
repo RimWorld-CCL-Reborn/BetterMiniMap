@@ -1,4 +1,3 @@
-using UnityEngine;
 using Verse;
 
 namespace BetterMiniMap.Overlays
@@ -21,6 +20,5 @@ namespace BetterMiniMap.Overlays
 					base.Texture.SetPixel(shadow.x, shadow.z, BetterMiniMapMod.settings.overlayColors.viewpointFaded);
             }
         }
-
 	}
 }

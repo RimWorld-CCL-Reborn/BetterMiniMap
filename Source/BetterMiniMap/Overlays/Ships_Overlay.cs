@@ -17,9 +17,10 @@ namespace BetterMiniMap.Overlays
             return Find.VisibleMap.listerThings.AllThings.Where(t => t is Building_CrashedShipPart);
         }
 
-        public override void GetIndicatorProperities(Thing thing, out Color color, out float radius)
+        public override void GetIndicatorProperities(Thing thing, out Color color, out Color edgeColor, out float radius)
         {
             color = BetterMiniMapMod.settings.overlayColors.ships;
+            edgeColor = BetterMiniMapMod.settings.overlayColors.shipsFaded;
             radius = BetterMiniMapMod.settings.indicatorSizes.ships;
         }
 

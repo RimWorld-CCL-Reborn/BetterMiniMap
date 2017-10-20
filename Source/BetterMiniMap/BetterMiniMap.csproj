@@ -64,6 +64,7 @@
     <Compile Include="MiniMapTextures.cs" />
     <Compile Include="MiniMapWindow.cs" />
     <Compile Include="ModSettings.cs" />
+    <Compile Include="Overlays\MarkerOverlay.cs" />
     <Compile Include="Overlays\Overlay.cs" />
     <Compile Include="Overlays\Areas_Overlay.cs" />
     <Compile Include="Overlays\Buildings_Overlay.cs" />

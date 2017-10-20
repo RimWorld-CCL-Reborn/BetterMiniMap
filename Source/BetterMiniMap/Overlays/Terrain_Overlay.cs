@@ -66,6 +66,8 @@ namespace BetterMiniMap.Overlays
 	{
         public Terrain_Overlay(bool visible = true) : base(visible) { }
 
+        public void ExposeData() => this.ExposeData("overlayTerrain");
+
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.terrain;
 
         public void Update() => base.Update(false);
@@ -81,6 +83,5 @@ namespace BetterMiniMap.Overlays
 			}
         }
 
-        public void ExposeData() => this.ExposeData("overlayTerrain");
     }
 }

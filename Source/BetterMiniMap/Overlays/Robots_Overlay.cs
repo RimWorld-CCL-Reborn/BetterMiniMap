@@ -16,9 +16,10 @@ namespace BetterMiniMap.Overlays
 			return Find.VisibleMap.mapPawns.AllPawns.Where(p => p.def.thingClass.ToString().ToLower().Contains("robot"));
 		}
 
-        public override void GetIndicatorProperities(Pawn pawn, out Color color, out float radius)
+        public override void GetIndicatorProperities(Pawn pawn, out Color color, out Color edgeColor, out float radius)
         {
             color = BetterMiniMapMod.settings.overlayColors.robots;
+            edgeColor = BetterMiniMapMod.settings.overlayColors.robotsFaded;
             radius = BetterMiniMapMod.settings.indicatorSizes.robots;
         }
 
