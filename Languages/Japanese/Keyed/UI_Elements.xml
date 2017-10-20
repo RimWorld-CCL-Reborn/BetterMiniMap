@@ -34,6 +34,14 @@
   <BMM_HostileAnimalIndicatorSizeLabel>敵対野生動物</BMM_HostileAnimalIndicatorSizeLabel>
   <BMM_HuntingIndicatorSizeLabel>狩猟対象動物</BMM_HuntingIndicatorSizeLabel>
 
+  <BMM_ColorPickersLabel>カラーピッカー（表示色等）</BMM_ColorPickersLabel>
+
+  <BMM_PlanningLabel>計画</BMM_PlanningLabel>
+  <BMM_PoweredOnLabel>電力ON</BMM_PoweredOnLabel>
+  <BMM_PoweredByBatteriesLabel>バッテリー稼働</BMM_PoweredByBatteriesLabel>
+  <BMM_NotPoweredLabel>電力無し</BMM_NotPoweredLabel>
+  <BMM_PoweredOffLabel>電力OFF</BMM_PoweredOffLabel>
+
   <BMM_HomeButtonTooltip>表示している現在の領域を選択する為のメニューです。一度に1つしか有効にできません。</BMM_HomeButtonTooltip>
   <BMM_ConfigButtonTooltip>ミニマップに現在表示されている表示階層(Overlayer)を設定します。</BMM_ConfigButtonTooltip>
   <BMM_ResizeButtonTooltip>ミニマップのサイズ変更を切り替えますこのアイコンをクリックしてONにすると白く光ります。その後マップをクリックすると選択され、マップを左ドラッグして移動させると地図のサイズが変更できます。サイズを固定するにはこのアイコンをもう一度クリックして動作OFFにします。</BMM_ResizeButtonTooltip>
