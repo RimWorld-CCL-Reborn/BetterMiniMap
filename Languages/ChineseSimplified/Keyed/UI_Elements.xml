@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
 
   <BMM_SettingsCategoryLabel>更好的小地图</BMM_SettingsCategoryLabel>
@@ -34,6 +34,14 @@
   <BMM_HostileAnimalIndicatorSizeLabel>敌对的野生动物</BMM_HostileAnimalIndicatorSizeLabel>
   <BMM_HuntingIndicatorSizeLabel>待狩猎的野生动物</BMM_HuntingIndicatorSizeLabel>
 
+    <BMM_ColorPickersLabel>取色器(指示器颜色等)</BMM_ColorPickersLabel>
+
+    <BMM_PlanningLabel>规划</BMM_PlanningLabel>
+    <BMM_PoweredOnLabel>电源开启的</BMM_PoweredOnLabel>
+    <BMM_PoweredByBatteriesLabel>电池供电的</BMM_PoweredByBatteriesLabel>
+    <BMM_NotPoweredLabel>无电的</BMM_NotPoweredLabel>
+    <BMM_PoweredOffLabel>电源关闭的</BMM_PoweredOffLabel>
+    
   <BMM_HomeButtonTooltip>用来选择要显示的当前区域的菜单。一次只能激活1个。</BMM_HomeButtonTooltip>
   <BMM_ConfigButtonTooltip>设置哪个叠层要被显示在小地图中</BMM_ConfigButtonTooltip>
   <BMM_ResizeButtonTooltip>开关缩放小地图。激活后点住地图左右拖动以进行缩放。</BMM_ResizeButtonTooltip>
