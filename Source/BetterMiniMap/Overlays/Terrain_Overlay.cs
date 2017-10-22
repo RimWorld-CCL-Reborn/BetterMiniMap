@@ -1,21 +1,20 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
-using RimWorld;
-using System;
 
 namespace BetterMiniMap.Overlays
 {
     [StaticConstructorOnStartup]
     public static class TerrainColors
     {
-        public static Dictionary<ushort, Color> colorMapping;
+        public static Dictionary<ushort, Color32> colorMapping;
 
         // NOTE: need to handle dynamic stuff (like fluffy's floor)
         // REFERENCE: https://support.unity3d.com/hc/en-us/articles/206486626-How-can-I-get-pixels-from-unreadable-textures-
         static TerrainColors()
         {
-            colorMapping = new Dictionary<ushort, Color>();
+            colorMapping = new Dictionary<ushort, Color32>();
             Texture2D nonReadableTexture;
             ulong r, g, b;
             uint count;
@@ -74,13 +73,11 @@ namespace BetterMiniMap.Overlays
 
         public override void Render()
 		{
+            // NOTE: consider SetPixels32
+            Color32[] pixels = new Color32[Find.VisibleMap.cellIndices.NumGridCells];
 			for (int i = 0; i < Find.VisibleMap.cellIndices.NumGridCells; i++)
-			{
-				IntVec3 cell = Find.VisibleMap.cellIndices.IndexToCell(i);
-                TerrainDef terrainDef = Find.VisibleMap.terrainGrid.TerrainAt(i);
-                Color color = TerrainColors.colorMapping[terrainDef.shortHash];
-                base.Texture.SetPixel(cell.x, cell.z, color);
-			}
+                pixels[i] = TerrainColors.colorMapping[Find.VisibleMap.terrainGrid.TerrainAt(i).shortHash];
+            base.Texture.SetPixels32(pixels);
         }
 
     }

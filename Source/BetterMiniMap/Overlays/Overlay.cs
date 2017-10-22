@@ -38,11 +38,11 @@ namespace BetterMiniMap.Overlays
             if (this.texture != null)
                 Texture2D.Destroy(this.texture);
 
-            this.texture = new Texture2D(Find.VisibleMap.Size.x, Find.VisibleMap.Size.z, this.SupportedTextureFormat, true);
-            this.texture.SetPixels(Utilities.GetClearPixelArray);
+            this.texture = new Texture2D(Find.VisibleMap.Size.x, Find.VisibleMap.Size.z, this.SupportedTextureFormat, BetterMiniMapMod.settings.mipMaps);
+            this.texture.SetPixels32(Utilities.GetClearPixelArray);
             //this.texture.filterMode = FilterMode.Trilinear;
-            //this.texture.anisoLevel = 2;
-            this.texture.Apply(true);
+            this.texture.anisoLevel = BetterMiniMapMod.settings.anisoLevel;
+            this.texture.Apply(BetterMiniMapMod.settings.mipMaps);
         }
 
         private TextureFormat SupportedTextureFormat
@@ -59,9 +59,9 @@ namespace BetterMiniMap.Overlays
         public void Update(bool clearTexture = true)
         {
             if (clearTexture)
-                this.Texture.SetPixels(Utilities.GetClearPixelArray);
+                this.Texture.SetPixels32(Utilities.GetClearPixelArray);
             this.Render();
-            this.Texture.Apply(true);
+            this.Texture.Apply(BetterMiniMapMod.settings.mipMaps);
         }
 
         public abstract void Render();

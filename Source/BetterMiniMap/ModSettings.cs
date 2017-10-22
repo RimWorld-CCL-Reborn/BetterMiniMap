@@ -78,7 +78,6 @@ namespace BetterMiniMap
             private static readonly Color darkGray = new Color(0.65f, 0.65f, 0.65f, 1f);
 
             public Color viewpoint = Color.black;
-            //public Color viewpointFaded = fadedBlack; // TODO: is fadedBlack needed?
             public Color fog = darkGray;
             public Color buildings = Color.white;
 
@@ -178,12 +177,20 @@ namespace BetterMiniMap
         public IndicatorSizes indicatorSizes;
         public OverlayColors overlayColors;
 
+        // HIDDEN SETTINGS
+        public bool mipMaps = false;
+        public int anisoLevel = 1;
+
         public override void ExposeData()
         {
             base.ExposeData();
             Scribe_Deep.Look(ref this.updatePeriods, "updatePeriods");
             Scribe_Deep.Look(ref this.indicatorSizes, "indicatorSizes");
             Scribe_Deep.Look(ref this.overlayColors, "overlayColors");
+
+            // HIDDEN SETTINGS
+            Scribe_Values.Look<bool>(ref this.mipMaps, "mipMaps", false);
+            Scribe_Values.Look<int>(ref this.anisoLevel, "anisoLevel", 1);
 
             // Handles upgrading settings
             if (Scribe.mode == LoadSaveMode.LoadingVars)

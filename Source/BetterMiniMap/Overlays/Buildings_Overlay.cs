@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using UnityEngine;
 using Verse;
 
 namespace BetterMiniMap.Overlays

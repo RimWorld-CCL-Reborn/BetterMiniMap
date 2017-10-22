@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
+using RimWorld;
 
 using BetterMiniMap.Overlays;
-using RimWorld;
 
 namespace BetterMiniMap
 {
@@ -199,10 +198,13 @@ namespace BetterMiniMap
 
                         if (this.coords.width < 1f)
                         {
-                            if (rectDelta < 0 && this.coords.width > 0.1f) // zooming in
+                            if (rectDelta < 0) // zooming in
                             {
-                                this.coords.x -= rectDelta * (vector.x / this.windowRect.width);
-                                this.coords.y -= rectDelta * (vector.y / this.windowRect.height);
+                                if (this.coords.width != 0.1f) // if not maxZoom
+                                {
+                                    this.coords.x -= rectDelta * (vector.x / this.windowRect.width);
+                                    this.coords.y -= rectDelta * (vector.y / this.windowRect.height);
+                                }
                             }
                             else // zooming out
                             {
@@ -228,6 +230,7 @@ namespace BetterMiniMap
                             this.coords.x = this.coords.y = 0f;
                         }
                     }
+                    // TODO: consider using arrow keys to move zoomed in map
                 }
             }
             else

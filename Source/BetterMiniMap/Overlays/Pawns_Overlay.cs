@@ -14,7 +14,8 @@ namespace BetterMiniMap.Overlays
 		public override void Render()
 		{
             foreach (Pawn current in this.GetPawns())
-				this.CreateMarker(current, true, 0.5f);
+                if (current.CarriedBy == null)
+                    this.CreateMarker(current, true);
         }
 
         public virtual void CreateMarker(Pawn pawn, bool transparentEdges = true, float edgeOpacity = 0.5f)
