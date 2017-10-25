@@ -96,8 +96,22 @@ namespace BetterMiniMap
                 this.overlayFog,
                 this.overlayView
             };
+        }
 
-            controls.GenerateOverlayMenu();
+        public List<FloatMenuOption> GenerateOverlayMenuItems()
+        {
+            return new List<FloatMenuOption>()
+            {
+                new FloatMenuCheckBox(this.overlayColonists, "BMM_ColonistsOverlayLabel".Translate()),
+                new FloatMenuCheckBox(this.overlayNoncolonist, "BMM_NoncolonistOverlayLabel".Translate()),
+                new FloatMenuCheckBox(this.overlayWild, "BMM_WildlifeOverlayLabel".Translate()),
+                new FloatMenuCheckBox(this.overlayBuilding, "BMM_BuildingsOverlayLabel".Translate()),
+                new FloatMenuCheckBox(this.overlayPower, "BMM_PowerGridOverlayLabel".Translate()),
+                new FloatMenuCheckBox(this.overlayMining, "BMM_MiningOverlayLabel".Translate()),
+                new FloatMenuCheckBox(this.overlayTerrain, "BMM_TerrainOverlayLabel".Translate()),
+                new FloatMenuCheckBox(this.overlayShips, "BMM_ShipsOverlayLabel".Translate()),
+                new FloatMenuCheckBox(this.overlayRobots, "BMM_RobotsOverlayLabel".Translate())
+            };
         }
 
         public override void Notify_ResolutionChanged()
@@ -114,7 +128,6 @@ namespace BetterMiniMap
             if (Find.VisibleMap.uniqueID != this.mapID)
             {
                 this.mapID = Find.VisibleMap.uniqueID;
-                //this.GenerateOverlays();
 
                 for (int i = 0; i < this.overlays.Count; i++)
                     this.overlays[i].GenerateTexture();
@@ -179,8 +192,7 @@ namespace BetterMiniMap
                         }
                         else
                             Find.CameraDriver.JumpToVisibleMapLoc(globalPos);
-                    }
-                    if (Event.current.type == EventType.ScrollWheel)
+                    } else if (Event.current.type == EventType.ScrollWheel)
                     {
                         // TODO: clean this section up
                         Vector2 mousePosition = Event.current.mousePosition;
@@ -230,28 +242,13 @@ namespace BetterMiniMap
                             this.coords.x = this.coords.y = 0f;
                         }
                     }
-                    // TODO: consider using arrow keys to move zoomed in map
+                    else
+                        this.preventCameraMotion = false;
+
                 }
             }
             else
                 this.preventCameraMotion = false;
-
-        }
-
-        public List<FloatMenuOption> GenerateOverlayMenuItems()
-        {
-            return new List<FloatMenuOption>()
-            {
-                new FloatMenuOptionItem(this.overlayColonists, "BMM_ColonistsOverlayLabel".Translate()),
-                new FloatMenuOptionItem(this.overlayNoncolonist, "BMM_NoncolonistOverlayLabel".Translate()),
-                new FloatMenuOptionItem(this.overlayWild, "BMM_WildlifeOverlayLabel".Translate()),
-                new FloatMenuOptionItem(this.overlayBuilding, "BMM_BuildingsOverlayLabel".Translate()),
-                new FloatMenuOptionItem(this.overlayPower, "BMM_PowerGridOverlayLabel".Translate()),
-                new FloatMenuOptionItem(this.overlayMining, "BMM_MiningOverlayLabel".Translate()),
-                new FloatMenuOptionItem(this.overlayTerrain, "BMM_TerrainOverlayLabel".Translate()),
-                new FloatMenuOptionItem(this.overlayShips, "BMM_ShipsOverlayLabel".Translate()),
-                new FloatMenuOptionItem(this.overlayRobots, "BMM_RobotsOverlayLabel".Translate())
-            };
 
         }
 
@@ -374,7 +371,6 @@ namespace BetterMiniMap
 
         private void PostLoadInit()
         {
-            this.controls.GenerateOverlayMenu();
             // NOTE: there should be a cleaner way to do this...
             // Replace default window
             Find.WindowStack.Add(this);

@@ -3,6 +3,7 @@ using Verse;
 
 namespace ColorPicker.Dialog
 {
+    [StaticConstructorOnStartup]
     class ColorSelectDialog : Window
     {
         private static readonly Texture2D colorPresetTexture = new Texture2D(20, 20);

@@ -46,15 +46,6 @@ namespace BetterMiniMap
             //this.SetLocality();
         }
 
-        public void GenerateOverlayMenu()
-        {
-            this.overlayMenu = new FloatMenu(miniMap.GenerateOverlayMenuItems())
-            {
-                closeOnEscapeKey = true,
-                preventCameraMotion = false,
-            };
-        }
-
         protected override float Margin { get => 0f; }
 
         public void SetLocality()
@@ -64,6 +55,23 @@ namespace BetterMiniMap
         }
 
         public float DefaultHeight => buttonWidth + 2f * buttonMargin;
+
+        public FloatMenu OverlayMenu
+        {
+            get
+            {
+                if (this.overlayMenu != null)
+                {
+                    this.overlayMenu = new FloatMenu(miniMap.GenerateOverlayMenuItems())
+                    {
+                        closeOnEscapeKey = true,
+                        preventCameraMotion = false,
+                    };
+                }
+                return this.overlayMenu;
+            }
+            //set => overlayMenu = value;
+        }
 
         public override void PostOpen()
         {
@@ -91,7 +99,7 @@ namespace BetterMiniMap
             if (Widgets.ButtonImage(this.configButtonRect, MiniMapTextures.config))
             {
                 if (Event.current.button == 0 || Event.current.button == 1) // left/right click
-                    Find.WindowStack.Add(this.overlayMenu);
+                    Find.WindowStack.Add(this.OverlayMenu);
             }
 
             Widgets.DrawHighlightIfMouseover(this.resizeButtonRect);
@@ -124,7 +132,7 @@ namespace BetterMiniMap
             List<Area> allAreas = Find.VisibleMap.areaManager.AllAreas;
 
             for (int i=0; i < allAreas.Count; i++)
-                this.areasOptions.Add(new FloatMenuOptionItem(allAreas[i], this.miniMap));
+                this.areasOptions.Add(new FloatMenuRadioButton(allAreas[i], this.miniMap));
 
             return new FloatMenu(this.areasOptions)
             {

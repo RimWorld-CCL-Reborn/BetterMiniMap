@@ -58,7 +58,8 @@
     <Compile Include="ColorPicker\ColorSelectDialog.cs" />
     <Compile Include="ColorPicker\IOUtil.cs" />
     <Compile Include="ColorPicker\SelectionColorWidget.cs" />
-    <Compile Include="FloatMenuOptionItem.cs" />
+    <Compile Include="FloatMenuCheckBox.cs" />
+    <Compile Include="FloatMenuRadioButton.cs" />
     <Compile Include="GameComponent.cs" />
     <Compile Include="MiniMapControls.cs" />
     <Compile Include="MiniMapTextures.cs" />
