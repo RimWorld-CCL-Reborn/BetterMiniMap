@@ -60,7 +60,7 @@ namespace BetterMiniMap
         {
             get
             {
-                if (this.overlayMenu != null)
+                if (this.overlayMenu == null)
                 {
                     this.overlayMenu = new FloatMenu(miniMap.GenerateOverlayMenuItems())
                     {
@@ -70,7 +70,6 @@ namespace BetterMiniMap
                 }
                 return this.overlayMenu;
             }
-            //set => overlayMenu = value;
         }
 
         public override void PostOpen()
