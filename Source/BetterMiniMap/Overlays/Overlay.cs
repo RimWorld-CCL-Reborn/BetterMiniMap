@@ -38,7 +38,7 @@ namespace BetterMiniMap.Overlays
             if (this.texture != null)
                 Texture2D.Destroy(this.texture);
 
-            this.texture = new Texture2D(Find.VisibleMap.Size.x, Find.VisibleMap.Size.z, this.SupportedTextureFormat, BetterMiniMapMod.settings.mipMaps);
+            this.texture = new Texture2D(Find.CurrentMap.Size.x, Find.CurrentMap.Size.z, this.SupportedTextureFormat, BetterMiniMapMod.settings.mipMaps);
             this.texture.SetPixels32(Utilities.GetClearPixelArray);
             //this.texture.filterMode = FilterMode.Trilinear;
             this.texture.anisoLevel = BetterMiniMapMod.settings.anisoLevel;

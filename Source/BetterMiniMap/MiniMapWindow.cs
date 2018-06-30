@@ -48,7 +48,6 @@ namespace BetterMiniMap
 
         public MiniMapWindow()
         {
-            this.closeOnEscapeKey = false;
             this.preventCameraMotion = false;
             this.layer = WindowLayer.GameUI;
 
@@ -125,16 +124,16 @@ namespace BetterMiniMap
 		{
             // NOTE: lazy load but do not see a good way to do redraw otherwise (yet)
             // NOTE: this could be part of a mapcomponent perhaps?
-            if (Find.VisibleMap.uniqueID != this.mapID)
+            if (Find.CurrentMap.uniqueID != this.mapID)
             {
-                this.mapID = Find.VisibleMap.uniqueID;
+                this.mapID = Find.CurrentMap.uniqueID;
 
                 for (int i = 0; i < this.overlays.Count; i++)
                     this.overlays[i].GenerateTexture();
 
                 if (selectedAreaLabel != "")
                 {
-                    List<Area> allAreas = Find.VisibleMap.areaManager.AllAreas;
+                    List<Area> allAreas = Find.CurrentMap.areaManager.AllAreas;
                     for (int i = 0; i < allAreas.Count; i++)
                     {
                         if (allAreas[i].Label == selectedAreaLabel)
@@ -182,16 +181,16 @@ namespace BetterMiniMap
                     {
                         Vector2 mousePosition = Event.current.mousePosition;
                         mousePosition = new Vector2(mousePosition.x, inRect.height - mousePosition.y);
-                        float scaleFactor = (float)Find.VisibleMap.Size.x / inRect.width; // NOTE: this could be cached
+                        float scaleFactor = (float)Find.CurrentMap.Size.x / inRect.width; // NOTE: this could be cached
                         Vector3 globalPos = new Vector3(mousePosition.x * scaleFactor, 0f, mousePosition.y * scaleFactor);
 
                         if (this.coords.width != 0 || this.coords.height != 0) // NOTE: redudant check here but `or` makes it okay bae
                         {
-                            Vector3 zoomedPos = new Vector3((float)Find.VisibleMap.Size.x * this.coords.x + globalPos.x * this.coords.width, 0, (float)Find.VisibleMap.Size.z * this.coords.y + globalPos.z * this.coords.height);
-                            Find.CameraDriver.JumpToVisibleMapLoc(zoomedPos);
+                            Vector3 zoomedPos = new Vector3((float)Find.CurrentMap.Size.x * this.coords.x + globalPos.x * this.coords.width, 0, (float)Find.CurrentMap.Size.z * this.coords.y + globalPos.z * this.coords.height);
+                            Find.CameraDriver.JumpToCurrentMapLoc(zoomedPos);
                         }
                         else
-                            Find.CameraDriver.JumpToVisibleMapLoc(globalPos);
+                            Find.CameraDriver.JumpToCurrentMapLoc(globalPos);
                     } else if (Event.current.type == EventType.ScrollWheel)
                     {
                         // TODO: clean this section up

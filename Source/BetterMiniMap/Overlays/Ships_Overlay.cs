@@ -14,7 +14,7 @@ namespace BetterMiniMap.Overlays
 
 		public override IEnumerable<Thing> GetThings()
 		{
-            return Find.VisibleMap.listerThings.AllThings.Where(t => t is Building_CrashedShipPart);
+            return Find.CurrentMap.listerThings.AllThings.Where(t => t is Building_CrashedShipPart);
         }
 
         public override void GetIndicatorProperities(Thing thing, out Color color, out Color edgeColor, out float radius)

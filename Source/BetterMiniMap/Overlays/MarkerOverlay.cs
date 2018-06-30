@@ -32,7 +32,7 @@ namespace BetterMiniMap.Overlays
 
         protected virtual void CreateMarker(IntVec3 position, float radius, Color color, Color edgeColor, float edgeOpacity = 0.5f)
         {
-            map = Find.VisibleMap;
+            map = Find.CurrentMap;
 
             // reduce raidus by 1 to make radius=1 be a single cell
             int numInnerCells = InnerCellsCache.GetNumInnerCells(--radius);

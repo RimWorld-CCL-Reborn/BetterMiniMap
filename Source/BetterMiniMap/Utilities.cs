@@ -14,7 +14,7 @@ namespace BetterMiniMap
 			{
 				if (Utilities.clearPixelArray == null)
 				{
-					Utilities.clearPixelArray = new Color32[Find.VisibleMap.Size.x * Find.VisibleMap.Size.z];
+					Utilities.clearPixelArray = new Color32[Find.CurrentMap.Size.x * Find.CurrentMap.Size.z];
 					for (int i = 0; i < Utilities.clearPixelArray.Count<Color32>(); i++)
 						Utilities.clearPixelArray[i] = Color.clear;
 				}

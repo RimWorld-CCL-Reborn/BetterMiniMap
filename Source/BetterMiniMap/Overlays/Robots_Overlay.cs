@@ -13,7 +13,7 @@ namespace BetterMiniMap.Overlays
 
 		public override IEnumerable<Pawn> GetPawns()
 		{
-			return Find.VisibleMap.mapPawns.AllPawns.Where(p => p.def.thingClass.ToString().ToLower().Contains("robot"));
+			return Find.CurrentMap.mapPawns.AllPawns.Where(p => p.def.thingClass.ToString().ToLower().Contains("robot"));
 		}
 
         public override void GetIndicatorProperities(Pawn pawn, out Color color, out Color edgeColor, out float radius)

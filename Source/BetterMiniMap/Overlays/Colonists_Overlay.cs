@@ -14,7 +14,7 @@ namespace BetterMiniMap.Overlays
 
         public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.colonists;
 
-		public override IEnumerable<Pawn> GetPawns() => Find.VisibleMap.mapPawns.AllPawns.Where(p => p.Faction == Faction.OfPlayer);
+		public override IEnumerable<Pawn> GetPawns() => Find.CurrentMap.mapPawns.AllPawns.Where(p => p.Faction == Faction.OfPlayer);
 
         public override void GetIndicatorProperities(Pawn pawn, out Color color, out Color edgeColor, out float radius)
         {

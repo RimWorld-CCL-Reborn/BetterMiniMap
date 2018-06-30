@@ -13,7 +13,7 @@ namespace BetterMiniMap.Overlays
 
         public override void Render()
         {
-            foreach (Building current in Find.VisibleMap.listerBuildings.allBuildingsColonist)
+            foreach (Building current in Find.CurrentMap.listerBuildings.allBuildingsColonist)
                 if (current.def.AffectsRegions)
                     base.Texture.SetPixel(current.Position.x, current.Position.z, BetterMiniMapMod.settings.overlayColors.buildings);
         }

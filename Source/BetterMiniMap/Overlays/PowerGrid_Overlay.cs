@@ -16,7 +16,7 @@ namespace BetterMiniMap.Overlays
 
 		public override void Render()
 		{
-            foreach (Building poweredBuilding in Find.VisibleMap.listerBuildings.allBuildingsColonist.Where(b => b.PowerComp != null))
+            foreach (Building poweredBuilding in Find.CurrentMap.listerBuildings.allBuildingsColonist.Where(b => b.PowerComp != null))
 				this.DrawConnection(poweredBuilding.PowerComp);
         }
 
@@ -70,7 +70,7 @@ namespace BetterMiniMap.Overlays
         private void DrawThing(Thing thing, Color color)
         {
             foreach (IntVec3 current in thing.OccupiedRect().Cells)
-                if (current.InBounds(Find.VisibleMap))
+                if (current.InBounds(Find.CurrentMap))
                     base.Texture.SetPixel(current.x, current.z, color);
         }
     }

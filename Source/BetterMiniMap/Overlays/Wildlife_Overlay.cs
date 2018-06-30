@@ -14,7 +14,7 @@ namespace BetterMiniMap.Overlays
 
 		public override IEnumerable<Pawn> GetPawns()
 		{
-            return Find.VisibleMap.mapPawns.AllPawns.Where(p => p.RaceProps.Animal && p.Faction != Faction.OfPlayer);
+            return Find.CurrentMap.mapPawns.AllPawns.Where(p => p.RaceProps.Animal && p.Faction != Faction.OfPlayer);
 		}
 
         public override void GetIndicatorProperities(Pawn pawn, out Color color, out Color edgeColor, out float radius)
@@ -27,7 +27,7 @@ namespace BetterMiniMap.Overlays
                 return;
             }
 
-            Designation designation = Find.VisibleMap.designationManager.DesignationOn(pawn);
+            Designation designation = Find.CurrentMap.designationManager.DesignationOn(pawn);
             if (designation != null)
             {
                 DesignationDef designationDef = designation.def;

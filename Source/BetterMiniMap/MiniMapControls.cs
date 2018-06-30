@@ -27,7 +27,6 @@ namespace BetterMiniMap
         {
             this.miniMap = miniMap;
 
-            this.closeOnEscapeKey = false;
             this.preventCameraMotion = false;
             this.layer = WindowLayer.GameUI;
 
@@ -64,7 +63,6 @@ namespace BetterMiniMap
                 {
                     this.overlayMenu = new FloatMenu(miniMap.GenerateOverlayMenuItems())
                     {
-                        closeOnEscapeKey = true,
                         preventCameraMotion = false,
                     };
                 }
@@ -128,14 +126,13 @@ namespace BetterMiniMap
         {
             this.areasOptions = new List<FloatMenuOption>();
 
-            List<Area> allAreas = Find.VisibleMap.areaManager.AllAreas;
+            List<Area> allAreas = Find.CurrentMap.areaManager.AllAreas;
 
             for (int i=0; i < allAreas.Count; i++)
                 this.areasOptions.Add(new FloatMenuRadioButton(allAreas[i], this.miniMap));
 
             return new FloatMenu(this.areasOptions)
             {
-                closeOnEscapeKey = true,
                 preventCameraMotion = false,
             };
         }

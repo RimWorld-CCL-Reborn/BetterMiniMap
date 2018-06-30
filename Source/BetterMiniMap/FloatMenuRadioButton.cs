@@ -35,7 +35,7 @@ namespace BetterMiniMap
             };
         }
 
-        public override bool DoGUI(Rect rect, bool colonistOrdering)
+        public override bool DoGUI(Rect rect, bool colonistOrdering, FloatMenu floatMenu)
         {
             Text.Font = GameFont.Small;
             Rect rect2 = rect;

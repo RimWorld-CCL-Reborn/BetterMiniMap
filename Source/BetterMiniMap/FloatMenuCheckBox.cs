@@ -23,7 +23,7 @@ namespace BetterMiniMap
             this.action = () => this.visible = overlay.Visible = !overlay.Visible;
         }
 
-        public override bool DoGUI(Rect rect, bool colonistOrdering)
+        public override bool DoGUI(Rect rect, bool colonistOrdering, FloatMenu floatMenu)
         {
             Text.Font = GameFont.Small;
             Rect rect2 = rect;

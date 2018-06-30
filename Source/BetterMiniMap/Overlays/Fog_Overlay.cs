@@ -11,11 +11,11 @@ namespace BetterMiniMap.Overlays
 
         public override void Render()
 		{
-            bool[] fogGrid = Find.VisibleMap.fogGrid.fogGrid;
+            bool[] fogGrid = Find.CurrentMap.fogGrid.fogGrid;
             // NOTE: consider SetPixels32?
-            for (int i = 0; i < Find.VisibleMap.cellIndices.NumGridCells; i++)
+            for (int i = 0; i < Find.CurrentMap.cellIndices.NumGridCells; i++)
 			{
-				IntVec3 intVec = Find.VisibleMap.cellIndices.IndexToCell(i);
+				IntVec3 intVec = Find.CurrentMap.cellIndices.IndexToCell(i);
 				base.Texture.SetPixel(intVec.x, intVec.z, fogGrid[i] ? BetterMiniMapMod.settings.overlayColors.fog : Color.clear);
 			}
         }
