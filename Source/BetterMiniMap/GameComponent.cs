@@ -4,7 +4,6 @@ using RimWorld;
 using Harmony;
 using RimWorld.Planet;
 using System.Linq;
-using Verse.Profile;
 
 namespace BetterMiniMap
 {
@@ -39,21 +38,10 @@ namespace BetterMiniMap
         static MiniMap_GameComponent()
         {
             HarmonyInstance harmony = HarmonyInstance.Create("rimworld.whyisthat.betterminimap.gamecomponent");
-            harmony.Patch(AccessTools.Method(typeof(UIRoot_Play), nameof(UIRoot_Play.Init)), null, new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(AddDefaultWindow)));
             harmony.Patch(AccessTools.Method(typeof(MainTabsRoot), nameof(MainTabsRoot.ToggleTab)), null, new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(ToggleMiniMap)));
             harmony.Patch(AccessTools.Method(typeof(MainButtonWorker_ToggleWorld), nameof(MainButtonWorker_ToggleWorld.Activate)), null, new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(ToggleMiniMap_WorldTab)));
         }
         
-        // NOTE: this is done here to avoid lazy loading.
-        static void AddDefaultWindow()
-        {
-#if DEBUG
-            Log.Message("MiniMap_GameComponent.Initilize");
-#endif
-            miniMap = new MiniMapWindow();
-            Find.WindowStack.Add(miniMap);
-        }
-
         static void ToggleMiniMap(MainTabsRoot __instance, MainButtonDef newTab)
         {
 #if DEBUG
@@ -108,13 +96,34 @@ namespace BetterMiniMap
             }
         }
 
+        public override void FinalizeInit()
+        {
+            Log.Message("FinalizeInit");
+            base.FinalizeInit();
+            if (miniMap == null)
+            {
+                miniMap = new MiniMapWindow();
+                Log.Message("miniMap == null");
+            }
+            Find.WindowStack.Add(miniMap);
+            // need to reset textures (in case reload)
+            //miniMap.ResetOverlays();
+        }
+
+        private void AddMiniMapWindow()
+        {
+            if (miniMap == null)
+            {
+                miniMap = new MiniMapWindow();
+                Log.Message("miniMap == null");
+            }
+            Find.WindowStack.Add(miniMap);
+        }
+
         public override void ExposeData()
         {
             base.ExposeData();
             Scribe_Deep.Look<MiniMapWindow>(ref miniMap, "miniMap");
-            // NOTE: handles adding mod to existing save
-            if (Scribe.mode == LoadSaveMode.PostLoadInit && miniMap == null)
-                AddDefaultWindow();
         }
 
     }

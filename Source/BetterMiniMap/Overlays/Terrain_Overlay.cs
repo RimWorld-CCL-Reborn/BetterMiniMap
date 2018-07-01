@@ -73,7 +73,6 @@ namespace BetterMiniMap.Overlays
 
         public override void Render()
 		{
-            // NOTE: consider SetPixels32
             Color32[] pixels = new Color32[Find.CurrentMap.cellIndices.NumGridCells];
 			for (int i = 0; i < Find.CurrentMap.cellIndices.NumGridCells; i++)
                 pixels[i] = TerrainColors.colorMapping[Find.CurrentMap.terrainGrid.TerrainAt(i).shortHash];

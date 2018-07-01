@@ -27,6 +27,7 @@ namespace BetterMiniMap
         {
             this.miniMap = miniMap;
 
+            this.closeOnCancel = false;
             this.preventCameraMotion = false;
             this.layer = WindowLayer.GameUI;
 
@@ -63,6 +64,7 @@ namespace BetterMiniMap
                 {
                     this.overlayMenu = new FloatMenu(miniMap.GenerateOverlayMenuItems())
                     {
+                        closeOnCancel = false,
                         preventCameraMotion = false,
                     };
                 }
@@ -133,6 +135,7 @@ namespace BetterMiniMap
 
             return new FloatMenu(this.areasOptions)
             {
+                closeOnCancel = false,
                 preventCameraMotion = false,
             };
         }

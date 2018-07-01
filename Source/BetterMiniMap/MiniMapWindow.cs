@@ -5,6 +5,8 @@ using RimWorld;
 
 using BetterMiniMap.Overlays;
 
+// TODO: look at tiberium overlays to find better extensiblity
+
 namespace BetterMiniMap
 {
 	internal class MiniMapWindow : Window, IExposable
@@ -14,22 +16,9 @@ namespace BetterMiniMap
         private const int defaultMargin = 8;
         private const float scrollWheelZoomRate = 0.015f;
 
-        private Colonists_Overlay overlayColonists;
-        private Fog_Overlay overlayFog;
-        private Mining_Overlay overlayMining;
-        private NonColonists_Overlay overlayNoncolonist;
-        private Buildings_Overlay overlayBuilding;
-        private PowerGrid_Overlay overlayPower; 
-        private Terrain_Overlay overlayTerrain;
-        private Viewpoint_Overlay overlayView;
-        private Wildlife_Overlay overlayWild;
-        private Ships_Overlay overlayShips;
-        private Robots_Overlay overlayRobots;
-        private Area_Overlay overlayArea;
-
         private List<Overlay> overlays;
 
-        private int mapID = -1;
+        private int tileHash = 0;
 
         private MiniMapControls controls;
 
@@ -48,11 +37,12 @@ namespace BetterMiniMap
 
         public MiniMapWindow()
         {
+            this.closeOnCancel = false;
             this.preventCameraMotion = false;
             this.layer = WindowLayer.GameUI;
 
             this.controls = new MiniMapControls(this);
-            this.GenerateOverlays();
+            this.SetOverlays();
             this.clampHeight = UI.screenHeight - MainButtonDef.ButtonHeight - this.controls.DefaultHeight;
 
             this.coords = new Rect(0f, 0f, 1f, 1f);
@@ -62,55 +52,53 @@ namespace BetterMiniMap
         public Vector2 Position { get => position; set => position = value; }
         public Vector2 Size { get => size; set => size = value; }
         public bool Active { get => this.active; set => this.active = value; }
-        public Area_Overlay OverlayArea { get => overlayArea;  }
+        public Area_Overlay OverlayArea { get => OverlayManager.OverlayArea;  }
 
         protected override float Margin { get => 0f; }
 
-        public void GenerateOverlays()
+        public void SetOverlays()
         {
-            this.overlayColonists = new Colonists_Overlay();
-            this.overlayFog = new Fog_Overlay();
-            this.overlayMining = new Mining_Overlay();
-            this.overlayNoncolonist = new NonColonists_Overlay();
-            this.overlayBuilding = new Buildings_Overlay();
-            this.overlayPower = new PowerGrid_Overlay();
-            this.overlayTerrain = new Terrain_Overlay();
-            this.overlayView = new Viewpoint_Overlay();
-            this.overlayWild = new Wildlife_Overlay();
-            this.overlayShips = new Ships_Overlay();
-            this.overlayRobots = new Robots_Overlay();
-            this.overlayArea = new Area_Overlay();
-
+            // TODO: consider moving this all to overlay manager?
             this.overlays = new List<Overlay>()
             {
-                this.overlayTerrain,
-                this.overlayColonists,
-                this.overlayMining,
-                this.overlayNoncolonist,
-                this.overlayBuilding,
-                this.overlayPower,
-                this.overlayWild,
-                this.overlayShips,
-                this.overlayRobots,
-                this.overlayFog,
-                this.overlayView
+                OverlayManager.OverlayTerrain,
+                OverlayManager.OverlayColonists,
+                OverlayManager.OverlayMining,
+                OverlayManager.OverlayNoncolonist,
+                OverlayManager.OverlayBuilding,
+                OverlayManager.OverlayPower,
+                OverlayManager.OverlayWild,
+                OverlayManager.OverlayShips,
+                OverlayManager.OverlayRobots,
+                OverlayManager.OverlayFog,
+                OverlayManager.OverlayView,
             };
+
+            if (OverlayManager.HasTiberium())
+                this.overlays.Add(OverlayManager.OverlayTiberium);
         }
 
+        // TODO: consider moving this all to overlay manager?
         public List<FloatMenuOption> GenerateOverlayMenuItems()
         {
-            return new List<FloatMenuOption>()
+            List<FloatMenuOption> overlayMenuItems = new List<FloatMenuOption>()
             {
-                new FloatMenuCheckBox(this.overlayColonists, "BMM_ColonistsOverlayLabel".Translate()),
-                new FloatMenuCheckBox(this.overlayNoncolonist, "BMM_NoncolonistOverlayLabel".Translate()),
-                new FloatMenuCheckBox(this.overlayWild, "BMM_WildlifeOverlayLabel".Translate()),
-                new FloatMenuCheckBox(this.overlayBuilding, "BMM_BuildingsOverlayLabel".Translate()),
-                new FloatMenuCheckBox(this.overlayPower, "BMM_PowerGridOverlayLabel".Translate()),
-                new FloatMenuCheckBox(this.overlayMining, "BMM_MiningOverlayLabel".Translate()),
-                new FloatMenuCheckBox(this.overlayTerrain, "BMM_TerrainOverlayLabel".Translate()),
-                new FloatMenuCheckBox(this.overlayShips, "BMM_ShipsOverlayLabel".Translate()),
-                new FloatMenuCheckBox(this.overlayRobots, "BMM_RobotsOverlayLabel".Translate())
+                new FloatMenuCheckBox(OverlayManager.OverlayColonists, "BMM_ColonistsOverlayLabel".Translate()),
+                new FloatMenuCheckBox(OverlayManager.OverlayNoncolonist, "BMM_NoncolonistOverlayLabel".Translate()),
+                new FloatMenuCheckBox(OverlayManager.OverlayWild, "BMM_WildlifeOverlayLabel".Translate()),
+                new FloatMenuCheckBox(OverlayManager.OverlayBuilding, "BMM_BuildingsOverlayLabel".Translate()),
+                new FloatMenuCheckBox(OverlayManager.OverlayPower, "BMM_PowerGridOverlayLabel".Translate()),
+                new FloatMenuCheckBox(OverlayManager.OverlayMining, "BMM_MiningOverlayLabel".Translate()),
+                new FloatMenuCheckBox(OverlayManager.OverlayTerrain, "BMM_TerrainOverlayLabel".Translate()),
+                new FloatMenuCheckBox(OverlayManager.OverlayShips, "BMM_ShipsOverlayLabel".Translate()),
+                new FloatMenuCheckBox(OverlayManager.OverlayRobots, "BMM_RobotsOverlayLabel".Translate()),
             };
+
+            if (OverlayManager.HasTiberium())
+                overlayMenuItems.Add(new FloatMenuCheckBox(OverlayManager.OverlayTiberium, "Tiberium"));
+
+            return overlayMenuItems;
+
         }
 
         public override void Notify_ResolutionChanged()
@@ -124,9 +112,9 @@ namespace BetterMiniMap
 		{
             // NOTE: lazy load but do not see a good way to do redraw otherwise (yet)
             // NOTE: this could be part of a mapcomponent perhaps?
-            if (Find.CurrentMap.uniqueID != this.mapID)
+            if (Find.CurrentMap.TileInfo.GetHashCode() != this.tileHash)
             {
-                this.mapID = Find.CurrentMap.uniqueID;
+                this.tileHash = Find.CurrentMap.TileInfo.GetHashCode();
 
                 for (int i = 0; i < this.overlays.Count; i++)
                     this.overlays[i].GenerateTexture();
@@ -138,7 +126,7 @@ namespace BetterMiniMap
                     {
                         if (allAreas[i].Label == selectedAreaLabel)
                         {
-                            this.overlayArea.area = allAreas[i];
+                            OverlayManager.OverlayArea.area = allAreas[i];
                             break;
                         }
                     }
@@ -379,9 +367,9 @@ namespace BetterMiniMap
 
         private void Saving()
         {
-            if (this.overlayArea.area != null)
+            if (OverlayManager.OverlayArea.area != null)
             {
-                string selectedAreaLabel = this.overlayArea.area.Label;
+                string selectedAreaLabel = OverlayManager.OverlayArea.area.Label;
                 Scribe_Values.Look<string>(ref selectedAreaLabel, "selectedAreaLabel");
             }
 

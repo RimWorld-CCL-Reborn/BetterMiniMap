@@ -63,6 +63,7 @@
     <Compile Include="MiniMapTextures.cs" />
     <Compile Include="MiniMapWindow.cs" />
     <Compile Include="ModSettings.cs" />
+    <Compile Include="OverlayManager.cs" />
     <Compile Include="Overlays\Areas_Overlay.cs" />
     <Compile Include="Overlays\Buildings_Overlay.cs" />
     <Compile Include="Overlays\Colonists_Overlay.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Overlays\Ships_Overlay.cs" />
     <Compile Include="Overlays\Terrain_Overlay.cs" />
     <Compile Include="Overlays\Things_Overlay.cs" />
+    <Compile Include="Overlays\Tiberium_Overlay.cs" />
     <Compile Include="Overlays\Viewpoint_Overlay.cs" />
     <Compile Include="Overlays\Wildlife_Overlay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
