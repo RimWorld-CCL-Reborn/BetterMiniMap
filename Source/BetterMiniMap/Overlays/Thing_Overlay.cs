@@ -1,21 +1,26 @@
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using UnityEngine;
 using Verse;
 
 namespace BetterMiniMap.Overlays
 {
-    // TODO: To be deprecated by TerrainOverlayDef mechanisms
-	public abstract class Things_Overlay : MarkerOverlay
+    public class Thing_Overlay : MarkerOverlay
     {
-        protected Things_Overlay(bool visible = true) : base(visible) { }
+        protected Thing_Overlay(bool visible = true) : base(visible) { }
 
-		public abstract IEnumerable<Thing> GetThings();
+        public abstract IEnumerable<Thing> GetThings();
         public abstract void GetIndicatorProperities(Thing thing, out Color color, out Color edgeColor, out float radius);
 
-		public override void Render()
-		{
-			foreach (Thing current in this.GetThings())
-				this.CreateMarker(current);
+        // TODO: store in xml (as default)
+        public override int GetUpdateInterval() => 60; //TODO
+
+        public override void Render()
+        {
+            foreach (Thing current in this.GetThings())
+                this.CreateMarker(current);
         }
 
         public virtual void CreateMarker(Thing thing, float edgeOpacity = 0.5f)
@@ -23,5 +28,7 @@ namespace BetterMiniMap.Overlays
             this.GetIndicatorProperities(thing, out Color color, out Color edgeColor, out float radius);
             base.CreateMarker(thing.Position, radius, color, edgeColor, edgeOpacity);
         }
+
+
     }
 }

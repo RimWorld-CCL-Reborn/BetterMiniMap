@@ -14,7 +14,7 @@ namespace BetterMiniMap.Overlays
 
         public override IEnumerable<Thing> GetThings()
         {
-            List<Thing> crystals = new List<Thing>();
+            /*List<Thing> crystals = new List<Thing>();
             ListerThings lister = Find.CurrentMap.listerThings;
             crystals.AddRange(lister.ThingsOfDef(DefDatabase<ThingDef>.GetNamed("TiberiumGreen", false)));
             crystals.AddRange(lister.ThingsOfDef(DefDatabase<ThingDef>.GetNamed("TiberiumPod", false)));
@@ -27,8 +27,11 @@ namespace BetterMiniMap.Overlays
             crystals.AddRange(lister.ThingsOfDef(DefDatabase<ThingDef>.GetNamed("TiberiumShardsRed", false)));
             crystals.AddRange(lister.ThingsOfDef(DefDatabase<ThingDef>.GetNamed("TiberiumGlacier", false)));
             crystals.AddRange(lister.ThingsOfDef(DefDatabase<ThingDef>.GetNamed("TiberiumVein", false)));
-            return crystals.AsEnumerable();
+            return crystals.AsEnumerable();*/
+
+            return Find.CurrentMap.listerThings.AllThings.Where(t => t.Label.Contains("Tiberium"));
         }
+
 
         public override void GetIndicatorProperities(Thing thing, out Color color, out Color edgeColor, out float radius)
         {
