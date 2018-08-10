@@ -75,8 +75,8 @@ namespace BetterMiniMap
                 this.overlays.Add(overlay);
             }
 
-            if (OverlayManager.HasTiberium())
-                this.overlays.Add(OverlayManager.OverlayTiberium);
+            /*if (OverlayManager.HasTiberium())
+                this.overlays.Add(OverlayManager.OverlayTiberium);*/
         }
 
         // TODO: return to float menus.
@@ -96,8 +96,9 @@ namespace BetterMiniMap
                 //new FloatMenuCheckBox(OverlayManager.OverlayRobots, "BMM_RobotsOverlayLabel".Translate()),
             };
 
-            if (OverlayManager.HasTiberium())
+            /*if (OverlayManager.HasTiberium())
                 overlayMenuItems.Add(new FloatMenuCheckBox(OverlayManager.OverlayTiberium, "Tiberium"));
+            */
 
             return overlayMenuItems;
 

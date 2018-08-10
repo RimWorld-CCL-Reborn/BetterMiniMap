@@ -25,10 +25,28 @@ namespace BetterMiniMap
         public override bool IsValid(object o) => classType.IsAssignableFrom(o.GetType());
     }
 
+    public abstract class ThingSelector : Selector
+    {
+        public abstract bool IsValid(Thing t);
+        public override bool IsValid(object o) => (o is Thing t) ? IsValid(t) : false;
+    }
+
+    public class ThingByDefNameSelector : ThingSelector
+    {
+        public List<string> defNames;
+        public override bool IsValid(Thing t) => this.defNames.Any(n => t.def.defName == n);
+    }
+
     public abstract class PawnSelector : Selector
     {
         public abstract bool IsValid(Pawn p);
         public override bool IsValid(object o) => (o is Pawn p) ? IsValid(p) : false;
+    }
+
+    public class PawnByDefNameSelector : PawnSelector
+    {
+        public List<string> defNames;
+        public override bool IsValid(Pawn p) => this.defNames.Any(n => p.def.defName == n);
     }
 
     public class PlayerFactionSelector : PawnSelector
@@ -61,14 +79,6 @@ namespace BetterMiniMap
         public override bool IsValid(Pawn p) => p.trader != null;
     }
 
-    /*public class TestSelector : PawnSelector
-    {
-        public string contains;
-        public override bool IsValid(Pawn p) => p.def.thingClass
-    }*/
-    //p.def.thingClass.ToString().ToLower().Contains("robot")
-
-    //Find.CurrentMap.designationManager.DesignationOn(pawn)
     public class PawnDesignatorSelector : PawnSelector
     {
         public DesignationDef designationDef;

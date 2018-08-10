@@ -17,7 +17,6 @@ namespace BetterMiniMap
         public static Terrain_Overlay OverlayTerrain;
         public static Viewpoint_Overlay OverlayView;
         public static Area_Overlay OverlayArea;
-        public static Tiberium_Overlay OverlayTiberium;
 
         public static List<Overlay> Overlays;
 
@@ -31,9 +30,6 @@ namespace BetterMiniMap
             OverlayView = new Viewpoint_Overlay();
             OverlayArea = new Area_Overlay();
             
-            if (HasTiberium())
-                OverlayTiberium = new Tiberium_Overlay();
-
             // handle OverlayDefs
             OverlayManager.Overlays = new List<Overlay>();
             foreach (OverlayDef def in DefDatabase<OverlayDef>.AllDefs.Where(d => !d.disabled))
@@ -43,6 +39,7 @@ namespace BetterMiniMap
             }
         }
 
-        public static bool HasTiberium() => LoadedModManager.RunningMods.Any(m => m.Identifier.Equals("TiberiumRim"));
+        // TODO: revist this concept...
+        //public static bool HasTiberium() => LoadedModManager.RunningMods.Any(m => m.Identifier.Equals("TiberiumRim"));
     }
 }

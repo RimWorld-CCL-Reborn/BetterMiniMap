@@ -1,42 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-  <!--<BetterMiniMap.OverlayDef>
-    <defName>TiberiumOverlay</defName>
-    <label>Tiberium Overlay</label>
-    <description>This overlay shows the distribution of tiberium on the map</description>
-    <overlayClass>BetterMiniMap.Overlays.Thing_Overlay</overlayClass>
-    <classSelector>TiberiumCrystal</classSelector>
-    <updatePeriod>60</updatePeriod>
-
-    <indicatorProps>
-      <li class="BetterMiniMap.IndicatorProps">
-        <targetName>TiberiumGreen</targetName>
-        <color>RGBA(0.000, 0.800, 0.000, 1.000)</color>
-        <edgeColor>RGBA(1.000, 1.800, 1.000, 1.000)</edgeColor>
-        <radius>1.0</radius>
-      </li>
-      <li class="BetterMiniMap.IndicatorProps">
-        <targetName>TiberiumPod</targetName>
-        <color>RGBA(0.000, 0.800, 0.000, 1.000)</color>
-        <edgeColor>RGBA(1.000, 1.000, 1.000, 1.000)</edgeColor>
-        <radius>1.0</radius>
-      </li>
-      <li class="BetterMiniMap.IndicatorProps">
-        <targetName>TiberiumShardsGreen</targetName>
-        <color>RGBA(0.000, 0.800, 0.000, 1.000)</color>
-        <edgeColor>RGBA(1.000, 1.000, 1.000, 1.000)</edgeColor>
-        <radius>1.0</radius>
-      </li>
-      <li class="BetterMiniMap.IndicatorProps">
-        <targetName>TiberiumMossGreen</targetName>
-        <color>RGBA(0.000, 0.800, 0.000, 1.000)</color>
-        <edgeColor>RGBA(1.000, 1.000, 1.000, 1.000)</edgeColor>
-        <radius>1.0</radius>
-      </li>
-    </indicatorProps>
-  </BetterMiniMap.OverlayDef>-->
-
   <BetterMiniMap.OverlayDef>
     <defName>ColonistsOverlay</defName>
     <label>Colonists Overlay</label>
@@ -175,6 +139,81 @@
         </li>
       </mappings>
     </indicatorMappings>
+  </BetterMiniMap.OverlayDef>
+
+  <BetterMiniMap.OverlayDef>
+    <defName>TiberiumOverlay</defName>
+    <label>Tiberium Overlay</label>
+    <description>This overlay shows the distribution of tiberium on the map</description>
+    <overlayClass>BetterMiniMap.Overlays.Thing_Overlay</overlayClass>
+    <updatePeriod>60</updatePeriod>
+    <selectors>
+      <li Class="BetterMiniMap.ClassSelector">
+        <classType>TiberiumRim.TiberiumCrystal</classType>
+      </li>
+    </selectors>
+    <indicatorMappings Class="BetterMiniMap.IndicatorMapper">
+      <mappings>
+        <li Class="BetterMiniMap.IndicatorProps">
+          <selector Class="BetterMiniMap.ThingByDefNameSelector">
+            <defNames>
+              <li>TiberiumGreen</li>
+              <li>TiberiumPod</li>
+              <li>TiberiumShardsGreen</li>
+              <li>TiberiumMossGreen</li>
+            </defNames>
+          </selector>
+          <color>RGBA(0.000, 0.800, 0.000, 1.000)</color>
+          <edgeColor>RGBA(1.000, 1.000, 1.000, 0.800)</edgeColor>
+          <radius>1.0</radius>
+        </li>
+        <li Class="BetterMiniMap.IndicatorProps">
+          <selector Class="BetterMiniMap.ThingByDefNameSelector">
+            <defNames>
+              <li>TiberiumBlue</li>
+              <li>TiberiumShardsBlue</li>
+              <li>TiberiumMossBlue</li>
+            </defNames>
+          </selector>
+          <color>RGBA(0.000, 0.600, 0.900, 1.000)</color>
+          <edgeColor>RGBA(1.000, 1.000, 1.000, 0.800)</edgeColor>
+          <radius>1.0</radius>
+        </li>
+        <li Class="BetterMiniMap.IndicatorProps">
+          <selector Class="BetterMiniMap.ThingByDefNameSelector">
+            <defNames>
+              <li>TiberiumRed</li>
+              <li>TiberiumShardsRed</li>
+            </defNames>
+          </selector>
+          <color>RGBA(0.900, 0.000, 0.000, 1.000)</color>
+          <edgeColor>RGBA(1.000, 1.000, 1.000, 0.800)</edgeColor>
+          <radius>1.0</radius>
+        </li>
+        <li Class="BetterMiniMap.IndicatorProps">
+          <selector Class="BetterMiniMap.ThingByDefNameSelector">
+            <defNames>
+              <li>TiberiumGlacier</li>
+            </defNames>
+          </selector>
+          <color>RGBA(0.000, 0.350, 0.300, 1.000)</color>
+          <edgeColor>RGBA(1.000, 1.000, 1.000, 0.800)</edgeColor>
+          <radius>1.0</radius>
+        </li>
+        <li Class="BetterMiniMap.IndicatorProps">
+          <selector Class="BetterMiniMap.ThingByDefNameSelector">
+            <defNames>
+              <li>TiberiumVein</li>
+            </defNames>
+          </selector>
+          <color>RGBA(0.950, 0.400, 0.300, 1.000)</color>
+          <edgeColor>RGBA(1.000, 1.000, 1.000, 0.800)</edgeColor>
+          <radius>1.0</radius>
+        </li>
+      </mappings>
+    </indicatorMappings>
+    <indicatorProps>
+    </indicatorProps>
   </BetterMiniMap.OverlayDef>
 
 </Defs>
