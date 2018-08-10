@@ -30,7 +30,7 @@ Provides a minimap for RimWorld using the overlays provided from Community Core 
 - Pardeike/Brrainz for amazing non-destructive patching library, Harmony.
 <p align="center">
   <a href="https://github.com/pardeike/Harmony">
-    <img src="https://s24.postimg.org/58bl1rz39/logo.png" alt="Harmony" />
+    <img src="https://raw.githubusercontent.com/pardeike/Harmony/master/HarmonyLogo.png" alt="Harmony" />
   </a>
 </p>
 
