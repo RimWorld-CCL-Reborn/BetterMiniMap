@@ -28,9 +28,10 @@ Provides a minimap for RimWorld using the overlays provided from Community Core 
 - Xen for helping with terrain color selection (deprecated feature).
 - KiameV for [ColorPicker](https://github.com/KiameV/rimworld-recolorzones).
 - Pardeike/Brrainz for amazing non-destructive patching library, Harmony.
+
 <p align="center">
   <a href="https://github.com/pardeike/Harmony">
-    <img src="https://raw.githubusercontent.com/pardeike/Harmony/master/HarmonyLogo.png" alt="Harmony" />
+    <img src="https://raw.githubusercontent.com/pardeike/Harmony/master/HarmonyLogo.png" alt="Harmony" width="128" />
   </a>
 </p>
 
