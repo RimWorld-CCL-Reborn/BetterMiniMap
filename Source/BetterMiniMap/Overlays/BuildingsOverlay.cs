@@ -3,9 +3,9 @@ using Verse;
 namespace BetterMiniMap.Overlays
 {
     // NOTE: there may be room for impovement on this overlay
-    public class Buildings_Overlay : Overlay, IExposable
+    public class BuildingsOverlay : Overlay, IExposable
     {
-        public Buildings_Overlay(bool visible = true) : base(visible) { }
+        public BuildingsOverlay(bool visible = true) : base(visible) { }
 
         public void ExposeData() => this.ExposeData("overlayBuilding");
 

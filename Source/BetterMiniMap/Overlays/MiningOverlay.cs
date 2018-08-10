@@ -4,9 +4,9 @@ using RimWorld;
 
 namespace BetterMiniMap.Overlays
 {
-	public class Mining_Overlay : Overlay, IExposable
+	public class MiningOverlay : Overlay, IExposable
 	{
-        public Mining_Overlay(bool visible = true) : base(visible) { }
+        public MiningOverlay(bool visible = true) : base(visible) { }
 
         public void ExposeData() => this.ExposeData("overlayMining");
 

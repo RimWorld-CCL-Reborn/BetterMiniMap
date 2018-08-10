@@ -7,14 +7,9 @@
 
   <BMM_AreasOverlayLabel>エリア</BMM_AreasOverlayLabel>
   <BMM_BuildingsOverlayLabel>建物</BMM_BuildingsOverlayLabel>
-  <BMM_ColonistsOverlayLabel>入植者</BMM_ColonistsOverlayLabel>
   <BMM_MiningOverlayLabel>鉱石</BMM_MiningOverlayLabel>
-  <BMM_NoncolonistOverlayLabel>非入植者</BMM_NoncolonistOverlayLabel>
   <BMM_PowerGridOverlayLabel>電力線</BMM_PowerGridOverlayLabel>
-  <BMM_RobotsOverlayLabel>ロボット</BMM_RobotsOverlayLabel>
-  <BMM_ShipsOverlayLabel>宇宙船</BMM_ShipsOverlayLabel>
   <BMM_TerrainOverlayLabel>地形</BMM_TerrainOverlayLabel>
-  <BMM_WildlifeOverlayLabel>野生動物</BMM_WildlifeOverlayLabel>
 
   <!--These are only for adjust settings update-->
   <BMM_FogOverlayLabel>霧</BMM_FogOverlayLabel>

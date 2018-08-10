@@ -5,6 +5,8 @@ namespace BetterMiniMap.Overlays
 {
     public abstract class Overlay
     {
+        public OverlayDef def;
+
         private bool visible;
         private Texture2D texture;
 

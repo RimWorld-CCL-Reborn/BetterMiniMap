@@ -7,14 +7,9 @@
 
     <BMM_AreasOverlayLabel>Bereich</BMM_AreasOverlayLabel>
     <BMM_BuildingsOverlayLabel>Bauwerke</BMM_BuildingsOverlayLabel>
-    <BMM_ColonistsOverlayLabel>Kolonisten</BMM_ColonistsOverlayLabel>
     <BMM_MiningOverlayLabel>Bergbau</BMM_MiningOverlayLabel>
-    <BMM_NoncolonistOverlayLabel>Besucher</BMM_NoncolonistOverlayLabel>
     <BMM_PowerGridOverlayLabel>Energienetz</BMM_PowerGridOverlayLabel>
-    <BMM_RobotsOverlayLabel>Roboter</BMM_RobotsOverlayLabel>
-    <BMM_ShipsOverlayLabel>Schiffe</BMM_ShipsOverlayLabel>
     <BMM_TerrainOverlayLabel>Terrain</BMM_TerrainOverlayLabel>
-    <BMM_WildlifeOverlayLabel>Fauna</BMM_WildlifeOverlayLabel>
 
     <!--Nur zur Anpassung bei Einstellungsaktualisierung-->
     <BMM_FogOverlayLabel>Nebel</BMM_FogOverlayLabel>

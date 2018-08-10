@@ -52,7 +52,7 @@ namespace BetterMiniMap
         public Vector2 Position { get => position; set => position = value; }
         public Vector2 Size { get => size; set => size = value; }
         public bool Active { get => this.active; set => this.active = value; }
-        public Area_Overlay OverlayArea { get => OverlayManager.OverlayArea;  }
+        public AreaOverlay OverlayArea { get => OverlayManager.OverlayArea;  }
 
         protected override float Margin { get => 0f; }
 
@@ -74,9 +74,6 @@ namespace BetterMiniMap
             {
                 this.overlays.Add(overlay);
             }
-
-            /*if (OverlayManager.HasTiberium())
-                this.overlays.Add(OverlayManager.OverlayTiberium);*/
         }
 
         // TODO: return to float menus.
@@ -85,20 +82,14 @@ namespace BetterMiniMap
         {
             List<FloatMenuOption> overlayMenuItems = new List<FloatMenuOption>()
             {
-                //new FloatMenuCheckBox(OverlayManager.OverlayColonists, "BMM_ColonistsOverlayLabel".Translate()),
-                //new FloatMenuCheckBox(OverlayManager.OverlayNoncolonist, "BMM_NoncolonistOverlayLabel".Translate()),
-                //new FloatMenuCheckBox(OverlayManager.OverlayWild, "BMM_WildlifeOverlayLabel".Translate()),
                 new FloatMenuCheckBox(OverlayManager.OverlayBuilding, "BMM_BuildingsOverlayLabel".Translate()),
                 new FloatMenuCheckBox(OverlayManager.OverlayPower, "BMM_PowerGridOverlayLabel".Translate()),
                 new FloatMenuCheckBox(OverlayManager.OverlayMining, "BMM_MiningOverlayLabel".Translate()),
                 new FloatMenuCheckBox(OverlayManager.OverlayTerrain, "BMM_TerrainOverlayLabel".Translate()),
-                //new FloatMenuCheckBox(OverlayManager.OverlayShips, "BMM_ShipsOverlayLabel".Translate()),
-                //new FloatMenuCheckBox(OverlayManager.OverlayRobots, "BMM_RobotsOverlayLabel".Translate()),
             };
 
-            /*if (OverlayManager.HasTiberium())
-                overlayMenuItems.Add(new FloatMenuCheckBox(OverlayManager.OverlayTiberium, "Tiberium"));
-            */
+            foreach (Overlay overlay in OverlayManager.Overlays)
+                overlayMenuItems.Add(new FloatMenuCheckBox(overlay, overlay?.def.label));
 
             return overlayMenuItems;
 

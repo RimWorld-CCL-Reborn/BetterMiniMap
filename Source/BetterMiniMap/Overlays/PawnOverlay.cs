@@ -10,8 +10,6 @@ namespace BetterMiniMap.Overlays
 {
     public class PawnOverlay : MarkerOverlay
     {
-        public OverlayDef def;
-
         public PawnOverlay(OverlayDef def, bool visible = true) : base(visible)
         {
             this.def = def;

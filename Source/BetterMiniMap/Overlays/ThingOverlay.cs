@@ -9,8 +9,6 @@ namespace BetterMiniMap.Overlays
 {
     public class ThingOverlay : MarkerOverlay
     {
-        public OverlayDef def;
-
         public ThingOverlay(OverlayDef def, bool visible = true) : base(visible)
         {
             this.def = def;

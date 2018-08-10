@@ -7,14 +7,9 @@
 
   <BMM_AreasOverlayLabel>지역</BMM_AreasOverlayLabel>
   <BMM_BuildingsOverlayLabel>건물</BMM_BuildingsOverlayLabel>
-  <BMM_ColonistsOverlayLabel>콜로니스트(림)</BMM_ColonistsOverlayLabel>
   <BMM_MiningOverlayLabel>채광</BMM_MiningOverlayLabel>
-  <BMM_NoncolonistOverlayLabel>비 콜로니스트</BMM_NoncolonistOverlayLabel>
   <BMM_PowerGridOverlayLabel>전력 그리드</BMM_PowerGridOverlayLabel>
-  <BMM_RobotsOverlayLabel>로봇</BMM_RobotsOverlayLabel>
-  <BMM_ShipsOverlayLabel>함선</BMM_ShipsOverlayLabel>
   <BMM_TerrainOverlayLabel>지형</BMM_TerrainOverlayLabel>
-  <BMM_WildlifeOverlayLabel>야생동물</BMM_WildlifeOverlayLabel>
 
   <!--These are only for adjust settings update-->
   <BMM_FogOverlayLabel>안개</BMM_FogOverlayLabel>

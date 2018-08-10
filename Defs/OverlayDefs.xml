@@ -28,7 +28,7 @@
 
   <BetterMiniMap.OverlayDef>
     <defName>NonColonistOverlay</defName>
-    <label>Wildlife Overlay</label>
+    <label>NonColonists Overlay</label>
     <description>This overlay shows pawns that aren't animals nor colonists</description>
     <overlayClass>BetterMiniMap.Overlays.PawnOverlay</overlayClass>
     <updatePeriod>15</updatePeriod>

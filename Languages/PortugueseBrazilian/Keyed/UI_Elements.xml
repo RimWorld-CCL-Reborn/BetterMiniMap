@@ -6,14 +6,9 @@
     <BMM_TimeUpdateLabel>Atualizar de X em X Frames</BMM_TimeUpdateLabel>
     <BMM_AreasOverlayLabel>Áreas</BMM_AreasOverlayLabel>
     <BMM_BuildingsOverlayLabel>Construções</BMM_BuildingsOverlayLabel>
-    <BMM_ColonistsOverlayLabel>Colonista</BMM_ColonistsOverlayLabel>
     <BMM_MiningOverlayLabel>Mineração</BMM_MiningOverlayLabel>
-    <BMM_NoncolonistOverlayLabel>Não Colonista</BMM_NoncolonistOverlayLabel>
     <BMM_PowerGridOverlayLabel>Rede Elétrica</BMM_PowerGridOverlayLabel>
-    <BMM_RobotsOverlayLabel>Robô</BMM_RobotsOverlayLabel>
-    <BMM_ShipsOverlayLabel>Nave</BMM_ShipsOverlayLabel>
     <BMM_TerrainOverlayLabel>Terreno</BMM_TerrainOverlayLabel>
-    <BMM_WildlifeOverlayLabel>Animais</BMM_WildlifeOverlayLabel>
 
     <!--These are only for adjust settings update-->
     <BMM_FogOverlayLabel>Fog</BMM_FogOverlayLabel>

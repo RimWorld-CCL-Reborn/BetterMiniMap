@@ -2,9 +2,9 @@ using Verse;
 
 namespace BetterMiniMap.Overlays
 {
-	public class Viewpoint_Overlay : Overlay
+	public class ViewpointOverlay : Overlay
 	{
-        public Viewpoint_Overlay(bool visible = true) : base(visible) { }
+        public ViewpointOverlay(bool visible = true) : base(visible) { }
 
         public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.viewpoint;
 

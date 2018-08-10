@@ -10,25 +10,25 @@ namespace BetterMiniMap
     [StaticConstructorOnStartup]
     public static class OverlayManager
     {
-        public static Fog_Overlay OverlayFog;
-        public static Mining_Overlay OverlayMining;
-        public static Buildings_Overlay OverlayBuilding;
-        public static PowerGrid_Overlay OverlayPower;
-        public static Terrain_Overlay OverlayTerrain;
-        public static Viewpoint_Overlay OverlayView;
-        public static Area_Overlay OverlayArea;
+        public static FogOverlay OverlayFog;
+        public static MiningOverlay OverlayMining;
+        public static BuildingsOverlay OverlayBuilding;
+        public static PowerGridOverlay OverlayPower;
+        public static TerrainOverlay OverlayTerrain;
+        public static ViewpointOverlay OverlayView;
+        public static AreaOverlay OverlayArea;
 
         public static List<Overlay> Overlays;
 
         static OverlayManager()
         {
-            OverlayFog = new Fog_Overlay();
-            OverlayMining = new Mining_Overlay();
-            OverlayBuilding = new Buildings_Overlay();
-            OverlayPower = new PowerGrid_Overlay();
-            OverlayTerrain = new Terrain_Overlay();
-            OverlayView = new Viewpoint_Overlay();
-            OverlayArea = new Area_Overlay();
+            OverlayFog = new FogOverlay();
+            OverlayMining = new MiningOverlay();
+            OverlayBuilding = new BuildingsOverlay();
+            OverlayPower = new PowerGridOverlay();
+            OverlayTerrain = new TerrainOverlay();
+            OverlayView = new ViewpointOverlay();
+            OverlayArea = new AreaOverlay();
             
             // handle OverlayDefs
             OverlayManager.Overlays = new List<Overlay>();
