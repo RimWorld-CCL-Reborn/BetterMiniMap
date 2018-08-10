@@ -62,36 +62,38 @@ namespace BetterMiniMap
             this.overlays = new List<Overlay>()
             {
                 OverlayManager.OverlayTerrain,
-                OverlayManager.OverlayColonists,
                 OverlayManager.OverlayMining,
-                OverlayManager.OverlayNoncolonist,
                 OverlayManager.OverlayBuilding,
                 OverlayManager.OverlayPower,
-                OverlayManager.OverlayWild,
-                OverlayManager.OverlayShips,
-                OverlayManager.OverlayRobots,
                 OverlayManager.OverlayFog,
                 OverlayManager.OverlayView,
             };
+
+            //TODO: work in progress
+            foreach(Overlay overlay in OverlayManager.Overlays)
+            {
+                this.overlays.Add(overlay);
+            }
 
             if (OverlayManager.HasTiberium())
                 this.overlays.Add(OverlayManager.OverlayTiberium);
         }
 
+        // TODO: return to float menus.
         // TODO: consider moving this all to overlay manager?
         public List<FloatMenuOption> GenerateOverlayMenuItems()
         {
             List<FloatMenuOption> overlayMenuItems = new List<FloatMenuOption>()
             {
-                new FloatMenuCheckBox(OverlayManager.OverlayColonists, "BMM_ColonistsOverlayLabel".Translate()),
-                new FloatMenuCheckBox(OverlayManager.OverlayNoncolonist, "BMM_NoncolonistOverlayLabel".Translate()),
-                new FloatMenuCheckBox(OverlayManager.OverlayWild, "BMM_WildlifeOverlayLabel".Translate()),
+                //new FloatMenuCheckBox(OverlayManager.OverlayColonists, "BMM_ColonistsOverlayLabel".Translate()),
+                //new FloatMenuCheckBox(OverlayManager.OverlayNoncolonist, "BMM_NoncolonistOverlayLabel".Translate()),
+                //new FloatMenuCheckBox(OverlayManager.OverlayWild, "BMM_WildlifeOverlayLabel".Translate()),
                 new FloatMenuCheckBox(OverlayManager.OverlayBuilding, "BMM_BuildingsOverlayLabel".Translate()),
                 new FloatMenuCheckBox(OverlayManager.OverlayPower, "BMM_PowerGridOverlayLabel".Translate()),
                 new FloatMenuCheckBox(OverlayManager.OverlayMining, "BMM_MiningOverlayLabel".Translate()),
                 new FloatMenuCheckBox(OverlayManager.OverlayTerrain, "BMM_TerrainOverlayLabel".Translate()),
-                new FloatMenuCheckBox(OverlayManager.OverlayShips, "BMM_ShipsOverlayLabel".Translate()),
-                new FloatMenuCheckBox(OverlayManager.OverlayRobots, "BMM_RobotsOverlayLabel".Translate()),
+                //new FloatMenuCheckBox(OverlayManager.OverlayShips, "BMM_ShipsOverlayLabel".Translate()),
+                //new FloatMenuCheckBox(OverlayManager.OverlayRobots, "BMM_RobotsOverlayLabel".Translate()),
             };
 
             if (OverlayManager.HasTiberium())
