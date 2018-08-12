@@ -1,24 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Verse;
-using RimWorld;
-using UnityEngine;
+
+using static BetterMiniMap.BetterMiniMapSettings;
 
 namespace BetterMiniMap.Overlays
 {
-    public class PawnOverlay : MarkerOverlay
+    public class PawnOverlay : MarkerOverlay, IExposable
     {
         public PawnOverlay(OverlayDef def, bool visible = true) : base(visible)
         {
             this.def = def;
         }
 
+        public void ExposeData() => this.ExposeData(this.def.label);
         public IEnumerable<Pawn> GetPawns() => Find.CurrentMap.mapPawns.AllPawns.Where(p => this.def.IsValid(p));
-
-        // TODO: settings
-        public override int GetUpdateInterval() => this.def.updatePeriod; 
+        public override int GetUpdateInterval() => OverlaySettingDatabase.GetOverlaySettings(this.def.defName).updatePeriod;
 
         public override void Render()
         {
@@ -28,8 +25,8 @@ namespace BetterMiniMap.Overlays
 
         public virtual void CreateMarker(Pawn pawn, bool transparentEdges = true, float edgeOpacity = 0.5f)
         {
-            IndicatorProps props = this.def.indicatorMappings.Mapper(pawn);
-            base.CreateMarker(pawn.Position, props.radius, props.color, props.EdgeColor, edgeOpacity);
+            IndicatorSettings settings = this.def.indicatorMappings.GetIndicatorSettings(pawn);
+            base.CreateMarker(pawn.Position, settings.radius, settings.color, settings.edgeColor, edgeOpacity);
         }
     }
 }

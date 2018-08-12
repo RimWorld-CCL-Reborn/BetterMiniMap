@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using UnityEngine;
 using Verse;
+
+using static BetterMiniMap.BetterMiniMapSettings;
 
 namespace BetterMiniMap.Overlays
 {
-    public class ThingOverlay : MarkerOverlay
+    public class ThingOverlay : MarkerOverlay, IExposable
     {
         public ThingOverlay(OverlayDef def, bool visible = true) : base(visible)
         {
             this.def = def;
         }
 
+        public void ExposeData() => this.ExposeData(this.def.label);
         public IEnumerable<Thing> GetThings() => Find.CurrentMap.listerThings.AllThings.Where(t => this.def.IsValid(t));
-
-        // TODO: settings
-        public override int GetUpdateInterval() => this.def.updatePeriod;
+        public override int GetUpdateInterval() => OverlaySettingDatabase.GetOverlaySettings(this.def.defName).updatePeriod;
 
         public override void Render()
         {
@@ -27,9 +25,8 @@ namespace BetterMiniMap.Overlays
 
         public virtual void CreateMarker(Thing thing, float edgeOpacity = 0.5f)
         {
-            IndicatorProps props = this.def.indicatorMappings.Mapper(thing);
-            base.CreateMarker(thing.Position, props.radius, props.color, props.EdgeColor, edgeOpacity);
+            IndicatorSettings settings = this.def.indicatorMappings.GetIndicatorSettings(thing);
+            base.CreateMarker(thing.Position, settings.radius, settings.color, settings.edgeColor, edgeOpacity);
         }
-
     }
 }

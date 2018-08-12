@@ -3,21 +3,25 @@
 
   <BetterMiniMap.OverlayDef>
     <defName>ColonistsOverlay</defName>
-    <label>Colonists Overlay</label>
+    <label>Colonists</label>
     <description>This overlay shows colonists and tamed animals</description>
     <overlayClass>BetterMiniMap.Overlays.PawnOverlay</overlayClass>
     <updatePeriod>15</updatePeriod>
     <selectors>
       <li Class="BetterMiniMap.PlayerFactionSelector" />
     </selectors>
-    <indicatorMappings Class="BetterMiniMap.IndicatorMapper">
+    <indicatorMappings Class="BetterMiniMap.IndicatorMappings">
       <mappings>
         <li Class="BetterMiniMap.IndicatorProps">
+          <name>tamedAnimals</name>
+          <label>BMM_AnimalIndicatorSizeLabel</label>
           <selector Class="BetterMiniMap.AnimalSelector" />
           <color>RGBA(0.000, 1.000, 0.000, 1.000)</color>
           <radius>2.0</radius>
         </li>
         <li Class="BetterMiniMap.IndicatorProps">
+          <name>colonists</name>
+          <label>BMM_ColonistIndicatorSizeLabel</label>
           <selector Class="BetterMiniMap.Default" />
           <color>RGBA(0.000, 1.000, 0.000, 1.000)</color>
           <radius>3.0</radius>
@@ -28,7 +32,7 @@
 
   <BetterMiniMap.OverlayDef>
     <defName>NonColonistOverlay</defName>
-    <label>NonColonists Overlay</label>
+    <label>Non-colonist</label>
     <description>This overlay shows pawns that aren't animals nor colonists</description>
     <overlayClass>BetterMiniMap.Overlays.PawnOverlay</overlayClass>
     <updatePeriod>15</updatePeriod>
@@ -36,19 +40,25 @@
       <li Class="BetterMiniMap.NonAnimalSelector" />
       <li Class="BetterMiniMap.NonPlayerFactionSelector" />
     </selectors>
-    <indicatorMappings Class="BetterMiniMap.IndicatorMapper">
+    <indicatorMappings Class="BetterMiniMap.IndicatorMappings">
       <mappings>
         <li Class="BetterMiniMap.IndicatorProps">
           <selector Class="BetterMiniMap.HostilePawnsSelector" />
+          <name>enemyPawns</name>
+          <label>BMM_EnemyIndicatorSizeLabel</label>
           <color>RGBA(1.000, 0.000, 0.000, 1.000)</color>
           <radius>3.0</radius>
         </li>
         <li Class="BetterMiniMap.IndicatorProps">
+          <name>traderPawns</name>
+          <label>BMM_TraderIndicatorSizeLabel</label>
           <selector Class="BetterMiniMap.TraderSelector" />
           <color>RGBA(0.000, 0.000, 1.000, 1.000)</color>
           <radius>2.0</radius>
         </li>
-        <li Class="BetterMiniMap.IndicatorProps"> <!-- Visitors -->
+        <li Class="BetterMiniMap.IndicatorProps">
+          <name>visitorPawns</name>
+          <label>BMM_VisitorIndicatorSizeLabel</label>
           <selector Class="BetterMiniMap.Default" />
           <color>RGBA(0.000, 1.000, 0.000, 1.000)</color>
           <radius>2.0</radius>
@@ -57,9 +67,9 @@
     </indicatorMappings>
   </BetterMiniMap.OverlayDef>
 
-<BetterMiniMap.OverlayDef>
+  <BetterMiniMap.OverlayDef>
     <defName>WildlifeOverlay</defName>
-    <label>Wildlife Overlay</label>
+    <label>Wildlife</label>
     <description>This overlay shows wild animals</description>
     <overlayClass>BetterMiniMap.Overlays.PawnOverlay</overlayClass>
     <updatePeriod>80</updatePeriod>
@@ -67,14 +77,18 @@
       <li Class="BetterMiniMap.NonPlayerFactionSelector" />
       <li Class="BetterMiniMap.AnimalSelector" />
     </selectors>
-    <indicatorMappings Class="BetterMiniMap.IndicatorMapper">
+    <indicatorMappings Class="BetterMiniMap.IndicatorMappings">
       <mappings>
         <li Class="BetterMiniMap.IndicatorProps">
+          <name>wildlifeHostiles</name>
+          <label>BMM_HostileAnimalIndicatorSizeLabel</label>
           <selector Class="BetterMiniMap.HostilePawnsSelector" />
           <color>RGBA(1.000, 0.000, 0.000, 1.000)</color>
           <radius>3.0</radius>
         </li>
         <li Class="BetterMiniMap.IndicatorProps">
+          <name>wildlifeHunting</name>
+          <label>BMM_HuntingIndicatorSizeLabel</label>
           <selector Class="BetterMiniMap.PawnDesignatorSelector">
             <designationDef>Hunt</designationDef>
           </selector>
@@ -82,6 +96,8 @@
           <radius>3.0</radius>
         </li>
         <li Class="BetterMiniMap.IndicatorProps">
+          <name>wildlifeTaming</name>
+          <label>BMM_TamingIndicatorSizeLabel</label>
           <selector Class="BetterMiniMap.PawnDesignatorSelector">
             <designationDef>Tame</designationDef>
           </selector>
@@ -89,6 +105,8 @@
           <radius>2.0</radius>
         </li>
         <li Class="BetterMiniMap.IndicatorProps">
+          <name>wildlife</name>
+          <label>BMM_WildlifeIndicatorSizeLabel</label>
           <selector Class="BetterMiniMap.Default" />
           <color>RGBA(0.000, 1.000, 0.000, 1.000)</color>
           <radius>1.0</radius>
@@ -99,7 +117,7 @@
 
   <BetterMiniMap.OverlayDef>
     <defName>RobotsOverlay</defName>
-    <label>Robots Overlay</label>
+    <label>Robots</label>
     <description>This overlay shows robots</description>
     <overlayClass>BetterMiniMap.Overlays.PawnOverlay</overlayClass>
     <updatePeriod>15</updatePeriod>
@@ -108,9 +126,11 @@
         <classType>AIRobot.X2_AIRobot</classType>
       </li>
     </selectors>
-    <indicatorMappings Class="BetterMiniMap.IndicatorMapper">
+    <indicatorMappings Class="BetterMiniMap.IndicatorMappings">
       <mappings>
         <li Class="BetterMiniMap.IndicatorProps">
+          <name>robots</name>
+          <label>BMM_RobotsIndicatorSizeLabel</label>
           <selector Class="BetterMiniMap.Default" />
           <color>RGBA(1.000, 1.000, 1.000, 1.000)</color>
           <radius>3.0</radius>
@@ -121,7 +141,7 @@
 
   <BetterMiniMap.OverlayDef>
     <defName>ShipsOverlay</defName>
-    <label>Ships Overlay</label>
+    <label>Ships</label>
     <description>This overlay shows any crashed ships that have landed on the map</description>
     <overlayClass>BetterMiniMap.Overlays.ThingOverlay</overlayClass>
     <updatePeriod>60</updatePeriod>
@@ -130,9 +150,11 @@
         <classType>Building_CrashedShipPart</classType>
       </li>
     </selectors>
-    <indicatorMappings Class="BetterMiniMap.IndicatorMapper">
+    <indicatorMappings Class="BetterMiniMap.IndicatorMappings">
       <mappings>
         <li Class="BetterMiniMap.IndicatorProps">
+          <name>ships</name>
+          <label>BMM_ShipsIndicatorSizeLabel</label>
           <selector Class="BetterMiniMap.Default" />
           <color>RGBA(1.000, 0.000, 0.000, 1.000)</color>
           <radius>3.0</radius>
@@ -143,7 +165,7 @@
 
   <BetterMiniMap.OverlayDef>
     <defName>TiberiumOverlay</defName>
-    <label>Tiberium Overlay</label>
+    <label>Tiberium</label>
     <description>This overlay shows the distribution of tiberium on the map</description>
     <overlayClass>BetterMiniMap.Overlays.Thing_Overlay</overlayClass>
     <updatePeriod>60</updatePeriod>
@@ -152,9 +174,11 @@
         <classType>TiberiumRim.TiberiumCrystal</classType>
       </li>
     </selectors>
-    <indicatorMappings Class="BetterMiniMap.IndicatorMapper">
+    <indicatorMappings Class="BetterMiniMap.IndicatorMappings">
       <mappings>
         <li Class="BetterMiniMap.IndicatorProps">
+          <name>tiberiumGreen</name>
+          <label>tiberiumGreen</label>
           <selector Class="BetterMiniMap.ThingByDefNameSelector">
             <defNames>
               <li>TiberiumGreen</li>
@@ -168,6 +192,8 @@
           <radius>1.0</radius>
         </li>
         <li Class="BetterMiniMap.IndicatorProps">
+          <name>tiberiumBlue</name>
+          <label>tiberiumBlue</label>
           <selector Class="BetterMiniMap.ThingByDefNameSelector">
             <defNames>
               <li>TiberiumBlue</li>
@@ -180,6 +206,8 @@
           <radius>1.0</radius>
         </li>
         <li Class="BetterMiniMap.IndicatorProps">
+          <name>tiberiumRed</name>
+          <label>tiberiumRed</label>
           <selector Class="BetterMiniMap.ThingByDefNameSelector">
             <defNames>
               <li>TiberiumRed</li>
@@ -191,6 +219,8 @@
           <radius>1.0</radius>
         </li>
         <li Class="BetterMiniMap.IndicatorProps">
+          <name>tiberiumGlacier</name>
+          <label>tiberiumGlacier</label>
           <selector Class="BetterMiniMap.ThingByDefNameSelector">
             <defNames>
               <li>TiberiumGlacier</li>
@@ -201,6 +231,8 @@
           <radius>1.0</radius>
         </li>
         <li Class="BetterMiniMap.IndicatorProps">
+          <name>tiberiumVein</name>
+          <label>tiberiumVein</label>
           <selector Class="BetterMiniMap.ThingByDefNameSelector">
             <defNames>
               <li>TiberiumVein</li>

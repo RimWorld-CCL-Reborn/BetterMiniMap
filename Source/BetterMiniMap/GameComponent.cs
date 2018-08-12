@@ -98,13 +98,12 @@ namespace BetterMiniMap
 
         public override void FinalizeInit()
         {
+#if DEBUG
             Log.Message("FinalizeInit");
+#endif
             base.FinalizeInit();
             if (miniMap == null)
-            {
                 miniMap = new MiniMapWindow();
-                Log.Message("miniMap == null");
-            }
             Find.WindowStack.Add(miniMap);
             // need to reset textures (in case reload)
             //miniMap.ResetOverlays();
@@ -113,10 +112,7 @@ namespace BetterMiniMap
         private void AddMiniMapWindow()
         {
             if (miniMap == null)
-            {
                 miniMap = new MiniMapWindow();
-                Log.Message("miniMap == null");
-            }
             Find.WindowStack.Add(miniMap);
         }
 

@@ -37,6 +37,8 @@ namespace BetterMiniMap
                 Overlay overlay = (Overlay)Activator.CreateInstance(def.overlayClass, new object[] {def, true});
                 OverlayManager.Overlays.Add(overlay);
             }
+            // add tracking for settings
+            OverlaySettingDatabase.InitializeOverlaySettings();
         }
 
         // TODO: revist this concept...
