@@ -96,10 +96,12 @@ namespace BetterMiniMap
             }
         }
 
-        public override void FinalizeInit()
+        // NOTE: Finalize Init is too early for CurrentMap to be set
+        //public override void FinalizeInit()
+        public void PostInit()
         {
 #if DEBUG
-            Log.Message($"FinalizeInit");
+            Log.Message($"PostInit");
 #endif
             base.FinalizeInit();
             if (miniMap == null) // this should always fire?
@@ -110,6 +112,19 @@ namespace BetterMiniMap
             
             // need to reset textures (in case reload)
             //miniMap.ResetOverlays();
+        }
+
+        public override void StartedNewGame()
+        {
+            base.StartedNewGame();
+            PostInit();
+        }
+
+
+        public override void LoadedGame()
+        {
+            base.LoadedGame();
+            PostInit();
         }
 
         public override void ExposeData()
