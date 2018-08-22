@@ -45,6 +45,7 @@ namespace BetterMiniMap.Overlays
             //this.texture.SetPixels32(Utilities.GetClearPixelArray);
             //this.texture.filterMode = FilterMode.Trilinear;
                 anisoLevel = BetterMiniMapMod.settings.anisoLevel,
+                hideFlags = HideFlags.HideAndDontSave,
             };
             this.texture.Apply(BetterMiniMapMod.settings.mipMaps);
         }

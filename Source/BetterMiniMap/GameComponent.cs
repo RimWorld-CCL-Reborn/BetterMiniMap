@@ -99,21 +99,17 @@ namespace BetterMiniMap
         public override void FinalizeInit()
         {
 #if DEBUG
-            Log.Message("FinalizeInit");
+            Log.Message($"FinalizeInit");
 #endif
             base.FinalizeInit();
-            if (miniMap == null)
+            if (miniMap == null) // this should always fire?
                 miniMap = new MiniMapWindow();
-            Find.WindowStack.Add(miniMap);
+            
+            if (Find.CurrentMap != null)
+                Find.WindowStack.Add(miniMap);
+            
             // need to reset textures (in case reload)
             //miniMap.ResetOverlays();
-        }
-
-        private void AddMiniMapWindow()
-        {
-            if (miniMap == null)
-                miniMap = new MiniMapWindow();
-            Find.WindowStack.Add(miniMap);
         }
 
         public override void ExposeData()

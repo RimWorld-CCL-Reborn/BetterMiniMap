@@ -239,11 +239,10 @@ namespace BetterMiniMap
         public override void DoSettingsWindowContents(Rect rect)
         {
             rect.height += 50f;
-            Listing_Standard listing_Standard = new Listing_Standard() { ColumnWidth = (rect.width / 1f) - 5f };
-            listing_Standard.Begin(rect);
+            Listing_Standard listing_Standard = rect.BeginListingStandard();
 
             // UpdatePeriods
-            listing_Standard.AddLabelLine("BMM_TimeUpdateLabel".Translate(), 2f * Text.LineHeight);
+            listing_Standard.AddLabelLine("BMM_TimeUpdateLabel".Translate());
 
             listing_Standard.AddLabeledNumericalTextField<int>("BMM_AreasOverlayLabel".Translate(), ref settings.updatePeriods.areas, 0.75f);
             listing_Standard.AddLabeledNumericalTextField<int>("BMM_BuildingsOverlayLabel".Translate(), ref settings.updatePeriods.buildings, 0.75f);
@@ -259,8 +258,7 @@ namespace BetterMiniMap
             // IndicatorSizes
             listing_Standard.AddSubSettingsButton("BMM_IndicatorSizeLabel".Translate(), (Rect inRect) =>
             {
-                Listing_Standard subsettings = new Listing_Standard();
-                subsettings.Begin(inRect);
+                Listing_Standard subsettings = inRect.BeginListingStandard();
                 foreach(IndicatorSettings settings in OverlaySettingDatabase.IndicatorSettings)
                 {
                     // TODO: remove the need for this translate...(Def Injection)
@@ -272,9 +270,7 @@ namespace BetterMiniMap
             // Customize colors
             listing_Standard.AddSubSettingsButton("BMM_ColorPickersLabel".Translate(), (Rect inRect) =>
             {
-                Listing_Standard subsettings = new Listing_Standard(); 
-                subsettings.Begin(inRect);
-
+                Listing_Standard subsettings = inRect.BeginListingStandard();
                 //listing_Standard.AddColorPickerButton("BMM_FogOverlayLabel".Translate(), settings.overlayColors.fog, (SelectionColorWidget scw) => { settings.overlayColors.fog = scw.SelectedColor; });
                 subsettings.AddColorPickerButton("BMM_BuildingsOverlayLabel".Translate(), settings.overlayColors.buildings, (SelectionColorWidget scw) => { settings.overlayColors.buildings = scw.SelectedColor; });
 
@@ -295,6 +291,7 @@ namespace BetterMiniMap
                     // TODO: remove the need for this translate...(Def Injection)
                     subsettings.AddColorPickerButton(settings.label.Translate(), settings.color, (SelectionColorWidget scw) => {
                         settings.color = scw.SelectedColor;
+                        settings.edgeColor = BetterMiniMapSettings.FadedColor(settings.color);
                         // TODO: handle faded/secondary color
                     });
                 }

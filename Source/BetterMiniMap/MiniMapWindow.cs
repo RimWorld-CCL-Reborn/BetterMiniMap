@@ -108,6 +108,9 @@ namespace BetterMiniMap
             // NOTE: this could be part of a mapcomponent perhaps?
             if (Find.CurrentMap.TileInfo.GetHashCode() != this.tileHash)
             {
+#if DEBUG
+                Log.Message($"MiniMapWindow.DoWindowContents -> regenerating {Find.CurrentMap.Size.x} {Find.CurrentMap.Size.z}");
+#endif
                 this.tileHash = Find.CurrentMap.TileInfo.GetHashCode();
 
                 for (int i = 0; i < this.overlays.Count; i++)
@@ -278,6 +281,9 @@ namespace BetterMiniMap
 
         public void Toggle(bool add = false)
         {
+#if DEBUG
+            Log.Message($"MiniMapWindow.Toggle: {add}");
+#endif
             if (add)
             {
                 if (Find.WindowStack.Windows.IndexOf(this) == -1) // keep from double add...
@@ -350,6 +356,7 @@ namespace BetterMiniMap
                 this.coords.size = new Vector2(1f, 1f);
         }
 
+        // TODO: fix this... it's nasty.
         private void PostLoadInit()
         {
             // NOTE: there should be a cleaner way to do this...
