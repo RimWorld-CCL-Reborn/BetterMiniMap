@@ -7,14 +7,9 @@
 
     <BMM_AreasOverlayLabel>Зоны</BMM_AreasOverlayLabel>
     <BMM_BuildingsOverlayLabel>Постройки</BMM_BuildingsOverlayLabel>
-    <BMM_ColonistsOverlayLabel>Колонисты</BMM_ColonistsOverlayLabel>
     <BMM_MiningOverlayLabel>Шахтёрство</BMM_MiningOverlayLabel>
-    <BMM_NoncolonistOverlayLabel>Не-колонисты</BMM_NoncolonistOverlayLabel>
     <BMM_PowerGridOverlayLabel>Электросеть</BMM_PowerGridOverlayLabel>
-    <BMM_RobotsOverlayLabel>Роботы</BMM_RobotsOverlayLabel>
-    <BMM_ShipsOverlayLabel>Корабли</BMM_ShipsOverlayLabel>
     <BMM_TerrainOverlayLabel>Местность</BMM_TerrainOverlayLabel>
-    <BMM_WildlifeOverlayLabel>Дикая живность</BMM_WildlifeOverlayLabel>
 
     <!--These are only for adjust settings update-->
     <BMM_FogOverlayLabel>Туман</BMM_FogOverlayLabel>

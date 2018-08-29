@@ -5,10 +5,10 @@ using RimWorld;
 
 namespace BetterMiniMap.Overlays
 {
-    // TODO: consider merging this with Buildings_Overlay
-	public class PowerGrid_Overlay : Overlay, IExposable
+    // TODO: can this be abstracted into a def?
+	public class PowerGridOverlay : Overlay, IExposable
 	{
-        public PowerGrid_Overlay(bool visible = true) : base(visible) { }
+        public PowerGridOverlay(bool visible = true) : base(visible) { }
 
         public void ExposeData() => this.ExposeData("overlayPower");
 

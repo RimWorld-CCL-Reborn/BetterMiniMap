@@ -1,4 +1,4 @@
-# BetterMiniMap [![RimWorld Alpha 18](https://img.shields.io/badge/RimWorld-Alpha%2018-brightgreen.svg)](http://rimworldgame.com/)
+# BetterMiniMap [![RimWorld Beta 19](https://img.shields.io/badge/RimWorld-Alpha%2018-brightgreen.svg)](http://rimworldgame.com/)
 
 Provides a minimap for RimWorld using the overlays provided from Community Core Library. A simular mod exists that attempted to do the same but had numerous issues and bug.
 

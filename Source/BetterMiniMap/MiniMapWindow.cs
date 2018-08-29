@@ -52,7 +52,7 @@ namespace BetterMiniMap
         public Vector2 Position { get => position; set => position = value; }
         public Vector2 Size { get => size; set => size = value; }
         public bool Active { get => this.active; set => this.active = value; }
-        public Area_Overlay OverlayArea { get => OverlayManager.OverlayArea;  }
+        public AreaOverlay OverlayArea { get => OverlayManager.OverlayArea;  }
 
         protected override float Margin { get => 0f; }
 
@@ -62,40 +62,34 @@ namespace BetterMiniMap
             this.overlays = new List<Overlay>()
             {
                 OverlayManager.OverlayTerrain,
-                OverlayManager.OverlayColonists,
                 OverlayManager.OverlayMining,
-                OverlayManager.OverlayNoncolonist,
                 OverlayManager.OverlayBuilding,
                 OverlayManager.OverlayPower,
-                OverlayManager.OverlayWild,
-                OverlayManager.OverlayShips,
-                OverlayManager.OverlayRobots,
                 OverlayManager.OverlayFog,
                 OverlayManager.OverlayView,
             };
 
-            if (OverlayManager.HasTiberium())
-                this.overlays.Add(OverlayManager.OverlayTiberium);
+            //TODO: work in progress
+            foreach(Overlay overlay in OverlayManager.Overlays)
+            {
+                this.overlays.Add(overlay);
+            }
         }
 
+        // TODO: return to float menus.
         // TODO: consider moving this all to overlay manager?
         public List<FloatMenuOption> GenerateOverlayMenuItems()
         {
             List<FloatMenuOption> overlayMenuItems = new List<FloatMenuOption>()
             {
-                new FloatMenuCheckBox(OverlayManager.OverlayColonists, "BMM_ColonistsOverlayLabel".Translate()),
-                new FloatMenuCheckBox(OverlayManager.OverlayNoncolonist, "BMM_NoncolonistOverlayLabel".Translate()),
-                new FloatMenuCheckBox(OverlayManager.OverlayWild, "BMM_WildlifeOverlayLabel".Translate()),
                 new FloatMenuCheckBox(OverlayManager.OverlayBuilding, "BMM_BuildingsOverlayLabel".Translate()),
                 new FloatMenuCheckBox(OverlayManager.OverlayPower, "BMM_PowerGridOverlayLabel".Translate()),
                 new FloatMenuCheckBox(OverlayManager.OverlayMining, "BMM_MiningOverlayLabel".Translate()),
                 new FloatMenuCheckBox(OverlayManager.OverlayTerrain, "BMM_TerrainOverlayLabel".Translate()),
-                new FloatMenuCheckBox(OverlayManager.OverlayShips, "BMM_ShipsOverlayLabel".Translate()),
-                new FloatMenuCheckBox(OverlayManager.OverlayRobots, "BMM_RobotsOverlayLabel".Translate()),
             };
 
-            if (OverlayManager.HasTiberium())
-                overlayMenuItems.Add(new FloatMenuCheckBox(OverlayManager.OverlayTiberium, "Tiberium"));
+            foreach (Overlay overlay in OverlayManager.Overlays)
+                overlayMenuItems.Add(new FloatMenuCheckBox(overlay, overlay?.def.label));
 
             return overlayMenuItems;
 
@@ -114,6 +108,9 @@ namespace BetterMiniMap
             // NOTE: this could be part of a mapcomponent perhaps?
             if (Find.CurrentMap.TileInfo.GetHashCode() != this.tileHash)
             {
+#if DEBUG
+                Log.Message($"MiniMapWindow.DoWindowContents -> regenerating {Find.CurrentMap.Size.x} {Find.CurrentMap.Size.z}");
+#endif
                 this.tileHash = Find.CurrentMap.TileInfo.GetHashCode();
 
                 for (int i = 0; i < this.overlays.Count; i++)
@@ -284,6 +281,9 @@ namespace BetterMiniMap
 
         public void Toggle(bool add = false)
         {
+#if DEBUG
+            Log.Message($"MiniMapWindow.Toggle: {add}");
+#endif
             if (add)
             {
                 if (Find.WindowStack.Windows.IndexOf(this) == -1) // keep from double add...
@@ -356,6 +356,7 @@ namespace BetterMiniMap
                 this.coords.size = new Vector2(1f, 1f);
         }
 
+        // TODO: fix this... it's nasty.
         private void PostLoadInit()
         {
             // NOTE: there should be a cleaner way to do this...

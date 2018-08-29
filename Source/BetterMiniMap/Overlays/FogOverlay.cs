@@ -3,9 +3,9 @@ using Verse;
 
 namespace BetterMiniMap.Overlays
 {
-	public class Fog_Overlay : Overlay
+	public class FogOverlay : Overlay
 	{
-        public Fog_Overlay(bool visible = true) : base(visible) { }
+        public FogOverlay(bool visible = true) : base(visible) { }
 
         public void Update() => base.Update(false);
 

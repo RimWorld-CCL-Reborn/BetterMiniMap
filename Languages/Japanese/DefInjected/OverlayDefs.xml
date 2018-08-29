@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+
+    <ColonistsOverlay.label>入植者</ColonistsOverlay.label>
+    <NonColonistOverlay.label>非入植者</NonColonistOverlay.label>
+    <RobotsOverlay.label>ロボット</RobotsOverlay.label>
+    <ShipsOverlay.label>宇宙船</ShipsOverlay.label>
+    <WildlifeOverlay.label>野生動物</WildlifeOverlay.label>
+
+</LanguageData>

@@ -61,9 +61,9 @@ namespace BetterMiniMap.Overlays
 
     }
 
-	public class Terrain_Overlay : Overlay, IExposable
+	public class TerrainOverlay : Overlay, IExposable
 	{
-        public Terrain_Overlay(bool visible = true) : base(visible) { }
+        public TerrainOverlay(bool visible = true) : base(visible) { }
 
         public void ExposeData() => this.ExposeData("overlayTerrain");
 

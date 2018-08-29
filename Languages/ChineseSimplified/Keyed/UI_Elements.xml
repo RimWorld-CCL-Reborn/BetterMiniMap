@@ -7,14 +7,9 @@
 
   <BMM_AreasOverlayLabel>区域</BMM_AreasOverlayLabel>
   <BMM_BuildingsOverlayLabel>建筑</BMM_BuildingsOverlayLabel>
-  <BMM_ColonistsOverlayLabel>殖民者</BMM_ColonistsOverlayLabel>
   <BMM_MiningOverlayLabel>矿区</BMM_MiningOverlayLabel>
-  <BMM_NoncolonistOverlayLabel>非殖民者</BMM_NoncolonistOverlayLabel>
   <BMM_PowerGridOverlayLabel>电力网格</BMM_PowerGridOverlayLabel>
-  <BMM_RobotsOverlayLabel>机器人</BMM_RobotsOverlayLabel>
-  <BMM_ShipsOverlayLabel>飞船</BMM_ShipsOverlayLabel>
   <BMM_TerrainOverlayLabel>地形</BMM_TerrainOverlayLabel>
-  <BMM_WildlifeOverlayLabel>野生动物</BMM_WildlifeOverlayLabel>
 
   <!--These are only for adjust settings update-->
   <BMM_FogOverlayLabel>迷雾</BMM_FogOverlayLabel>
@@ -34,14 +29,14 @@
   <BMM_HostileAnimalIndicatorSizeLabel>敌对的野生动物</BMM_HostileAnimalIndicatorSizeLabel>
   <BMM_HuntingIndicatorSizeLabel>待狩猎的野生动物</BMM_HuntingIndicatorSizeLabel>
 
-    <BMM_ColorPickersLabel>取色器(指示器颜色等)</BMM_ColorPickersLabel>
+  <BMM_ColorPickersLabel>取色器(指示器颜色等)</BMM_ColorPickersLabel>
 
-    <BMM_PlanningLabel>规划</BMM_PlanningLabel>
-    <BMM_PoweredOnLabel>电源开启的</BMM_PoweredOnLabel>
-    <BMM_PoweredByBatteriesLabel>电池供电的</BMM_PoweredByBatteriesLabel>
-    <BMM_NotPoweredLabel>无电的</BMM_NotPoweredLabel>
-    <BMM_PoweredOffLabel>电源关闭的</BMM_PoweredOffLabel>
-    
+  <BMM_PlanningLabel>规划</BMM_PlanningLabel>
+  <BMM_PoweredOnLabel>电源开启的</BMM_PoweredOnLabel>
+  <BMM_PoweredByBatteriesLabel>电池供电的</BMM_PoweredByBatteriesLabel>
+  <BMM_NotPoweredLabel>无电的</BMM_NotPoweredLabel>
+  <BMM_PoweredOffLabel>电源关闭的</BMM_PoweredOffLabel>
+
   <BMM_HomeButtonTooltip>用来选择要显示的当前区域的菜单。一次只能激活1个。</BMM_HomeButtonTooltip>
   <BMM_ConfigButtonTooltip>设置哪个叠层要被显示在小地图中</BMM_ConfigButtonTooltip>
   <BMM_ResizeButtonTooltip>开关缩放小地图。激活后点住地图左右拖动以进行缩放。</BMM_ResizeButtonTooltip>
