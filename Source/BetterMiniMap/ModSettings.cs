@@ -172,18 +172,20 @@ namespace BetterMiniMap
                     settings.edgeColor = BetterMiniMapSettings.FadedColor(settings.color);
             }
         }
-        #endregion NestedClasses
+#endregion NestedClasses
 
         // Initializes settings for users without config file
         public BetterMiniMapSettings()
         {
             this.updatePeriods = new UpdatePeriods();
             this.overlayColors = new OverlayColors();
+            this.indicatorSizes = new IndicatorSizes();
         }
 
         public string rootDir; // NOTE: no need to expose
         public UpdatePeriods updatePeriods;
         public OverlayColors overlayColors;
+        public IndicatorSizes indicatorSizes;
 
         // HIDDEN SETTINGS
         public bool mipMaps = false;
@@ -194,6 +196,7 @@ namespace BetterMiniMap
             base.ExposeData();
             Scribe_Deep.Look(ref this.updatePeriods, "updatePeriods");
             Scribe_Deep.Look(ref this.overlayColors, "overlayColors");
+            Scribe_Deep.Look(ref this.indicatorSizes, "indicatorSizes");
 
             // HIDDEN SETTINGS
             Scribe_Values.Look<bool>(ref this.mipMaps, "mipMaps", false);
@@ -206,6 +209,8 @@ namespace BetterMiniMap
                     this.updatePeriods = new UpdatePeriods();
                 if (this.overlayColors == null)
                     this.overlayColors = new OverlayColors();
+                if (this.indicatorSizes == null)
+                    this.indicatorSizes = new IndicatorSizes();
             }
         }
 

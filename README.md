@@ -1,4 +1,4 @@
-# BetterMiniMap [![RimWorld Alpha 18](https://img.shields.io/badge/RimWorld-Alpha%2018-brightgreen.svg)](http://rimworldgame.com/)
+# BetterMiniMap [![RimWorld Beta 19](https://img.shields.io/badge/RimWorld-Alpha%2018-brightgreen.svg)](http://rimworldgame.com/)
 
 Provides a minimap for RimWorld using the overlays provided from Community Core Library. A simular mod exists that attempted to do the same but had numerous issues and bug.
 
@@ -28,6 +28,7 @@ Provides a minimap for RimWorld using the overlays provided from Community Core 
 - Xen for helping with terrain color selection (deprecated feature).
 - KiameV for [ColorPicker](https://github.com/KiameV/rimworld-recolorzones).
 - Pardeike/Brrainz for amazing non-destructive patching library, Harmony.
+
 <p align="center">
   <a href="https://github.com/pardeike/Harmony">
     <img src="https://s24.postimg.org/58bl1rz39/logo.png" alt="Harmony" />
