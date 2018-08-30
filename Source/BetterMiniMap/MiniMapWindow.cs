@@ -52,7 +52,7 @@ namespace BetterMiniMap
         public Vector2 Position { get => position; set => position = value; }
         public Vector2 Size { get => size; set => size = value; }
         public bool Active { get => this.active; set => this.active = value; }
-        public AreaOverlay OverlayArea { get => OverlayManager.OverlayArea;  }
+        public AreaOverlay OverlayArea { get => OverlayManager.AreaOverlay;  }
 
         protected override float Margin { get => 0f; }
 
@@ -61,19 +61,17 @@ namespace BetterMiniMap
             // TODO: consider moving this all to overlay manager?
             this.overlays = new List<Overlay>()
             {
-                OverlayManager.OverlayTerrain,
-                OverlayManager.OverlayMining,
-                OverlayManager.OverlayBuilding,
-                OverlayManager.OverlayPower,
-                OverlayManager.OverlayFog,
-                OverlayManager.OverlayView,
+                OverlayManager.TerrainOverlay,
+                OverlayManager.MiningOverlay,
+                OverlayManager.BuildingOverlay,
+                OverlayManager.PowerOverlay,
             };
 
-            //TODO: work in progress
             foreach(Overlay overlay in OverlayManager.Overlays)
-            {
                 this.overlays.Add(overlay);
-            }
+
+            this.overlays.Add(OverlayManager.FogOverlay);
+            this.overlays.Add(OverlayManager.ViewpointOverlay);
         }
 
         // TODO: return to float menus.
@@ -82,10 +80,10 @@ namespace BetterMiniMap
         {
             List<FloatMenuOption> overlayMenuItems = new List<FloatMenuOption>()
             {
-                new FloatMenuCheckBox(OverlayManager.OverlayBuilding, "BMM_BuildingsOverlayLabel".Translate()),
-                new FloatMenuCheckBox(OverlayManager.OverlayPower, "BMM_PowerGridOverlayLabel".Translate()),
-                new FloatMenuCheckBox(OverlayManager.OverlayMining, "BMM_MiningOverlayLabel".Translate()),
-                new FloatMenuCheckBox(OverlayManager.OverlayTerrain, "BMM_TerrainOverlayLabel".Translate()),
+                new FloatMenuCheckBox(OverlayManager.BuildingOverlay, "BMM_BuildingsOverlayLabel".Translate()),
+                new FloatMenuCheckBox(OverlayManager.PowerOverlay, "BMM_PowerGridOverlayLabel".Translate()),
+                new FloatMenuCheckBox(OverlayManager.MiningOverlay, "BMM_MiningOverlayLabel".Translate()),
+                new FloatMenuCheckBox(OverlayManager.TerrainOverlay, "BMM_TerrainOverlayLabel".Translate()),
             };
 
             foreach (Overlay overlay in OverlayManager.Overlays)
@@ -123,7 +121,7 @@ namespace BetterMiniMap
                     {
                         if (allAreas[i].Label == selectedAreaLabel)
                         {
-                            OverlayManager.OverlayArea.area = allAreas[i];
+                            OverlayManager.AreaOverlay.area = allAreas[i];
                             break;
                         }
                     }
@@ -368,9 +366,9 @@ namespace BetterMiniMap
 
         private void Saving()
         {
-            if (OverlayManager.OverlayArea.area != null)
+            if (OverlayManager.AreaOverlay.area != null)
             {
-                string selectedAreaLabel = OverlayManager.OverlayArea.area.Label;
+                string selectedAreaLabel = OverlayManager.AreaOverlay.area.Label;
                 Scribe_Values.Look<string>(ref selectedAreaLabel, "selectedAreaLabel");
             }
 
