@@ -145,6 +145,7 @@
     <description>This overlay shows any crashed ships that have landed on the map</description>
     <overlayClass>BetterMiniMap.Overlays.ThingOverlay</overlayClass>
     <updatePeriod>60</updatePeriod>
+    <requestGroup>BuildingArtificial</requestGroup>
     <selectors>
       <li Class="BetterMiniMap.ClassSelector">
         <classType>Building_CrashedShipPart</classType>
@@ -167,8 +168,9 @@
     <defName>TiberiumOverlay</defName>
     <label>Tiberium</label>
     <description>This overlay shows the distribution of tiberium on the map</description>
-    <overlayClass>BetterMiniMap.Overlays.Thing_Overlay</overlayClass>
+    <overlayClass>BetterMiniMap.Overlays.ThingOverlay</overlayClass>
     <updatePeriod>60</updatePeriod>
+    <requestGroup>Plant</requestGroup>
     <selectors>
       <li Class="BetterMiniMap.ClassSelector">
         <classType>TiberiumRim.TiberiumCrystal</classType>

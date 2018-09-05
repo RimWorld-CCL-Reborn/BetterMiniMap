@@ -14,7 +14,7 @@ namespace BetterMiniMap.Overlays
         }
 
         public void ExposeData() => this.ExposeData(this.def.label);
-        public IEnumerable<Thing> GetThings() => Find.CurrentMap.listerThings.AllThings.Where(t => this.def.IsValid(t));
+        public IEnumerable<Thing> GetThings() => Find.CurrentMap.listerThings.ThingsInGroup(this.def.requestGroup).Where(t => this.def.IsValid(t));
         public override int GetUpdateInterval() => OverlaySettingDatabase.GetOverlaySettings(this.def.defName).updatePeriod;
 
         public override void Render()

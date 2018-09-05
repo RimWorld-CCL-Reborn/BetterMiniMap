@@ -46,9 +46,11 @@ namespace BetterMiniMap
         public List<Selector> selectors;
         public IndicatorMappings indicatorMappings;
         public bool disabled;
+        public ThingRequestGroup requestGroup; // should be not null for ThingOverlay
 
         public bool IsValid(object o) => this.selectors.All(s => s.IsValid(o));
 
+        // NOTE: all new variables need custom XML writing here.
         public void LoadDataFromXmlCustom(XmlNode xmlRoot)
         {
             this.defName = xmlRoot.SelectSingleNode("defName").InnerText;
@@ -57,6 +59,8 @@ namespace BetterMiniMap
             this.overlayClass = Type.GetType(xmlRoot.SelectSingleNode("overlayClass").InnerText);
             this.updatePeriod = Verse.DirectXmlToObject.ObjectFromXml<int>(xmlRoot.SelectSingleNode("updatePeriod"), true);
             this.indicatorMappings = Verse.DirectXmlToObject.ObjectFromXml<IndicatorMappings>(xmlRoot.SelectSingleNode("indicatorMappings"), true);
+            if (xmlRoot.SelectSingleNode("requestGroup") != null)
+                this.requestGroup = Verse.DirectXmlToObject.ObjectFromXml<ThingRequestGroup>(xmlRoot.SelectSingleNode("requestGroup"), true);
 
             if (this.ValidateClasses(xmlRoot.SelectSingleNode("selectors")))
                 this.selectors = Verse.DirectXmlToObject.ObjectFromXml<List<Selector>>(xmlRoot.SelectSingleNode("selectors"), true);

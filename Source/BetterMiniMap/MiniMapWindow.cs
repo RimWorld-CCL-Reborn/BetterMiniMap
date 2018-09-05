@@ -20,7 +20,7 @@ namespace BetterMiniMap
 
         private int tileHash = 0;
 
-        private MiniMapControls controls;
+        private readonly MiniMapControls controls;
 
         private Vector2 position;
         private Vector2 size;
