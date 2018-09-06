@@ -42,4 +42,6 @@
     <BMM_ResizeButtonTooltip>Toggles resizing minimap. Click on map, dragging left or right to resize when activated.</BMM_ResizeButtonTooltip>
     <BMM_DragButtonTooltip>Toggles moving minimap. Click on map, to position it when activated.</BMM_DragButtonTooltip>
 
+    <SH_ColorPresetHelp>To use a preset, click on it. To change a preset, hold shift to select the present to change.</SH_ColorPresetHelp>
+
 </LanguageData>

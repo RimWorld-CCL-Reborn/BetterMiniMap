@@ -170,7 +170,8 @@
     <description>This overlay shows the distribution of tiberium on the map</description>
     <overlayClass>BetterMiniMap.Overlays.ThingOverlay</overlayClass>
     <updatePeriod>60</updatePeriod>
-    <requestGroup>Plant</requestGroup>
+    <!--<requestGroup>Plant</requestGroup>-->
+    <requestGroup>BuildingArtificial</requestGroup>
     <selectors>
       <li Class="BetterMiniMap.ClassSelector">
         <classType>TiberiumRim.TiberiumCrystal</classType>
