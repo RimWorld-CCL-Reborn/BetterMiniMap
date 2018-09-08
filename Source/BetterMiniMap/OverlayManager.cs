@@ -18,7 +18,8 @@ namespace BetterMiniMap
         public static ViewpointOverlay ViewpointOverlay;
         public static AreaOverlay AreaOverlay;
 
-        public static List<Overlay> Overlays;
+        public static List<Overlay> DefOverlays;
+        private static List<Overlay> overlays;
 
         static OverlayManager()
         {
@@ -31,14 +32,46 @@ namespace BetterMiniMap
             AreaOverlay = new AreaOverlay();
             
             // handle OverlayDefs
-            OverlayManager.Overlays = new List<Overlay>();
-            foreach (OverlayDef def in DefDatabase<OverlayDef>.AllDefs.Where(d => !d.disabled))
+            OverlayManager.DefOverlays = new List<Overlay>();
+            foreach (OverlayDef def in DefDatabase<OverlayDef>.AllDefs.Where(d => d.selectors!=null))
             {
-                Overlay overlay = (Overlay)Activator.CreateInstance(def.overlayClass, new object[] {def, true});
-                OverlayManager.Overlays.Add(overlay);
+                Overlay overlay = (Overlay)Activator.CreateInstance(def.overlayClass, new object[] {def, def.disabled});
+                OverlayManager.DefOverlays.Add(overlay);
             }
             // add tracking for settings
             OverlaySettingDatabase.InitializeOverlaySettings();
+        }
+
+        private static IOrderedEnumerable<Overlay> GetOverlays()
+        {
+            List<Overlay> overlays = new List<Overlay>()
+            {
+                OverlayManager.TerrainOverlay,
+                OverlayManager.BuildingOverlay,
+                OverlayManager.PowerOverlay,
+                OverlayManager.FogOverlay,
+                OverlayManager.MiningOverlay,
+                OverlayManager.ViewpointOverlay,
+            };
+
+            foreach (Overlay overlay in OverlayManager.DefOverlays)
+                overlays.Add(overlay);
+
+            return overlays.OrderBy(o=> o.OverlayPriority);
+        }
+
+        public static List<Overlay> Overlays
+        {
+            get
+            {
+                if (overlays == null)
+                    overlays = GetOverlays().ToList();
+#if DEBUG
+                foreach (Overlay o in overlays)
+                    Log.Message($"{o}->{o.OverlayPriority}");
+#endif
+                return overlays;
+            }
         }
 
         // TODO: revist this concept...

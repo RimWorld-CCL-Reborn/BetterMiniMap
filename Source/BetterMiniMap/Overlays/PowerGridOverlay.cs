@@ -73,5 +73,7 @@ namespace BetterMiniMap.Overlays
                 if (current.InBounds(Find.CurrentMap))
                     base.Texture.SetPixel(current.x, current.z, color);
         }
+
+        public override int OverlayPriority => 850;
     }
 }

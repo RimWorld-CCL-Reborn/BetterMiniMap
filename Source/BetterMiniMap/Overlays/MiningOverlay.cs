@@ -20,5 +20,7 @@ namespace BetterMiniMap.Overlays
         }
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.mining;
+
+        public override int OverlayPriority => 2000;
 	}
 }

@@ -7,6 +7,7 @@
     <description>This overlay shows colonists and tamed animals</description>
     <overlayClass>BetterMiniMap.Overlays.PawnOverlay</overlayClass>
     <updatePeriod>15</updatePeriod>
+    <priority>5000</priority>
     <selectors>
       <li Class="BetterMiniMap.PlayerFactionSelector" />
     </selectors>
@@ -36,6 +37,7 @@
     <description>This overlay shows pawns that aren't animals nor colonists</description>
     <overlayClass>BetterMiniMap.Overlays.PawnOverlay</overlayClass>
     <updatePeriod>15</updatePeriod>
+    <priority>950</priority>
     <selectors>
       <li Class="BetterMiniMap.NonAnimalSelector" />
       <li Class="BetterMiniMap.NonPlayerFactionSelector" />
@@ -47,7 +49,8 @@
           <name>enemyPawns</name>
           <label>BMM_EnemyIndicatorSizeLabel</label>
           <color>RGBA(1.000, 0.000, 0.000, 1.000)</color>
-          <radius>3.0</radius>
+          <edgeColor>RGBA(0.000, 0.000, 0.000, 1.000)</edgeColor>
+          <radius>5.0</radius>
         </li>
         <li Class="BetterMiniMap.IndicatorProps">
           <name>traderPawns</name>
@@ -73,6 +76,7 @@
     <description>This overlay shows wild animals</description>
     <overlayClass>BetterMiniMap.Overlays.PawnOverlay</overlayClass>
     <updatePeriod>80</updatePeriod>
+    <priority>900</priority>
     <selectors>
       <li Class="BetterMiniMap.NonPlayerFactionSelector" />
       <li Class="BetterMiniMap.AnimalSelector" />
@@ -84,7 +88,8 @@
           <label>BMM_HostileAnimalIndicatorSizeLabel</label>
           <selector Class="BetterMiniMap.HostilePawnsSelector" />
           <color>RGBA(1.000, 0.000, 0.000, 1.000)</color>
-          <radius>3.0</radius>
+          <edgeColor>RGBA(0.000, 0.000, 0.000, 1.000)</edgeColor>
+          <radius>4.0</radius>
         </li>
         <li Class="BetterMiniMap.IndicatorProps">
           <name>wildlifeHunting</name>
@@ -92,7 +97,8 @@
           <selector Class="BetterMiniMap.PawnDesignatorSelector">
             <designationDef>Hunt</designationDef>
           </selector>
-          <color>RGBA(1.000, 0.000, 0.000, 1.000)</color>
+          <color>RGBA(0.800, 0.100, 0.200, 1.000)</color>
+          <edgeColor>RGBA(0.000, 0.000, 0.000, 0.600)</edgeColor>
           <radius>3.0</radius>
         </li>
         <li Class="BetterMiniMap.IndicatorProps">
@@ -109,7 +115,7 @@
           <label>BMM_WildlifeIndicatorSizeLabel</label>
           <selector Class="BetterMiniMap.Default" />
           <color>RGBA(0.000, 1.000, 0.000, 1.000)</color>
-          <radius>1.0</radius>
+          <radius>2.0</radius>
         </li>
       </mappings>
     </indicatorMappings>
@@ -121,6 +127,7 @@
     <description>This overlay shows robots</description>
     <overlayClass>BetterMiniMap.Overlays.PawnOverlay</overlayClass>
     <updatePeriod>15</updatePeriod>
+    <priority>875</priority>
     <selectors>
       <li Class="BetterMiniMap.ClassSelector">
         <classType>AIRobot.X2_AIRobot</classType>
@@ -142,6 +149,7 @@
   <BetterMiniMap.OverlayDef>
     <defName>ShipsOverlay</defName>
     <label>Ships</label>
+    <priority>950</priority>
     <description>This overlay shows any crashed ships that have landed on the map</description>
     <overlayClass>BetterMiniMap.Overlays.ThingOverlay</overlayClass>
     <updatePeriod>60</updatePeriod>
@@ -157,8 +165,38 @@
           <name>ships</name>
           <label>BMM_ShipsIndicatorSizeLabel</label>
           <selector Class="BetterMiniMap.Default" />
-          <color>RGBA(1.000, 0.000, 0.000, 1.000)</color>
-          <radius>3.0</radius>
+          <color>RGBA(0.800, 0.050, 0.100, 1.000)</color>
+          <edgeColor>RGBA(0.000, 0.000, 0.000, 1.000)</edgeColor>
+          <radius>7.0</radius>
+        </li>
+      </mappings>
+    </indicatorMappings>
+  </BetterMiniMap.OverlayDef>
+
+  <BetterMiniMap.OverlayDef>
+    <defName>FireOverlay</defName>
+    <label>Fires</label>
+    <priority>975</priority>
+    <description>This overlay shows any crashed ships that have landed on the map</description>
+    <disabled>true</disabled>
+    <overlayClass>BetterMiniMap.Overlays.ThingOverlay</overlayClass>
+    <updatePeriod>360</updatePeriod>
+    <requestGroup>Fire</requestGroup> <!-- returns all -->
+    <selectors>
+      <li Class="BetterMiniMap.ThingByDefNameSelector">
+        <defNames>
+          <li>Fire</li>
+        </defNames>
+      </li>
+    </selectors>
+    <indicatorMappings Class="BetterMiniMap.IndicatorMappings">
+      <mappings>
+        <li Class="BetterMiniMap.IndicatorProps">
+          <name>fires</name>
+          <label>fires</label>
+          <selector Class="BetterMiniMap.Default" />
+          <color>RGBA(1.000, 1.000, 0.000, 1.000)</color>
+          <radius>1.0</radius>
         </li>
       </mappings>
     </indicatorMappings>
@@ -170,6 +208,7 @@
     <description>This overlay shows the distribution of tiberium on the map</description>
     <overlayClass>BetterMiniMap.Overlays.ThingOverlay</overlayClass>
     <updatePeriod>60</updatePeriod>
+    <priority>600</priority>
     <!--<requestGroup>Plant</requestGroup>-->
     <requestGroup>BuildingArtificial</requestGroup>
     <selectors>
@@ -247,8 +286,6 @@
         </li>
       </mappings>
     </indicatorMappings>
-    <indicatorProps>
-    </indicatorProps>
   </BetterMiniMap.OverlayDef>
 
 </Defs>

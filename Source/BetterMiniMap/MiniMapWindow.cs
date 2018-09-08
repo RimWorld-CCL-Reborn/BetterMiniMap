@@ -42,7 +42,7 @@ namespace BetterMiniMap
             this.layer = WindowLayer.GameUI;
 
             this.controls = new MiniMapControls(this);
-            this.SetOverlays();
+            this.overlays = OverlayManager.Overlays;
             this.clampHeight = UI.screenHeight - MainButtonDef.ButtonHeight - this.controls.DefaultHeight;
 
             this.coords = new Rect(0f, 0f, 1f, 1f);
@@ -56,24 +56,6 @@ namespace BetterMiniMap
 
         protected override float Margin { get => 0f; }
 
-        public void SetOverlays()
-        {
-            // TODO: consider moving this all to overlay manager?
-            this.overlays = new List<Overlay>()
-            {
-                OverlayManager.TerrainOverlay,
-                OverlayManager.MiningOverlay,
-                OverlayManager.BuildingOverlay,
-                OverlayManager.PowerOverlay,
-            };
-
-            foreach(Overlay overlay in OverlayManager.Overlays)
-                this.overlays.Add(overlay);
-
-            this.overlays.Add(OverlayManager.FogOverlay);
-            this.overlays.Add(OverlayManager.ViewpointOverlay);
-        }
-
         // TODO: return to float menus.
         // TODO: consider moving this all to overlay manager?
         public List<FloatMenuOption> GenerateOverlayMenuItems()
@@ -86,7 +68,7 @@ namespace BetterMiniMap
                 new FloatMenuCheckBox(OverlayManager.TerrainOverlay, "BMM_TerrainOverlayLabel".Translate()),
             };
 
-            foreach (Overlay overlay in OverlayManager.Overlays)
+            foreach (Overlay overlay in OverlayManager.DefOverlays)
                 overlayMenuItems.Add(new FloatMenuCheckBox(overlay, overlay?.def.label));
 
             return overlayMenuItems;

@@ -23,7 +23,7 @@ namespace BetterMiniMap
 
         public static void InitializeOverlaySettings()
         {
-            foreach (OverlayDef def in DefDatabase<OverlayDef>.AllDefs.Where(d => !d.disabled))
+            foreach (OverlayDef def in DefDatabase<OverlayDef>.AllDefs.Where(d => d.selectors!=null))
                 OverlaySettingDatabase.AddOverlaySettings(def);
             LoadedModManager.GetMod<BetterMiniMapMod>().FetchSettings();
         }
@@ -32,7 +32,9 @@ namespace BetterMiniMap
         {
             OverlaySettingDatabase.overlaySettings.Add(def.defName, new OverlaySettings(def));
             foreach (IndicatorProps props in def.indicatorMappings.mappings)
+            {
                 OverlaySettingDatabase.indicatorSettings.Add(props.name, new IndicatorSettings(props));
+            }
         }
 
         public static List<OverlaySettings> OverlaySettings
@@ -87,6 +89,13 @@ namespace BetterMiniMap
                 this.defaultColor = this.color = props.color;
                 this.defaultEdgeColor = this.edgeColor = props.edgeColor;
                 this.defaultRadius = this.radius = props.radius;
+                this.Validate();
+            }
+
+            private void Validate()
+            {
+                if (this.defaultEdgeColor == Color.clear)
+                    this.defaultEdgeColor = this.edgeColor = BetterMiniMapSettings.FadedColor(this.defaultColor);
             }
         }
 
@@ -128,8 +137,9 @@ namespace BetterMiniMap
         // TODO: store edgeColors in config
         public class OverlayColors : IExposable
         {
-            private static readonly Color miningColorDefault = new Color(0.75f, 0.4f, 0.125f, 1f);
+            private static readonly Color miningColorDefault = new Color(0.0f, 0.6f, 0.4f, 1f);
             private static readonly Color darkGray = new Color(0.50f, 0.42f, 0.40f, 1f);
+            private static readonly Color viewpointEdgeDefault = BetterMiniMapSettings.FadedColor(Color.black, 0.25f);
 
             public Color viewpoint = Color.black;
             public Color fog = darkGray;
@@ -142,13 +152,13 @@ namespace BetterMiniMap
 
             public Color mining = miningColorDefault;
 
-            public Color viewpointFaded;
-
-            public OverlayColors() => this.SetFadedColors();
+            public Color viewpointEdge;
 
             public void ExposeData()
             {
                 Scribe_Values.Look(ref viewpoint, "viewpoint", Color.black);
+                this.viewpointEdge = viewpointEdgeDefault;
+
                 Scribe_Values.Look(ref fog, "fog", darkGray);
                 Scribe_Values.Look(ref buildings, "buildings", Color.white);
 
@@ -162,15 +172,18 @@ namespace BetterMiniMap
 
                 Scribe_Values.Look(ref mining, "mining", miningColorDefault);
 
-                this.SetFadedColors();
+                // edge colors
+                Scribe_Values.Look(ref viewpointEdge, "viewpointEdge", viewpointEdgeDefault);
+                foreach (IndicatorSettings settings in OverlaySettingDatabase.IndicatorSettings)
+                    Scribe_Values.Look(ref settings.edgeColor, $"{settings.name}Edge", settings.defaultEdgeColor);
             }
 
-            private void SetFadedColors()
+            // Make it work like a dictionary... for giggles
+            /*public Color this[string key]
             {
-                this.viewpointFaded = BetterMiniMapSettings.FadedColor(this.viewpoint, 0.25f);
-                foreach (IndicatorSettings settings in OverlaySettingDatabase.IndicatorSettings)
-                    settings.edgeColor = BetterMiniMapSettings.FadedColor(settings.color);
-            }
+                get => (Color)AccessTools.Field(typeof(OverlayColors), key).GetValue(this);
+                set => AccessTools.Field(typeof(OverlayColors), key).SetValue(this, value);
+            }*/
         }
 #endregion NestedClasses
 
@@ -281,7 +294,7 @@ namespace BetterMiniMap
 
                 subsettings.AddColorPickerButton("BMM_ViewpointOverlayLabel".Translate(), settings.overlayColors.viewpoint, (SelectionColorWidget scw) => {
                     settings.overlayColors.viewpoint = scw.SelectedColor;
-                    settings.overlayColors.viewpointFaded = BetterMiniMapSettings.FadedColor(scw.SelectedColor, 0.25f);
+                    settings.overlayColors.viewpointEdge = BetterMiniMapSettings.FadedColor(scw.SelectedColor, 0.25f);
                 });
 
                 subsettings.AddColorPickerButton("BMM_PoweredOnLabel".Translate(), settings.overlayColors.poweredOn, (SelectionColorWidget scw) => { settings.overlayColors.poweredOn = scw.SelectedColor; });
@@ -292,14 +305,7 @@ namespace BetterMiniMap
                 subsettings.AddColorPickerButton("BMM_MiningOverlayLabel".Translate(), settings.overlayColors.mining, (SelectionColorWidget scw) => { settings.overlayColors.mining = scw.SelectedColor; });
 
                 foreach (IndicatorSettings settings in OverlaySettingDatabase.IndicatorSettings)
-                {
-                    // TODO: remove the need for this translate...(Def Injection)
-                    subsettings.AddColorPickerButton(settings.label.Translate(), settings.color, (SelectionColorWidget scw) => {
-                        settings.color = scw.SelectedColor;
-                        settings.edgeColor = BetterMiniMapSettings.FadedColor(settings.color);
-                        // TODO: handle faded/secondary color
-                    });
-                }
+                    subsettings.AddMultiColorPickerButton(settings.label.Translate(), settings, nameof(settings.color), nameof(settings.edgeColor));
 
                 subsettings.End();
             });
@@ -307,6 +313,63 @@ namespace BetterMiniMap
             listing_Standard.End();
 
             settings.Write();
+        }
+
+    }
+
+    // TODO: clean-up? abstraction...
+    public static class ColorPickerHelper
+    {
+        // TODO: consider list of strings for colorKeys...
+        // TODO: spacing is a little off on the last element but meh...
+        public static void AddMultiColorPickerButton(this Listing_Standard listing_Standard, string label, object colorContainer, string colorKey, string colorKey2, string buttonText = "Change")
+        {
+            listing_Standard.Gap(ListingStandardHelper.Gap);
+            Rect lineRect = listing_Standard.GetRect();
+
+            float textSize = Text.CalcSize(buttonText).x + 10f;
+            float rightSize = textSize + 10f + lineRect.height;
+            Rect rightPart = lineRect.RightPartPixels(2 * rightSize);
+
+            // handle color 1
+            Rect thisPart = rightPart.LeftHalf();
+
+            Color color1 = colorContainer.GetColorFromContainer(colorKey);
+            // draw button leaving room for color rect in rightHalf rect (plus some padding)
+            if (Widgets.ButtonText(thisPart.LeftPartPixels(textSize), buttonText))
+                Find.WindowStack.Add(new ColorSelectDialog(buttonText, color1, (SelectionColorWidget scw) => { colorContainer.SetColorFromContainer(colorKey, scw.SelectedColor); }, true));
+            GUI.color = color1;
+            // draw square with color in rightHalf rect
+            Rect texRect = thisPart.RightPartPixels(thisPart.height);
+            texRect.x -= 5f;
+            GUI.DrawTexture(texRect, BaseContent.WhiteTex);
+            GUI.color = Color.white;
+
+            // handle color 2
+            thisPart = rightPart.RightHalf();
+
+            Color color2 = colorContainer.GetColorFromContainer(colorKey2);
+            // draw button leaving room for color rect in rightHalf rect (plus some padding)
+            if (Widgets.ButtonText(thisPart.LeftPartPixels(textSize), buttonText))
+                Find.WindowStack.Add(new ColorSelectDialog(buttonText, color2, (SelectionColorWidget scw) => { colorContainer.SetColorFromContainer(colorKey2, scw.SelectedColor); }, true));
+            GUI.color = color2;
+            // draw square with color in rightHalf rect
+            GUI.DrawTexture(thisPart.RightPartPixels(thisPart.height), BaseContent.WhiteTex);
+            GUI.color = Color.white;
+
+            Rect leftPart = lineRect.LeftPartPixels(lineRect.width - rightSize);
+            Widgets.Label(leftPart, label);
+
+        }
+
+        private static Color GetColorFromContainer(this object obj, string colorKey)
+        {
+            return (Color)AccessTools.Field(obj.GetType(), colorKey).GetValue(obj);
+        }
+
+        private static void SetColorFromContainer(this object obj, string colorKey, Color color)
+        {
+            AccessTools.Field(obj.GetType(), colorKey).SetValue(obj, color);
         }
 
     }

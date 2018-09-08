@@ -47,7 +47,8 @@ namespace BetterMiniMap
         public IndicatorMappings indicatorMappings;
         public bool disabled;
         public ThingRequestGroup requestGroup; // should be not null for ThingOverlay
-
+        public int priority = 0;
+ 
         public bool IsValid(object o) => this.selectors.All(s => s.IsValid(o));
 
         // NOTE: all new variables need custom XML writing here.
@@ -59,13 +60,24 @@ namespace BetterMiniMap
             this.overlayClass = Type.GetType(xmlRoot.SelectSingleNode("overlayClass").InnerText);
             this.updatePeriod = Verse.DirectXmlToObject.ObjectFromXml<int>(xmlRoot.SelectSingleNode("updatePeriod"), true);
             this.indicatorMappings = Verse.DirectXmlToObject.ObjectFromXml<IndicatorMappings>(xmlRoot.SelectSingleNode("indicatorMappings"), true);
-            if (xmlRoot.SelectSingleNode("requestGroup") != null)
-                this.requestGroup = Verse.DirectXmlToObject.ObjectFromXml<ThingRequestGroup>(xmlRoot.SelectSingleNode("requestGroup"), true);
 
-            if (this.ValidateClasses(xmlRoot.SelectSingleNode("selectors")))
-                this.selectors = Verse.DirectXmlToObject.ObjectFromXml<List<Selector>>(xmlRoot.SelectSingleNode("selectors"), true);
+            XmlNode node = xmlRoot.SelectSingleNode("requestGroup");
+            if (node != null)
+                this.requestGroup = Verse.DirectXmlToObject.ObjectFromXml<ThingRequestGroup>(node, true);
+
+            node = xmlRoot.SelectSingleNode("priority");
+            if (node != null)
+                this.priority = Verse.DirectXmlToObject.ObjectFromXml<int>(node, true);
+
+            node = xmlRoot.SelectSingleNode("disabled");
+            if (node != null)
+                this.disabled = Verse.DirectXmlToObject.ObjectFromXml<bool>(node, true);
+
+            node = xmlRoot.SelectSingleNode("selectors");
+            if (this.ValidateClasses(node))
+                this.selectors = Verse.DirectXmlToObject.ObjectFromXml<List<Selector>>(node, true);
             else
-                this.disabled = true;
+                this.selectors = null;
         }
 
         private bool ValidateClasses(XmlNode selectorsNode)

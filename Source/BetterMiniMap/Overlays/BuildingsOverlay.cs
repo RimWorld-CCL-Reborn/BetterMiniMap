@@ -18,5 +18,6 @@ namespace BetterMiniMap.Overlays
                     base.Texture.SetPixel(current.Position.x, current.Position.z, BetterMiniMapMod.settings.overlayColors.buildings);
         }
 
+        public override int OverlayPriority => 800;
     }
 }

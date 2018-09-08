@@ -42,8 +42,8 @@ namespace BetterMiniMap.Overlays
 
             this.texture = new Texture2D(Find.CurrentMap.Size.x, Find.CurrentMap.Size.z, this.SupportedTextureFormat, BetterMiniMapMod.settings.mipMaps)
             {
-            //this.texture.SetPixels32(Utilities.GetClearPixelArray);
-            //this.texture.filterMode = FilterMode.Trilinear;
+                //this.texture.SetPixels32(Utilities.GetClearPixelArray);
+                //this.texture.filterMode = FilterMode.Trilinear;
                 anisoLevel = BetterMiniMapMod.settings.anisoLevel,
                 hideFlags = HideFlags.HideAndDontSave,
             };
@@ -85,6 +85,8 @@ namespace BetterMiniMap.Overlays
                 return (Time.frameCount + this.GetHashCode()) % this.GetUpdateInterval() == 0;
             }
         }
+
+        public virtual int OverlayPriority => 0;
 
     }
 }

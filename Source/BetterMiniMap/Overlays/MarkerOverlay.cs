@@ -45,5 +45,6 @@ namespace BetterMiniMap.Overlays
             }
         }
 
+        public override int OverlayPriority => this.def.priority;
     }
 }

@@ -22,5 +22,6 @@ namespace BetterMiniMap.Overlays
 
 		public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.fog;
 
+        public override int OverlayPriority => 1000;
 	}
 }

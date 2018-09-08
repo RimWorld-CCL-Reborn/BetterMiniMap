@@ -17,8 +17,10 @@ namespace BetterMiniMap.Overlays
 					base.Texture.SetPixel(current.x, current.z, BetterMiniMapMod.settings.overlayColors.viewpoint);
                 shadow = new IntVec3(current.x - 1, 0, current.y + 1);
 				if (shadow.InBounds(Find.CurrentMap))
-					base.Texture.SetPixel(shadow.x, shadow.z, BetterMiniMapMod.settings.overlayColors.viewpointFaded);
+					base.Texture.SetPixel(shadow.x, shadow.z, BetterMiniMapMod.settings.overlayColors.viewpointEdge);
             }
         }
+
+        public override int OverlayPriority => 10000; // super high
 	}
 }

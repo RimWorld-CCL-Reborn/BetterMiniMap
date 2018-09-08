@@ -27,5 +27,7 @@ namespace BetterMiniMap.Overlays
         {
             get => area != null && base.ShouldUpdateOverlay;
         }
+
+        public override int OverlayPriority => 700;
     }
 }
