@@ -89,4 +89,9 @@ xcopy /S /Y "$(SolutionDir)..\Textures\*" "C:\Program Files (x86)\Steam\steamapp
 xcopy /S /Y "$(SolutionDir)..\Defs\*" "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\$(ProjectName)\Defs\"
 xcopy /S /Y "$(SolutionDir)..\Languages\*" "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\$(ProjectName)\Languages\"</PostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>del /S /Q "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\$(ProjectName)\Defs\*"
+del /S /Q "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\$(ProjectName)\Assemblies\*"
+del /S /Q "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\$(ProjectName)\Languages\*"</PreBuildEvent>
+  </PropertyGroup>
 </Project>
