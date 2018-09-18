@@ -3,6 +3,7 @@ using Verse;
 
 namespace BetterMiniMap.Overlays
 {
+    // TODO: inconsistency in data names. Visibile vs Disabled.
     public abstract class Overlay
     {
         public OverlayDef def;
