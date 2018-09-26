@@ -45,7 +45,7 @@ namespace BetterMiniMap
         public int updatePeriod;
         public List<Selector> selectors;
         public IndicatorMappings indicatorMappings;
-        public bool disabled;
+        public bool visible = true;
         public ThingRequestGroup requestGroup; // should be not null for ThingOverlay
         public int priority = 0;
  
@@ -69,9 +69,9 @@ namespace BetterMiniMap
             if (node != null)
                 this.priority = Verse.DirectXmlToObject.ObjectFromXml<int>(node, true);
 
-            node = xmlRoot.SelectSingleNode("disabled");
+            node = xmlRoot.SelectSingleNode("visible");
             if (node != null)
-                this.disabled = Verse.DirectXmlToObject.ObjectFromXml<bool>(node, true);
+                this.visible = Verse.DirectXmlToObject.ObjectFromXml<bool>(node, true);
 
             node = xmlRoot.SelectSingleNode("selectors");
             if (this.ValidateClasses(node))

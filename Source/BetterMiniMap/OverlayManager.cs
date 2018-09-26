@@ -39,7 +39,7 @@ namespace BetterMiniMap
 
                 Log.Message($"OverlayManager.cctor: {def.defName} -> {def.disabled}");
 #endif
-                Overlay overlay = (Overlay)Activator.CreateInstance(def.overlayClass, new object[] {def, !def.disabled});
+                Overlay overlay = (Overlay)Activator.CreateInstance(def.overlayClass, new object[] {def, def.visible});
                 OverlayManager.DefOverlays.Add(overlay);
             }
             // add tracking for settings

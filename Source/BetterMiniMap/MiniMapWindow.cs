@@ -16,7 +16,7 @@ namespace BetterMiniMap
         private const int defaultMargin = 8;
         private const float scrollWheelZoomRate = 0.015f;
 
-        private List<Overlay> overlays;
+        private readonly List<Overlay> overlays;
 
         private int tileHash = 0;
 
