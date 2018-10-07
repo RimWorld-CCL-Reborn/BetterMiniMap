@@ -12,6 +12,7 @@ namespace BetterMiniMap
         public static readonly Texture2D homeA;
         public static readonly Texture2D resizeA;
         public static readonly Texture2D resizeD;
+        public static readonly Texture2D mapManagerIcon;
 
         static MiniMapTextures()
         {
@@ -21,6 +22,8 @@ namespace BetterMiniMap
             MiniMapTextures.homeA = ContentFinder<Texture2D>.Get("UI/homeA", true);
             MiniMapTextures.resizeA = ContentFinder<Texture2D>.Get("UI/resizeA", true);
             MiniMapTextures.resizeD = ContentFinder<Texture2D>.Get("UI/resizeD", true);
+            // TODO: real icon?
+            MiniMapTextures.mapManagerIcon = ContentFinder<Texture2D>.Get("UI/Commands/ShowMap", true);
         }
 
     }

@@ -6,22 +6,20 @@ using BetterMiniMap.Overlays;
 
 namespace BetterMiniMap
 {
-    // since I cannot figure out how to clean up garbage textues this should do.
-    [StaticConstructorOnStartup]
-    public static class OverlayManager
+    public class OverlayManager
     {
-        public static FogOverlay FogOverlay;
-        public static MiningOverlay MiningOverlay;
-        public static BuildingsOverlay BuildingOverlay;
-        public static PowerGridOverlay PowerOverlay;
-        public static TerrainOverlay TerrainOverlay;
-        public static ViewpointOverlay ViewpointOverlay;
-        public static AreaOverlay AreaOverlay;
+        public FogOverlay FogOverlay;
+        public MiningOverlay MiningOverlay;
+        public BuildingsOverlay BuildingOverlay;
+        public PowerGridOverlay PowerOverlay;
+        public TerrainOverlay TerrainOverlay;
+        public ViewpointOverlay ViewpointOverlay;
+        public AreaOverlay AreaOverlay;
 
-        public static List<Overlay> DefOverlays;
-        private static List<Overlay> overlays;
+        public List<Overlay> DefOverlays;
+        private List<Overlay> overlays;
 
-        static OverlayManager()
+        public OverlayManager()
         {
             FogOverlay = new FogOverlay();
             MiningOverlay = new MiningOverlay();
@@ -32,39 +30,38 @@ namespace BetterMiniMap
             AreaOverlay = new AreaOverlay();
             
             // handle OverlayDefs
-            OverlayManager.DefOverlays = new List<Overlay>();
+            DefOverlays = new List<Overlay>();
             foreach (OverlayDef def in DefDatabase<OverlayDef>.AllDefs.Where(d => d.selectors!=null))
             {
 #if DEBUG
-
                 Log.Message($"OverlayManager.cctor: {def.defName} -> {def.disabled}");
 #endif
                 Overlay overlay = (Overlay)Activator.CreateInstance(def.overlayClass, new object[] {def, def.visible});
-                OverlayManager.DefOverlays.Add(overlay);
+                DefOverlays.Add(overlay);
             }
             // add tracking for settings
             OverlaySettingDatabase.InitializeOverlaySettings();
         }
 
-        private static IOrderedEnumerable<Overlay> GetOverlays()
+        private IOrderedEnumerable<Overlay> GetOverlays()
         {
             List<Overlay> overlays = new List<Overlay>()
             {
-                OverlayManager.TerrainOverlay,
-                OverlayManager.BuildingOverlay,
-                OverlayManager.PowerOverlay,
-                OverlayManager.FogOverlay,
-                OverlayManager.MiningOverlay,
-                OverlayManager.ViewpointOverlay,
+                TerrainOverlay,
+                BuildingOverlay,
+                PowerOverlay,
+                FogOverlay,
+                MiningOverlay,
+                ViewpointOverlay,
             };
 
-            foreach (Overlay overlay in OverlayManager.DefOverlays)
+            foreach (Overlay overlay in DefOverlays)
                 overlays.Add(overlay);
 
             return overlays.OrderBy(o=> o.OverlayPriority);
         }
 
-        public static List<Overlay> Overlays
+        public List<Overlay> Overlays
         {
             get
             {

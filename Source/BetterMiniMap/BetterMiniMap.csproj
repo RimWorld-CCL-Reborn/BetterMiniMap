@@ -61,6 +61,7 @@
     <Compile Include="FloatMenuRadioButton.cs" />
     <Compile Include="GameComponent.cs" />
     <Compile Include="MiniMapControls.cs" />
+    <Compile Include="MiniMapManager.cs" />
     <Compile Include="MiniMapTextures.cs" />
     <Compile Include="MiniMapWindow.cs" />
     <Compile Include="ModSettings.cs" />

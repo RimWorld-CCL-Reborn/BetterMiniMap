@@ -18,6 +18,12 @@ namespace BetterMiniMap
 
         private readonly List<Overlay> overlays;
 
+        private readonly OverlayManager overlayManager;
+
+        // TODO: readonly
+        private Map map;
+        public Map Map { get => this.map; }
+
         private int tileHash = 0;
 
         private readonly MiniMapControls controls;
@@ -35,14 +41,19 @@ namespace BetterMiniMap
         private Rect coords;
         private string selectedAreaLabel = "";
 
-        public MiniMapWindow()
+        // TODO: set map
+
+        public MiniMapWindow(Map map)
         {
             this.closeOnCancel = false;
             this.preventCameraMotion = false;
+            //this.doCloseX = true;
             this.layer = WindowLayer.GameUI;
 
+            this.overlayManager = new OverlayManager();
+
             this.controls = new MiniMapControls(this);
-            this.overlays = OverlayManager.Overlays;
+            this.overlays = overlayManager.Overlays;
             this.clampHeight = UI.screenHeight - MainButtonDef.ButtonHeight - this.controls.DefaultHeight;
 
             this.coords = new Rect(0f, 0f, 1f, 1f);
@@ -52,7 +63,7 @@ namespace BetterMiniMap
         public Vector2 Position { get => position; set => position = value; }
         public Vector2 Size { get => size; set => size = value; }
         public bool Active { get => this.active; set => this.active = value; }
-        public AreaOverlay OverlayArea { get => OverlayManager.AreaOverlay;  }
+        public AreaOverlay OverlayArea { get => overlayManager.AreaOverlay;  }
 
         protected override float Margin { get => 0f; }
 
@@ -62,13 +73,13 @@ namespace BetterMiniMap
         {
             List<FloatMenuOption> overlayMenuItems = new List<FloatMenuOption>()
             {
-                new FloatMenuCheckBox(OverlayManager.BuildingOverlay, "BMM_BuildingsOverlayLabel".Translate()),
-                new FloatMenuCheckBox(OverlayManager.PowerOverlay, "BMM_PowerGridOverlayLabel".Translate()),
-                new FloatMenuCheckBox(OverlayManager.MiningOverlay, "BMM_MiningOverlayLabel".Translate()),
-                new FloatMenuCheckBox(OverlayManager.TerrainOverlay, "BMM_TerrainOverlayLabel".Translate()),
+                new FloatMenuCheckBox(overlayManager.BuildingOverlay, "BMM_BuildingsOverlayLabel".Translate()),
+                new FloatMenuCheckBox(overlayManager.PowerOverlay, "BMM_PowerGridOverlayLabel".Translate()),
+                new FloatMenuCheckBox(overlayManager.MiningOverlay, "BMM_MiningOverlayLabel".Translate()),
+                new FloatMenuCheckBox(overlayManager.TerrainOverlay, "BMM_TerrainOverlayLabel".Translate()),
             };
 
-            foreach (Overlay overlay in OverlayManager.DefOverlays)
+            foreach (Overlay overlay in overlayManager.DefOverlays)
                 overlayMenuItems.Add(new FloatMenuCheckBox(overlay, overlay?.def.label));
 
             return overlayMenuItems;
@@ -103,7 +114,7 @@ namespace BetterMiniMap
                     {
                         if (allAreas[i].Label == selectedAreaLabel)
                         {
-                            OverlayManager.AreaOverlay.area = allAreas[i];
+                            overlayManager.AreaOverlay.area = allAreas[i];
                             break;
                         }
                     }
@@ -348,9 +359,9 @@ namespace BetterMiniMap
 
         private void Saving()
         {
-            if (OverlayManager.AreaOverlay.area != null)
+            if (overlayManager.AreaOverlay.area != null)
             {
-                string selectedAreaLabel = OverlayManager.AreaOverlay.area.Label;
+                string selectedAreaLabel = overlayManager.AreaOverlay.area.Label;
                 Scribe_Values.Look<string>(ref selectedAreaLabel, "selectedAreaLabel");
             }
 
