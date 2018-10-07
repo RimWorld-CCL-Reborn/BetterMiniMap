@@ -3,10 +3,10 @@ using System.Linq;
 using UnityEngine;
 using Verse;
 using SettingsHelper;
-using ColorPicker.Dialog;
 
 using static BetterMiniMap.BetterMiniMapSettings;
 using Harmony;
+using ColourPicker;
 
 namespace BetterMiniMap
 {
@@ -290,19 +290,19 @@ namespace BetterMiniMap
             {
                 Listing_Standard subsettings = inRect.BeginListingStandard();
                 //listing_Standard.AddColorPickerButton("BMM_FogOverlayLabel".Translate(), settings.overlayColors.fog, (SelectionColorWidget scw) => { settings.overlayColors.fog = scw.SelectedColor; });
-                subsettings.AddColorPickerButton("BMM_BuildingsOverlayLabel".Translate(), settings.overlayColors.buildings, (SelectionColorWidget scw) => { settings.overlayColors.buildings = scw.SelectedColor; });
+                subsettings.AddColorPickerButton("BMM_BuildingsOverlayLabel".Translate(), settings.overlayColors.buildings, nameof(settings.overlayColors.buildings), settings.overlayColors);
 
-                subsettings.AddColorPickerButton("BMM_ViewpointOverlayLabel".Translate(), settings.overlayColors.viewpoint, (SelectionColorWidget scw) => {
-                    settings.overlayColors.viewpoint = scw.SelectedColor;
-                    settings.overlayColors.viewpointEdge = BetterMiniMapSettings.FadedColor(scw.SelectedColor, 0.25f);
+                subsettings.AddColorPickerButton("BMM_ViewpointOverlayLabel".Translate(), settings.overlayColors.viewpoint, (Color c) => {
+                    settings.overlayColors.viewpoint = c;
+                    settings.overlayColors.viewpointEdge = BetterMiniMapSettings.FadedColor(c, 0.25f);
                 });
 
-                subsettings.AddColorPickerButton("BMM_PoweredOnLabel".Translate(), settings.overlayColors.poweredOn, (SelectionColorWidget scw) => { settings.overlayColors.poweredOn = scw.SelectedColor; });
-                subsettings.AddColorPickerButton("BMM_PoweredByBatteriesLabel".Translate(), settings.overlayColors.poweredByBatteries, (SelectionColorWidget scw) => { settings.overlayColors.poweredByBatteries = scw.SelectedColor; });
-                subsettings.AddColorPickerButton("BMM_NotPoweredLabel".Translate(), settings.overlayColors.notPowered, (SelectionColorWidget scw) => { settings.overlayColors.notPowered = scw.SelectedColor; });
-                subsettings.AddColorPickerButton("BMM_PoweredOffLabel".Translate(), settings.overlayColors.powererOff, (SelectionColorWidget scw) => { settings.overlayColors.powererOff = scw.SelectedColor; });
+                subsettings.AddColorPickerButton("BMM_PoweredOnLabel".Translate(), settings.overlayColors.poweredOn, nameof(settings.overlayColors.poweredOn), settings.overlayColors);
+                subsettings.AddColorPickerButton("BMM_PoweredByBatteriesLabel".Translate(), settings.overlayColors.poweredByBatteries, nameof(settings.overlayColors.poweredByBatteries), settings.overlayColors);
+                subsettings.AddColorPickerButton("BMM_NotPoweredLabel".Translate(), settings.overlayColors.notPowered, nameof(settings.overlayColors.notPowered), settings.overlayColors);
+                subsettings.AddColorPickerButton("BMM_PoweredOffLabel".Translate(), settings.overlayColors.powererOff, nameof(settings.overlayColors.powererOff), settings.overlayColors);
 
-                subsettings.AddColorPickerButton("BMM_MiningOverlayLabel".Translate(), settings.overlayColors.mining, (SelectionColorWidget scw) => { settings.overlayColors.mining = scw.SelectedColor; });
+                subsettings.AddColorPickerButton("BMM_MiningOverlayLabel".Translate(), settings.overlayColors.mining, nameof(settings.overlayColors.mining), settings.overlayColors);
 
                 foreach (IndicatorSettings settings in OverlaySettingDatabase.IndicatorSettings)
                     subsettings.AddMultiColorPickerButton(settings.label.Translate(), settings, nameof(settings.color), nameof(settings.edgeColor));
@@ -337,9 +337,10 @@ namespace BetterMiniMap
             Color color1 = colorContainer.GetColorFromContainer(colorKey);
             // draw button leaving room for color rect in rightHalf rect (plus some padding)
             if (Widgets.ButtonText(thisPart.LeftPartPixels(textSize), buttonText))
-                Find.WindowStack.Add(new ColorSelectDialog(buttonText, color1, (SelectionColorWidget scw) => { colorContainer.SetColorFromContainer(colorKey, scw.SelectedColor); }, true));
+                //Find.WindowStack.Add(new ColorSelectDialog(buttonText, color1, (SelectionColorWidget scw) => { colorContainer.SetColorFromContainer(colorKey, scw.SelectedColor); }, true));
+                Find.WindowStack.Add(new Dialog_ColourPicker(color1, (Color c) => colorContainer.SetColorFromContainer(colorKey, c)));
             GUI.color = color1;
-            // draw square with color in rightHalf rect
+            // draw square with color in rightHalf rectA 
             Rect texRect = thisPart.RightPartPixels(thisPart.height);
             texRect.x -= 5f;
             GUI.DrawTexture(texRect, BaseContent.WhiteTex);
@@ -351,7 +352,7 @@ namespace BetterMiniMap
             Color color2 = colorContainer.GetColorFromContainer(colorKey2);
             // draw button leaving room for color rect in rightHalf rect (plus some padding)
             if (Widgets.ButtonText(thisPart.LeftPartPixels(textSize), buttonText))
-                Find.WindowStack.Add(new ColorSelectDialog(buttonText, color2, (SelectionColorWidget scw) => { colorContainer.SetColorFromContainer(colorKey2, scw.SelectedColor); }, true));
+                Find.WindowStack.Add(new Dialog_ColourPicker(color2, (Color c) => colorContainer.SetColorFromContainer(colorKey2, c)));
             GUI.color = color2;
             // draw square with color in rightHalf rect
             GUI.DrawTexture(thisPart.RightPartPixels(thisPart.height), BaseContent.WhiteTex);
