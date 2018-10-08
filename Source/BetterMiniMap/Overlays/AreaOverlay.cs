@@ -8,7 +8,7 @@ namespace BetterMiniMap.Overlays
 		private const float opacity = 0.5f;
 		public Area area;
 
-		public AreaOverlay(Area area = null, bool visible = true) : base(visible) => this.area = area;
+		public AreaOverlay(Map map, Area area = null, bool visible = true) : base(map, visible) => this.area = area;
 
 		public override void Render()
 		{
@@ -21,7 +21,7 @@ namespace BetterMiniMap.Overlays
             }
         }
 
-		public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.areas;
+		public override int GetUpdateInterval() => BetterMiniMapMod.modSettings.updatePeriods.areas;
 
         public override bool ShouldUpdateOverlay
         {

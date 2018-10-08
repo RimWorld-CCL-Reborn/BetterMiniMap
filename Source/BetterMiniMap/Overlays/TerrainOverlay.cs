@@ -63,19 +63,19 @@ namespace BetterMiniMap.Overlays
 
 	public class TerrainOverlay : Overlay, IExposable
 	{
-        public TerrainOverlay(bool visible = true) : base(visible) { }
+        public TerrainOverlay(Map map, bool visible = true) : base(map, visible) { }
 
         public void ExposeData() => this.ExposeData("overlayTerrain");
 
-		public override int GetUpdateInterval() => BetterMiniMapMod.settings.updatePeriods.terrain;
+		public override int GetUpdateInterval() => BetterMiniMapMod.modSettings.updatePeriods.terrain;
 
         public void Update() => base.Update(false);
 
         public override void Render()
 		{
-            Color32[] pixels = new Color32[Find.CurrentMap.cellIndices.NumGridCells];
-			for (int i = 0; i < Find.CurrentMap.cellIndices.NumGridCells; i++)
-                pixels[i] = TerrainColors.colorMapping[Find.CurrentMap.terrainGrid.TerrainAt(i).shortHash];
+            Color32[] pixels = new Color32[this.map.cellIndices.NumGridCells];
+			for (int i = 0; i < this.map.cellIndices.NumGridCells; i++)
+                pixels[i] = TerrainColors.colorMapping[this.map.terrainGrid.TerrainAt(i).shortHash];
             base.Texture.SetPixels32(pixels);
         }
 

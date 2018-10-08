@@ -10,9 +10,14 @@ namespace BetterMiniMap.Overlays
 
         private bool visible;
         private Texture2D texture;
+        protected Map map;
 
         // NOTE: do not use property here or else NPEs at Update()
-        protected Overlay(bool visible) => this.visible = visible;
+        protected Overlay(Map map, bool visible)
+        {
+            this.map = map;
+            this.visible = visible;
+        }
 
         public bool Visible
         {
@@ -41,14 +46,14 @@ namespace BetterMiniMap.Overlays
             if (this.texture != null)
                 Texture2D.Destroy(this.texture);
 
-            this.texture = new Texture2D(Find.CurrentMap.Size.x, Find.CurrentMap.Size.z, this.SupportedTextureFormat, BetterMiniMapMod.settings.mipMaps)
+            this.texture = new Texture2D(this.map.Size.x, this.map.Size.z, this.SupportedTextureFormat, BetterMiniMapMod.modSettings.mipMaps)
             {
                 //this.texture.SetPixels32(Utilities.GetClearPixelArray);
                 //this.texture.filterMode = FilterMode.Trilinear;
-                anisoLevel = BetterMiniMapMod.settings.anisoLevel,
+                anisoLevel = BetterMiniMapMod.modSettings.anisoLevel,
                 hideFlags = HideFlags.HideAndDontSave,
             };
-            this.texture.Apply(BetterMiniMapMod.settings.mipMaps);
+            this.texture.Apply(BetterMiniMapMod.modSettings.mipMaps);
         }
 
         private TextureFormat SupportedTextureFormat
@@ -65,9 +70,9 @@ namespace BetterMiniMap.Overlays
         public void Update(bool clearTexture = true)
         {
             if (clearTexture)
-                this.Texture.SetPixels32(Utilities.GetClearPixelArray);
+                this.Texture.SetPixels32(Utilities.GetClearPixelArray(this.map.Size.x));
             this.Render();
-            this.Texture.Apply(BetterMiniMapMod.settings.mipMaps);
+            this.Texture.Apply(BetterMiniMapMod.modSettings.mipMaps);
         }
 
         public abstract void Render();

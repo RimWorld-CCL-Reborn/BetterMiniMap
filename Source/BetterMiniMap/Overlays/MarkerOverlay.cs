@@ -25,21 +25,16 @@ namespace BetterMiniMap.Overlays
 
     public abstract class MarkerOverlay : Overlay
     {
-        // stashing
-        private static Map map;
-
-        protected MarkerOverlay(bool visible) : base(visible) { }
+        protected MarkerOverlay(Map map, bool visible) : base(map, visible) { }
 
         protected virtual void CreateMarker(IntVec3 position, float radius, Color color, Color edgeColor, float edgeOpacity = 0.5f)
         {
-            map = Find.CurrentMap;
-
             // reduce raidus by 1 to make radius=1 be a single cell
             int numInnerCells = InnerCellsCache.GetNumInnerCells(--radius);
             int i = 0;
             foreach (IntVec3 cell in GenRadial.RadialCellsAround(position, radius, true))
             {
-                if (cell.InBounds(map))
+                if (cell.InBounds(this.map))
                     this.Texture.SetPixel(cell.x, cell.z, (i > numInnerCells) ? edgeColor : color);
                 i++;
             }

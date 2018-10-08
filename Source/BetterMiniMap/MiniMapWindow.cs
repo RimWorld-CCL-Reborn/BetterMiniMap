@@ -24,7 +24,7 @@ namespace BetterMiniMap
         private Map map;
         public Map Map { get => this.map; }
 
-        private int tileHash = 0;
+        //private int tileHash = 0;
 
         private readonly MiniMapControls controls;
 
@@ -45,12 +45,14 @@ namespace BetterMiniMap
 
         public MiniMapWindow(Map map)
         {
+            this.map = map;
+
             this.closeOnCancel = false;
             this.preventCameraMotion = false;
             //this.doCloseX = true;
             this.layer = WindowLayer.GameUI;
 
-            this.overlayManager = new OverlayManager();
+            this.overlayManager = new OverlayManager(this.map);
 
             this.controls = new MiniMapControls(this);
             this.overlays = overlayManager.Overlays;
@@ -93,37 +95,10 @@ namespace BetterMiniMap
             this.clampHeight = UI.screenHeight - MainButtonDef.ButtonHeight - this.controls.DefaultHeight; 
         }
 
+
+        // TODO: return to restoring default functionality
         public override void DoWindowContents(Rect inRect)
 		{
-            // NOTE: lazy load but do not see a good way to do redraw otherwise (yet)
-            // NOTE: this could be part of a mapcomponent perhaps?
-            if (Find.CurrentMap.TileInfo.GetHashCode() != this.tileHash)
-            {
-#if DEBUG
-                Log.Message($"MiniMapWindow.DoWindowContents -> regenerating {Find.CurrentMap.Size.x} {Find.CurrentMap.Size.z}");
-#endif
-                this.tileHash = Find.CurrentMap.TileInfo.GetHashCode();
-
-                for (int i = 0; i < this.overlays.Count; i++)
-                    this.overlays[i].GenerateTexture();
-
-                if (selectedAreaLabel != "")
-                {
-                    List<Area> allAreas = Find.CurrentMap.areaManager.AllAreas;
-                    for (int i = 0; i < allAreas.Count; i++)
-                    {
-                        if (allAreas[i].Label == selectedAreaLabel)
-                        {
-                            overlayManager.AreaOverlay.area = allAreas[i];
-                            break;
-                        }
-                    }
-                    selectedAreaLabel = "";
-                }
-
-                this.Refresh();
-            }
-
             this.Update();
 
 			foreach (Overlay current in this.Overlays)
@@ -155,14 +130,19 @@ namespace BetterMiniMap
                 {
                     if (Input.GetMouseButton(0))
                     {
+                        // set current map
+                        Log.Message($"{Current.Game.CurrentMap.uniqueID}");
+                        if (this.map != Current.Game.CurrentMap)
+                            Current.Game.CurrentMap = this.map;
+
                         Vector2 mousePosition = Event.current.mousePosition;
                         mousePosition = new Vector2(mousePosition.x, inRect.height - mousePosition.y);
-                        float scaleFactor = (float)Find.CurrentMap.Size.x / inRect.width; // NOTE: this could be cached
+                        float scaleFactor = (float)this.map.Size.x / inRect.width; // NOTE: this could be cached
                         Vector3 globalPos = new Vector3(mousePosition.x * scaleFactor, 0f, mousePosition.y * scaleFactor);
 
                         if (this.coords.width != 0 || this.coords.height != 0) // NOTE: redudant check here but `or` makes it okay bae
                         {
-                            Vector3 zoomedPos = new Vector3((float)Find.CurrentMap.Size.x * this.coords.x + globalPos.x * this.coords.width, 0, (float)Find.CurrentMap.Size.z * this.coords.y + globalPos.z * this.coords.height);
+                            Vector3 zoomedPos = new Vector3((float)this.Map.Size.x * this.coords.x + globalPos.x * this.coords.width, 0, (float)this.Map.Size.z * this.coords.y + globalPos.z * this.coords.height);
                             Find.CameraDriver.JumpToCurrentMapLoc(zoomedPos);
                         }
                         else
@@ -227,6 +207,34 @@ namespace BetterMiniMap
 
         }
 
+        public override void PreOpen()
+        {
+            base.PreOpen();
+
+            for (int i = 0; i < this.overlays.Count; i++)
+                this.overlays[i].GenerateTexture();
+
+            if (selectedAreaLabel != "")
+            {
+                List<Area> allAreas = Find.CurrentMap.areaManager.AllAreas;
+                for (int i = 0; i < allAreas.Count; i++)
+                {
+                    if (allAreas[i].Label == selectedAreaLabel)
+                    {
+                        overlayManager.AreaOverlay.area = allAreas[i];
+                        break;
+                    }
+                }
+                selectedAreaLabel = "";
+            }
+
+            foreach (Overlay current in this.overlays)
+                current.Update();
+
+            if (this.OverlayArea.area != null)
+                this.OverlayArea.Update();
+        }
+
 		public override void PostOpen()
 		{
             base.PostOpen();
@@ -239,7 +247,7 @@ namespace BetterMiniMap
             Log.Message($"PostOpen: {this.position} {this.size}");
 #endif
             this.windowRect = new Rect(this.Position, this.Size);
-            Find.WindowStack.Add(this.controls);
+            Find.WindowStack.CustomAdd(this.controls);
 		}
 
         public override void PreClose()
@@ -299,15 +307,6 @@ namespace BetterMiniMap
                     current.Update();
 
             if (this.OverlayArea.ShouldUpdateOverlay)
-                this.OverlayArea.Update();
-        }
-
-        public void Refresh() // initialize
-        {
-            foreach (Overlay current in this.overlays)
-                current.Update();
-
-            if (this.OverlayArea.area != null)
                 this.OverlayArea.Update();
         }
 

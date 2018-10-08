@@ -19,28 +19,23 @@ namespace BetterMiniMap
         public List<Overlay> DefOverlays;
         private List<Overlay> overlays;
 
-        public OverlayManager()
+        public OverlayManager(Map map)
         {
-            FogOverlay = new FogOverlay();
-            MiningOverlay = new MiningOverlay();
-            BuildingOverlay = new BuildingsOverlay();
-            PowerOverlay = new PowerGridOverlay();
-            TerrainOverlay = new TerrainOverlay();
-            ViewpointOverlay = new ViewpointOverlay();
-            AreaOverlay = new AreaOverlay();
+            FogOverlay = new FogOverlay(map);
+            MiningOverlay = new MiningOverlay(map);
+            BuildingOverlay = new BuildingsOverlay(map);
+            PowerOverlay = new PowerGridOverlay(map);
+            TerrainOverlay = new TerrainOverlay(map);
+            ViewpointOverlay = new ViewpointOverlay(map);
+            AreaOverlay = new AreaOverlay(map);
             
             // handle OverlayDefs
             DefOverlays = new List<Overlay>();
             foreach (OverlayDef def in DefDatabase<OverlayDef>.AllDefs.Where(d => d.selectors!=null))
             {
-#if DEBUG
-                Log.Message($"OverlayManager.cctor: {def.defName} -> {def.disabled}");
-#endif
-                Overlay overlay = (Overlay)Activator.CreateInstance(def.overlayClass, new object[] {def, def.visible});
+                Overlay overlay = (Overlay)Activator.CreateInstance(def.overlayClass, new object[] {def, map, def.visible});
                 DefOverlays.Add(overlay);
             }
-            // add tracking for settings
-            OverlaySettingDatabase.InitializeOverlaySettings();
         }
 
         private IOrderedEnumerable<Overlay> GetOverlays()

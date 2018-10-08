@@ -9,18 +9,16 @@ namespace BetterMiniMap
 	{
         private static Dictionary<int, Color32[]> clearPixelArray = new Dictionary<int, Color32[]>();
 
-		public static Color32[] GetClearPixelArray
+        // assuming square maps
+		public static Color32[] GetClearPixelArray(int size)
 		{
-			get
-			{
-                if (!Utilities.clearPixelArray.ContainsKey(Find.CurrentMap.Size.x))
-				{
-					Utilities.clearPixelArray[Find.CurrentMap.Size.x] = new Color32[Find.CurrentMap.Size.x * Find.CurrentMap.Size.z];
-					for (int i = 0; i < Utilities.clearPixelArray[Find.CurrentMap.Size.x].Count<Color32>(); i++)
-						Utilities.clearPixelArray[Find.CurrentMap.Size.x][i] = Color.clear;
-				}
-				return Utilities.clearPixelArray[Find.CurrentMap.Size.x];
-			}
+            if (!Utilities.clearPixelArray.ContainsKey(size))
+            {
+                Utilities.clearPixelArray[size] = new Color32[size*size];
+                for (int i = 0; i < Utilities.clearPixelArray[size].Count<Color32>(); i++)
+                    Utilities.clearPixelArray[size][i] = Color.clear;
+            }
+            return Utilities.clearPixelArray[size];
 		}
 
 	}

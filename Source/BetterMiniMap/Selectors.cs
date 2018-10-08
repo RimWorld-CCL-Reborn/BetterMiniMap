@@ -11,24 +11,24 @@ namespace BetterMiniMap
     // TODO: how to avoid these extra castings from object -> Pawn/Thing
     public abstract class Selector
     {
-        public abstract bool IsValid(object o);
+        public abstract bool IsValid(object o, Map map);
     }
 
     public class Default : Selector
     {
-        public override bool IsValid(object o) => true;
+        public override bool IsValid(object o, Map map) => true;
     }
 
     public class ClassSelector : Selector
     {
         public Type classType;
-        public override bool IsValid(object o) => classType.IsAssignableFrom(o.GetType());
+        public override bool IsValid(object o, Map map) => classType.IsAssignableFrom(o.GetType());
     }
 
     public abstract class ThingSelector : Selector
     {
         public abstract bool IsValid(Thing t);
-        public override bool IsValid(object o) => (o is Thing t) ? IsValid(t) : false;
+        public override bool IsValid(object o, Map map) => (o is Thing t) ? IsValid(t) : false;
     }
 
     public class ThingByDefNameSelector : ThingSelector
@@ -40,7 +40,7 @@ namespace BetterMiniMap
     public abstract class PawnSelector : Selector
     {
         public abstract bool IsValid(Pawn p);
-        public override bool IsValid(object o) => (o is Pawn p) ? IsValid(p) : false;
+        public override bool IsValid(object o, Map map) => (o is Pawn p) ? IsValid(p) : false;
     }
 
     public class PawnByDefNameSelector : PawnSelector

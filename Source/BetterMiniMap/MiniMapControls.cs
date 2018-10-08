@@ -16,6 +16,7 @@ namespace BetterMiniMap
         private Rect dragButtonRect;
         private Rect homeButtonRect;
         private Rect resizeButtonRect;
+        private Rect miniMapManagerRect;
 
         private MiniMapWindow miniMap;
 
@@ -36,21 +37,21 @@ namespace BetterMiniMap
             this.configButtonRect = new Rect(0 , buttonMargin, buttonWidth, buttonWidth);
             this.resizeButtonRect = new Rect(0, buttonMargin, buttonWidth, buttonWidth);
             this.dragButtonRect = new Rect(0, buttonMargin, buttonWidth, buttonWidth);
+            this.miniMapManagerRect = new Rect(0, buttonMargin, buttonWidth, buttonWidth);
 
             float xDiff = buttonWidth + 2f * buttonMargin;
 
             this.configButtonRect.x = xPos += xDiff;
             this.resizeButtonRect.x = xPos += xDiff;
             this.dragButtonRect.x = xPos += xDiff;
-
-            //this.SetLocality();
+            this.miniMapManagerRect.x = xPos += xDiff;
         }
 
         protected override float Margin { get => 0f; }
 
         public void SetLocality()
         {
-            float width = this.dragButtonRect.x + buttonWidth + buttonMargin;
+            float width = this.miniMapManagerRect.x + buttonWidth + buttonMargin;
             this.windowRect = new Rect(miniMap.windowRect.x + miniMap.windowRect.width - width, miniMap.windowRect.y + miniMap.windowRect.height, width, this.DefaultHeight);
         }
 
@@ -122,13 +123,20 @@ namespace BetterMiniMap
                     miniMap.resizing = false;
                 }
             }
+
+            if (Widgets.ButtonImage(this.miniMapManagerRect, MiniMapTextures.mapManagerIcon))
+            {
+                
+                if (Event.current.button == 0 || Event.current.button == 1) // left/right click
+                    Find.WindowStack.Add(MiniMap_GameComponent.MiniMapManager.MiniMapMenu);
+            }
         }
 
         private FloatMenu GetAreaOptions()
         {
             this.areasOptions = new List<FloatMenuOption>();
 
-            List<Area> allAreas = Find.CurrentMap.areaManager.AllAreas;
+            List<Area> allAreas = this.miniMap.Map.areaManager.AllAreas;
 
             for (int i=0; i < allAreas.Count; i++)
                 this.areasOptions.Add(new FloatMenuRadioButton(allAreas[i], this.miniMap));

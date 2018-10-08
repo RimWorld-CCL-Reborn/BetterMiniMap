@@ -24,7 +24,7 @@ namespace BetterMiniMap
     {
         public List<IndicatorProps> mappings;
 
-        public delegate IndicatorSettings IndicatorSettingsGetter(object o);
+        public delegate IndicatorSettings IndicatorSettingsGetter(object o, Map map);
         private IndicatorSettingsGetter indicatorGetter;
 
         // uses mappings which were baked into indicatorGetter
@@ -33,7 +33,7 @@ namespace BetterMiniMap
             get
             {
                 if (indicatorGetter == null)
-                    indicatorGetter = (object o) => OverlaySettingDatabase.GetIndicatorSettings(this.mappings.First((IndicatorProps props) => props.selector.IsValid(o)).name);
+                    indicatorGetter = (object o, Map map) => OverlaySettingDatabase.GetIndicatorSettings(this.mappings.First((IndicatorProps props) => props.selector.IsValid(o, map)).name);
                 return indicatorGetter;
             }
         }
@@ -49,7 +49,7 @@ namespace BetterMiniMap
         public ThingRequestGroup requestGroup; // should be not null for ThingOverlay
         public int priority = 0;
  
-        public bool IsValid(object o) => this.selectors.All(s => s.IsValid(o));
+        public bool IsValid(object o, Map map) => this.selectors.All(s => s.IsValid(o, map));
 
         // NOTE: all new variables need custom XML writing here.
         public void LoadDataFromXmlCustom(XmlNode xmlRoot)

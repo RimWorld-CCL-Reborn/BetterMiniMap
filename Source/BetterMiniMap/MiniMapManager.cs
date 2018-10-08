@@ -1,39 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using Verse;
 
 namespace BetterMiniMap
 {
-    public class MiniMapManager : Window
+    public class MiniMapManager
     {
         // keyed on tile id
         private Dictionary<int, MiniMapWindow> miniMaps;
 
         public MiniMapManager()
         {
-            this.closeOnCancel = false;
-            this.preventCameraMotion = false;
-            this.layer = WindowLayer.GameUI;
-            this.windowRect = new Rect(5, 5, 50, 50);
-
             this.miniMaps = new Dictionary<int, MiniMapWindow>();
-
         }
 
         public void AddMiniMap(Map map) => this.miniMaps.Add(map.Tile, new MiniMapWindow(map));
         public void RemoveMiniMap(Map map) => this.miniMaps.Remove(map.Tile);
-        protected override float Margin { get => 0f; }
 
-        public override void DoWindowContents(Rect inRect)
+        public void LoadMaps()
         {
-            if (Widgets.ButtonImage(inRect, MiniMapTextures.mapManagerIcon)) // handle float menu
-            {
-                if (Event.current.button == 0 || Event.current.button == 1) // left/right click
-                    Find.WindowStack.Add(this.MiniMapMenu);
-            }
+            foreach(Map map in Current.Game.Maps)
+                this.AddMiniMap(map);
         }
 
         public FloatMenu MiniMapMenu
@@ -55,10 +41,14 @@ namespace BetterMiniMap
                 List<FloatMenuOption> items = new List<FloatMenuOption>();
                 // TODO: ordering
                 foreach(MiniMapWindow miniMap in miniMaps.Values)
-                    items.Add(new FloatMenuOption($"TileMap-{miniMap.Map.Tile}", ()=> { Log.Message("bang"); }));
+                    items.Add(new FloatMenuOption($"TileMap-{miniMap.Map.Tile}", ()=> {
+                        if (Find.WindowStack.Windows.IndexOf(miniMap) == -1)
+                            Find.WindowStack.CustomAdd(miniMap);
+                    }));
                 return items;
             }
         }
 
+        internal MiniMapWindow GetMiniMap(Map map) => miniMaps[map.Tile];
     }
 }

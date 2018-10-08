@@ -23,9 +23,9 @@ namespace BetterMiniMap
 
         public static void InitializeOverlaySettings()
         {
+            Log.Message("InitializeOverlaySettings");
             foreach (OverlayDef def in DefDatabase<OverlayDef>.AllDefs.Where(d => d.selectors!=null))
                 OverlaySettingDatabase.AddOverlaySettings(def);
-            LoadedModManager.GetMod<BetterMiniMapMod>().FetchSettings();
         }
 
         private static void AddOverlaySettings(OverlayDef def)
@@ -235,21 +235,29 @@ namespace BetterMiniMap
         }
     }
 
+    [StaticConstructorOnStartup]
     public class BetterMiniMapMod : Mod
     {
-        public static BetterMiniMapSettings settings;
+        //public static BetterMiniMapSettings settings;
+        public static BetterMiniMapSettings modSettings;
+
+        #region HARMONY
+        static BetterMiniMapMod()
+        {
+            HarmonyInstance harmony = HarmonyInstance.Create("rimworld.whyisthat.betterminimap.init");
+            harmony.Patch(AccessTools.Method(typeof(UIRoot_Entry), nameof(UIRoot_Entry.Init)), null, new HarmonyMethod(typeof(BetterMiniMapMod), nameof(DefsLoaded)));
+        }
+
+        // NOTE: this occurs before HugsLib's DefsLoadded... but the defs are loaded...
+        public static void DefsLoaded() => OverlaySettingDatabase.InitializeOverlaySettings();
+        #endregion
 
         public BetterMiniMapMod(ModContentPack content) : base(content)
         {
-            FetchSettings();
-            settings.rootDir = content.RootDir;
+            //modSettings.rootDir = content.RootDir;
+            Log.Message("Settings");
+            modSettings = GetSettings<BetterMiniMapSettings>();
             ListingStandardHelper.Gap = 10f;
-        }
-
-        public void FetchSettings()
-        {
-            Traverse.Create(this).Field("modSettings").SetValue(null);
-            settings = GetSettings<BetterMiniMapSettings>();
         }
 
         public override string SettingsCategory() => "BMM_SettingsCategoryLabel".Translate();
@@ -262,13 +270,13 @@ namespace BetterMiniMap
             // UpdatePeriods
             listing_Standard.AddLabelLine("BMM_TimeUpdateLabel".Translate());
 
-            listing_Standard.AddLabeledNumericalTextField<int>("BMM_AreasOverlayLabel".Translate(), ref settings.updatePeriods.areas, 0.75f);
-            listing_Standard.AddLabeledNumericalTextField<int>("BMM_BuildingsOverlayLabel".Translate(), ref settings.updatePeriods.buildings, 0.75f);
-            listing_Standard.AddLabeledNumericalTextField<int>("BMM_MiningOverlayLabel".Translate(), ref settings.updatePeriods.mining, 0.75f);
-            listing_Standard.AddLabeledNumericalTextField<int>("BMM_PowerGridOverlayLabel".Translate(), ref settings.updatePeriods.powerGrid, 0.75f);
-            listing_Standard.AddLabeledNumericalTextField<int>("BMM_TerrainOverlayLabel".Translate(), ref settings.updatePeriods.terrain, 0.75f);
-            listing_Standard.AddLabeledNumericalTextField<int>("BMM_FogOverlayLabel".Translate(), ref settings.updatePeriods.fog, 0.75f);
-            listing_Standard.AddLabeledNumericalTextField<int>("BMM_ViewpointOverlayLabel".Translate(), ref settings.updatePeriods.viewpoint, 0.75f);
+            listing_Standard.AddLabeledNumericalTextField<int>("BMM_AreasOverlayLabel".Translate(), ref modSettings.updatePeriods.areas, 0.75f);
+            listing_Standard.AddLabeledNumericalTextField<int>("BMM_BuildingsOverlayLabel".Translate(), ref modSettings.updatePeriods.buildings, 0.75f);
+            listing_Standard.AddLabeledNumericalTextField<int>("BMM_MiningOverlayLabel".Translate(), ref modSettings.updatePeriods.mining, 0.75f);
+            listing_Standard.AddLabeledNumericalTextField<int>("BMM_PowerGridOverlayLabel".Translate(), ref modSettings.updatePeriods.powerGrid, 0.75f);
+            listing_Standard.AddLabeledNumericalTextField<int>("BMM_TerrainOverlayLabel".Translate(), ref modSettings.updatePeriods.terrain, 0.75f);
+            listing_Standard.AddLabeledNumericalTextField<int>("BMM_FogOverlayLabel".Translate(), ref modSettings.updatePeriods.fog, 0.75f);
+            listing_Standard.AddLabeledNumericalTextField<int>("BMM_ViewpointOverlayLabel".Translate(), ref modSettings.updatePeriods.viewpoint, 0.75f);
 
             foreach (OverlaySettings overlaySettings in OverlaySettingDatabase.OverlaySettings)
                 listing_Standard.AddLabeledNumericalTextField<int>(overlaySettings.label, ref overlaySettings.updatePeriod, 0.75f);
@@ -290,19 +298,19 @@ namespace BetterMiniMap
             {
                 Listing_Standard subsettings = inRect.BeginListingStandard();
                 //listing_Standard.AddColorPickerButton("BMM_FogOverlayLabel".Translate(), settings.overlayColors.fog, (SelectionColorWidget scw) => { settings.overlayColors.fog = scw.SelectedColor; });
-                subsettings.AddColorPickerButton("BMM_BuildingsOverlayLabel".Translate(), settings.overlayColors.buildings, nameof(settings.overlayColors.buildings), settings.overlayColors);
+                subsettings.AddColorPickerButton("BMM_BuildingsOverlayLabel".Translate(), modSettings.overlayColors.buildings, nameof(modSettings.overlayColors.buildings), modSettings.overlayColors);
 
-                subsettings.AddColorPickerButton("BMM_ViewpointOverlayLabel".Translate(), settings.overlayColors.viewpoint, (Color c) => {
-                    settings.overlayColors.viewpoint = c;
-                    settings.overlayColors.viewpointEdge = BetterMiniMapSettings.FadedColor(c, 0.25f);
+                subsettings.AddColorPickerButton("BMM_ViewpointOverlayLabel".Translate(), modSettings.overlayColors.viewpoint, (Color c) => {
+                    modSettings.overlayColors.viewpoint = c;
+                    modSettings.overlayColors.viewpointEdge = BetterMiniMapSettings.FadedColor(c, 0.25f);
                 });
 
-                subsettings.AddColorPickerButton("BMM_PoweredOnLabel".Translate(), settings.overlayColors.poweredOn, nameof(settings.overlayColors.poweredOn), settings.overlayColors);
-                subsettings.AddColorPickerButton("BMM_PoweredByBatteriesLabel".Translate(), settings.overlayColors.poweredByBatteries, nameof(settings.overlayColors.poweredByBatteries), settings.overlayColors);
-                subsettings.AddColorPickerButton("BMM_NotPoweredLabel".Translate(), settings.overlayColors.notPowered, nameof(settings.overlayColors.notPowered), settings.overlayColors);
-                subsettings.AddColorPickerButton("BMM_PoweredOffLabel".Translate(), settings.overlayColors.powererOff, nameof(settings.overlayColors.powererOff), settings.overlayColors);
+                subsettings.AddColorPickerButton("BMM_PoweredOnLabel".Translate(), modSettings.overlayColors.poweredOn, nameof(modSettings.overlayColors.poweredOn), modSettings.overlayColors);
+                subsettings.AddColorPickerButton("BMM_PoweredByBatteriesLabel".Translate(), modSettings.overlayColors.poweredByBatteries, nameof(modSettings.overlayColors.poweredByBatteries), modSettings.overlayColors);
+                subsettings.AddColorPickerButton("BMM_NotPoweredLabel".Translate(), modSettings.overlayColors.notPowered, nameof(modSettings.overlayColors.notPowered), modSettings.overlayColors);
+                subsettings.AddColorPickerButton("BMM_PoweredOffLabel".Translate(), modSettings.overlayColors.powererOff, nameof(modSettings.overlayColors.powererOff), modSettings.overlayColors);
 
-                subsettings.AddColorPickerButton("BMM_MiningOverlayLabel".Translate(), settings.overlayColors.mining, nameof(settings.overlayColors.mining), settings.overlayColors);
+                subsettings.AddColorPickerButton("BMM_MiningOverlayLabel".Translate(), modSettings.overlayColors.mining, nameof(modSettings.overlayColors.mining), modSettings.overlayColors);
 
                 foreach (IndicatorSettings settings in OverlaySettingDatabase.IndicatorSettings)
                     subsettings.AddMultiColorPickerButton(settings.label.Translate(), settings, nameof(settings.color), nameof(settings.edgeColor));
@@ -312,7 +320,7 @@ namespace BetterMiniMap
 
             listing_Standard.End();
 
-            settings.Write();
+            modSettings.Write();
         }
 
     }
