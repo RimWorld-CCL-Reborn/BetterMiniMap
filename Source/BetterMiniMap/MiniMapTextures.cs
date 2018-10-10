@@ -6,24 +6,26 @@ namespace BetterMiniMap
     [StaticConstructorOnStartup]
     class MiniMapTextures
     {
-        public static readonly Texture2D config;
-        public static readonly Texture2D dragA;
-        public static readonly Texture2D dragD;
-        public static readonly Texture2D homeA;
-        public static readonly Texture2D resizeA;
-        public static readonly Texture2D resizeD;
-        public static readonly Texture2D mapManagerIcon;
+        public static readonly Texture2D Config;
+        public static readonly Texture2D DragA;
+        public static readonly Texture2D DragD;
+        public static readonly Texture2D HomeA;
+        public static readonly Texture2D ResizeA;
+        public static readonly Texture2D ResizeD;
+        public static readonly Texture2D MapManagerIcon;
+        public static readonly Texture2D CloseXSmall;
 
         static MiniMapTextures()
         {
-            MiniMapTextures.config = ContentFinder<Texture2D>.Get("UI/config", true);
-            MiniMapTextures.dragA = ContentFinder<Texture2D>.Get("UI/dragA", true);
-            MiniMapTextures.dragD = ContentFinder<Texture2D>.Get("UI/dragD", true);
-            MiniMapTextures.homeA = ContentFinder<Texture2D>.Get("UI/homeA", true);
-            MiniMapTextures.resizeA = ContentFinder<Texture2D>.Get("UI/resizeA", true);
-            MiniMapTextures.resizeD = ContentFinder<Texture2D>.Get("UI/resizeD", true);
+            MiniMapTextures.Config = ContentFinder<Texture2D>.Get("UI/config", true);
+            MiniMapTextures.DragA = ContentFinder<Texture2D>.Get("UI/dragA", true);
+            MiniMapTextures.DragD = ContentFinder<Texture2D>.Get("UI/dragD", true);
+            MiniMapTextures.HomeA = ContentFinder<Texture2D>.Get("UI/homeA", true);
+            MiniMapTextures.ResizeA = ContentFinder<Texture2D>.Get("UI/resizeA", true);
+            MiniMapTextures.ResizeD = ContentFinder<Texture2D>.Get("UI/resizeD", true);
             // TODO: real icon?
-            MiniMapTextures.mapManagerIcon = ContentFinder<Texture2D>.Get("UI/Commands/ShowMap", true);
+            MiniMapTextures.MapManagerIcon = ContentFinder<Texture2D>.Get("UI/Commands/ShowMap", true);
+            MiniMapTextures.CloseXSmall = ContentFinder<Texture2D>.Get("UI/Widgets/CloseXSmall", true);
         }
 
     }

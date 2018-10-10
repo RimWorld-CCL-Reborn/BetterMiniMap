@@ -1,26 +1,79 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using Verse;
 
 namespace BetterMiniMap
 {
-    public class MiniMapManager
+    public class MiniMapManager : IExposable
     {
-        // keyed on tile id
+        // keyed on uniqueID
         private Dictionary<int, MiniMapWindow> miniMaps;
+        private Action gameComponentOnGUI;
+
+        public Action GameComponentOnGUI { get => gameComponentOnGUI; }
 
         public MiniMapManager()
         {
             this.miniMaps = new Dictionary<int, MiniMapWindow>();
+            gameComponentOnGUI = delegate ()
+            {
+                // wait till in game screen
+                if (!GenScene.InPlayScene) return;
+
+                // init
+                MiniMap_GameComponent.MiniMap.Toggle(true);
+
+                gameComponentOnGUI = delegate ()
+                {
+                    if (Event.current.type == EventType.KeyDown)
+                    {
+                        // TODO: needs to be reworked
+                        if (Event.current.keyCode == KeyCode.M)
+                        {
+                            bool add = Find.WindowStack.Windows.IndexOf(MiniMap_GameComponent.MiniMap) == -1;
+                            MiniMap_GameComponent.MiniMap.Toggle(add); // TODO: this is a bit nasty...
+                            MiniMap_GameComponent.MiniMap.Active = add;
+                        }
+                        if (Event.current.keyCode == KeyCode.K && MiniMap_GameComponent.MiniMap.Active)
+                            MiniMap_GameComponent.MiniMap.ToggleControls();
+                    }
+                };
+            };
         }
 
-        public void AddMiniMap(Map map) => this.miniMaps.Add(map.Tile, new MiniMapWindow(map));
-        public void RemoveMiniMap(Map map) => this.miniMaps.Remove(map.Tile);
-
-        public void LoadMaps()
+        public void SetMap(Map map)
         {
-            foreach(Map map in Current.Game.Maps)
+            if (this.miniMaps.Count == 0) // upgrade case (not sure)
                 this.AddMiniMap(map);
+            else
+            {
+                MiniMapWindow oldMMW = this.GetMiniMap(Current.Game.Maps[Current.Game.currentMapIndex]);
+                if (oldMMW.Initialized)
+                {
+                    MiniMapWindow newMMW = new MiniMapWindow(map);
+                    newMMW.SetLocality(oldMMW);
+                    oldMMW.Toggle();
+                    newMMW.Toggle(true);
+                    this.miniMaps.Clear();
+                    this.miniMaps.Add(map.uniqueID, newMMW);
+                }
+            }
         }
+
+        public void AddMiniMap(Map map)
+        {
+            MiniMapWindow miniMap = new MiniMapWindow(map);
+            // TODO: look into smart placement scheme
+            miniMap.Position = new Vector2(UI.screenWidth - (MiniMapWindow.defaultSize + MiniMapWindow.defaultMargin)*(miniMaps.Count+1), MiniMapWindow.defaultMargin);
+            if (this.miniMaps.ContainsKey(map.uniqueID))
+                Log.Warning($"BetterMiniMap: miniMaps already contains key {map.uniqueID}.");
+            else
+                this.miniMaps.Add(map.uniqueID, miniMap);
+        }
+
+        public void RemoveMiniMap(Map map) => this.miniMaps.Remove(map.uniqueID);
 
         public FloatMenu MiniMapMenu
         {
@@ -49,6 +102,11 @@ namespace BetterMiniMap
             }
         }
 
-        internal MiniMapWindow GetMiniMap(Map map) => miniMaps[map.Tile];
+        internal MiniMapWindow GetMiniMap(Map map) => (miniMaps.ContainsKey(map.uniqueID)) ? miniMaps[map.uniqueID] : null;
+
+        public void ExposeData()
+        {
+            Scribe_Collections.Look<int, MiniMapWindow>(ref miniMaps, "miniMaps", LookMode.Undefined, LookMode.Deep);
+        }
     }
 }

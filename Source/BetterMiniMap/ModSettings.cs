@@ -23,7 +23,6 @@ namespace BetterMiniMap
 
         public static void InitializeOverlaySettings()
         {
-            Log.Message("InitializeOverlaySettings");
             foreach (OverlayDef def in DefDatabase<OverlayDef>.AllDefs.Where(d => d.selectors!=null))
                 OverlaySettingDatabase.AddOverlaySettings(def);
         }
@@ -199,6 +198,7 @@ namespace BetterMiniMap
         public UpdatePeriods updatePeriods;
         public OverlayColors overlayColors;
         public IndicatorSizes indicatorSizes;
+        public bool singleMode = false;
 
         // HIDDEN SETTINGS
         public bool mipMaps = false;
@@ -210,6 +210,7 @@ namespace BetterMiniMap
             Scribe_Deep.Look(ref this.updatePeriods, "updatePeriods");
             Scribe_Deep.Look(ref this.overlayColors, "overlayColors");
             Scribe_Deep.Look(ref this.indicatorSizes, "indicatorSizes");
+            Scribe_Values.Look<bool>(ref this.singleMode, "singleMode", false);
 
             // HIDDEN SETTINGS
             Scribe_Values.Look<bool>(ref this.mipMaps, "mipMaps", false);
@@ -255,7 +256,6 @@ namespace BetterMiniMap
         public BetterMiniMapMod(ModContentPack content) : base(content)
         {
             //modSettings.rootDir = content.RootDir;
-            Log.Message("Settings");
             modSettings = GetSettings<BetterMiniMapSettings>();
             ListingStandardHelper.Gap = 10f;
         }
@@ -280,6 +280,8 @@ namespace BetterMiniMap
 
             foreach (OverlaySettings overlaySettings in OverlaySettingDatabase.OverlaySettings)
                 listing_Standard.AddLabeledNumericalTextField<int>(overlaySettings.label, ref overlaySettings.updatePeriod, 0.75f);
+
+            listing_Standard.AddLabeledCheckbox("SingleMode", ref modSettings.singleMode);
 
             // IndicatorSizes
             listing_Standard.AddSubSettingsButton("BMM_IndicatorSizeLabel".Translate(), (Rect inRect) =>

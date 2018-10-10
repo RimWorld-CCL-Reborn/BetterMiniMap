@@ -1,8 +1,6 @@
-﻿using UnityEngine;
-using Verse;
+﻿using Verse;
 using RimWorld;
 using Harmony;
-using RimWorld.Planet;
 using System.Linq;
 
 namespace BetterMiniMap
@@ -10,15 +8,11 @@ namespace BetterMiniMap
     [StaticConstructorOnStartup]
     public class MiniMap_GameComponent : GameComponent
     {
-        // TODO: remove this variable
-        //private static MiniMapWindow miniMap;
-
-        private static bool initialized;
-
         // used to toggle minimap
         private static bool researchPal; 
         private static bool relationsTab;
 
+        // TODO: remove static context
         private static MiniMapManager miniMapManager; 
 
         public static MiniMapManager MiniMapManager
@@ -26,39 +20,41 @@ namespace BetterMiniMap
             get => miniMapManager;
         }
 
-        public MiniMap_GameComponent(Game g) => Initialize();
-
-        public MiniMap_GameComponent() => Initialize();
-
-        private static void Initialize()
+        public MiniMap_GameComponent(Game g) : this() { }
+        public MiniMap_GameComponent()
         {
-            if (!initialized)
-            {
-                // used for toggling minimap 
-                researchPal = ModLister.AllInstalledMods.FirstOrDefault(m => m.Name == "ResearchPal")?.Active == true;
-                relationsTab = ModLister.AllInstalledMods.FirstOrDefault(m => m.Name == "Relations Tab")?.Active == true;
-                initialized = true;
-            }
             miniMapManager = new MiniMapManager();
         }
 
-        // TODO: should this stay?
-        private static MiniMapWindow MiniMap
+        internal static MiniMapWindow MiniMap
         {
             get => miniMapManager.GetMiniMap(Find.CurrentMap);
         }
 
-        #region HarmonyPatches
-
         static MiniMap_GameComponent()
         {
+            // used for toggling minimap 
+            researchPal = ModLister.AllInstalledMods.FirstOrDefault(m => m.Name == "ResearchPal")?.Active == true;
+            relationsTab = ModLister.AllInstalledMods.FirstOrDefault(m => m.Name == "Relations Tab")?.Active == true;
+
             HarmonyInstance harmony = HarmonyInstance.Create("rimworld.whyisthat.betterminimap.gamecomponent");
             //harmony.Patch(AccessTools.Method(typeof(MainTabsRoot), nameof(MainTabsRoot.ToggleTab)), null, new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(ToggleMiniMap)));
             //harmony.Patch(AccessTools.Method(typeof(MainButtonWorker_ToggleWorld), nameof(MainButtonWorker_ToggleWorld.Activate)), null, new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(ToggleMiniMap_WorldTab)));
-            harmony.Patch(AccessTools.Method(typeof(Game), nameof(Game.AddMap)), null, new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(AddMiniMap)));
-            harmony.Patch(AccessTools.Method(typeof(Game), nameof(Game.DeinitAndRemoveMap)), new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(RemoveMiniMap)));
+
+            if (BetterMiniMapMod.modSettings.singleMode)
+            {
+                harmony.Patch(AccessTools.Property(typeof(Game), nameof(Game.CurrentMap)).GetSetMethod(), new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(CurrentMap_Prefix)));
+            }
+            else
+            {
+                harmony.Patch(AccessTools.Method(typeof(Game), nameof(Game.AddMap)), null, new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(AddMiniMap)));
+                harmony.Patch(AccessTools.Method(typeof(Game), nameof(Game.DeinitAndRemoveMap)), new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(RemoveMiniMap)));
+                harmony.Patch(AccessTools.Method(typeof(PlaySettings), nameof(PlaySettings.DoPlaySettingsGlobalControls)), new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(PlaySettings_DoPlaySettingsGlobalControls_Prefix)));
+            }
         }
         
+        #region HarmonyPatches
+
         /*static void ToggleMiniMap(MainTabsRoot __instance, MainButtonDef newTab)
         {
 #if DEBUG
@@ -98,58 +94,44 @@ namespace BetterMiniMap
         static void AddMiniMap(Map map) => miniMapManager.AddMiniMap(map);
         static void RemoveMiniMap(Map map) => miniMapManager.RemoveMiniMap(map);
 
+        static void PlaySettings_DoPlaySettingsGlobalControls_Prefix(WidgetRow row, bool worldView)
+        {
+            if (row.ButtonIcon(MiniMapTextures.MapManagerIcon))
+                Find.WindowStack.Add(MiniMapManager.MiniMapMenu);
+        }
+
+        static void CurrentMap_Prefix(Game __instance, Map value)
+        {
+            if (__instance.currentMapIndex >= 0)
+                MiniMapManager.SetMap(value);
+        }
+
         #endregion HarmonyPatches
 
         public override void GameComponentOnGUI()
         {
             base.GameComponentOnGUI();
-            if (Event.current.type == EventType.KeyDown)
-            {
-                // TODO: needs to be reworked
-                if (Event.current.keyCode == KeyCode.M)
-                {
-                    bool add = Find.WindowStack.Windows.IndexOf(MiniMap) == -1;
-                    MiniMap.Toggle(add); // TODO: this is a bit nasty...
-                    MiniMap.Active = add;
-                }
-                if (Event.current.keyCode == KeyCode.K && MiniMap.Active)
-                    MiniMap.ToggleControls();
-            }
+            MiniMapManager.GameComponentOnGUI();
         }
 
-        /*public void PostInit()
+        public override void ExposeData()
         {
-#if DEBUG
-            Log.Message($"PostInit");
-#endif
-            base.FinalizeInit();
+            base.ExposeData();
+            Scribe_Deep.Look<MiniMapManager>(ref miniMapManager, "miniMapManager");
 
-            // need to reset textures (in case reload)
-            //miniMap.ResetOverlays();
-
-            Find.WindowStack.Add(miniMapManager);
-        }*/
+            // Handles upgrading settings
+            if (Scribe.mode == LoadSaveMode.LoadingVars)
+            {
+                if (miniMapManager == null)
+                    miniMapManager = new MiniMapManager();
+            } 
+        }
 
         public override void StartedNewGame()
         {
             base.StartedNewGame();
-            //PostInit();
+            if (BetterMiniMapMod.modSettings.singleMode)
+                MiniMapManager.AddMiniMap(Find.CurrentMap);
         }
-
-
-        public override void LoadedGame()
-        {
-            base.LoadedGame();
-            miniMapManager.LoadMaps();
-            //PostInit();
-        }
-
-        // TODO
-        /*public override void ExposeData()
-        {
-            base.ExposeData();
-            Scribe_Deep.Look<MiniMapWindow>(ref miniMap, "miniMap");
-        }*/
-
     }
 }

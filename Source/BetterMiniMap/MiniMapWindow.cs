@@ -11,61 +11,56 @@ namespace BetterMiniMap
 {
 	internal class MiniMapWindow : Window, IExposable
 	{
-        private const float minimumSize = 150f;
-        private const float defaultSize = 300f;
-        private const int defaultMargin = 8;
+        public const float defaultSize = 250f;
+        public const int defaultMargin = 8;
+        private const float minimumSize = 100f;
         private const float scrollWheelZoomRate = 0.015f;
-
-        private readonly List<Overlay> overlays;
-
-        private readonly OverlayManager overlayManager;
-
-        // TODO: readonly
-        private Map map;
-        public Map Map { get => this.map; }
-
-        //private int tileHash = 0;
 
         private readonly MiniMapControls controls;
 
+        private OverlayManager overlayManager;
+        private Map map;
         private Vector2 position;
         private Vector2 size;
-
         private Vector3 prevMousePos;
 
         public bool resizing = false;
         private bool active = true; // NOTE: do not confuse with toggling (which is a temporary removal of the window)
 
-        private float clampHeight;
+        private float clampHeight; //cached value
 
         private Rect coords;
         private string selectedAreaLabel = "";
 
-        // TODO: set map
+        // hacky
+        private bool initialized;
+        public bool Initialized { get => this.initialized; }
 
-        public MiniMapWindow(Map map)
+        public MiniMapWindow()
         {
-            this.map = map;
-
             this.closeOnCancel = false;
             this.preventCameraMotion = false;
-            //this.doCloseX = true;
             this.layer = WindowLayer.GameUI;
 
-            this.overlayManager = new OverlayManager(this.map);
-
             this.controls = new MiniMapControls(this);
-            this.overlays = overlayManager.Overlays;
             this.clampHeight = UI.screenHeight - MainButtonDef.ButtonHeight - this.controls.DefaultHeight;
 
             this.coords = new Rect(0f, 0f, 1f, 1f);
         }
 
-        public List<Overlay> Overlays { get => this.overlays; }
-        public Vector2 Position { get => position; set => position = value; }
-        public Vector2 Size { get => size; set => size = value; }
+        public MiniMapWindow(Map map) : this()
+        {
+            this.map = map;
+            this.overlayManager = new OverlayManager(map);
+        }
+
+        public Map Map { get => this.map; }
+
+        public List<Overlay> Overlays { get => overlayManager.Overlays; }
         public bool Active { get => this.active; set => this.active = value; }
         public AreaOverlay OverlayArea { get => overlayManager.AreaOverlay;  }
+        public Vector2 Position { get => this.position; internal set => this.position = value; }
+        public Vector2 Size { get => this.size; internal set => this.size = value; }
 
         protected override float Margin { get => 0f; }
 
@@ -95,8 +90,6 @@ namespace BetterMiniMap
             this.clampHeight = UI.screenHeight - MainButtonDef.ButtonHeight - this.controls.DefaultHeight; 
         }
 
-
-        // TODO: return to restoring default functionality
         public override void DoWindowContents(Rect inRect)
 		{
             this.Update();
@@ -128,10 +121,13 @@ namespace BetterMiniMap
                 }
                 else if (!this.draggable)
                 {
-                    if (Input.GetMouseButton(0))
+                    if (Input.GetMouseButton(0)) // click
                     {
+                        // close tabs
+                        if (Find.MainTabsRoot.OpenTab != null)
+                            Find.MainTabsRoot.ToggleTab(null, false);
+
                         // set current map
-                        Log.Message($"{Current.Game.CurrentMap.uniqueID}");
                         if (this.map != Current.Game.CurrentMap)
                             Current.Game.CurrentMap = this.map;
 
@@ -204,15 +200,18 @@ namespace BetterMiniMap
             }
             else
                 this.preventCameraMotion = false;
-
         }
 
         public override void PreOpen()
         {
             base.PreOpen();
+            this.Refresh();
+        }
 
-            for (int i = 0; i < this.overlays.Count; i++)
-                this.overlays[i].GenerateTexture();
+        private void Refresh()
+        {
+            for (int i = 0; i < Overlays.Count; i++)
+                Overlays[i].GenerateTexture();
 
             if (selectedAreaLabel != "")
             {
@@ -228,7 +227,7 @@ namespace BetterMiniMap
                 selectedAreaLabel = "";
             }
 
-            foreach (Overlay current in this.overlays)
+            foreach (Overlay current in Overlays)
                 current.Update();
 
             if (this.OverlayArea.area != null)
@@ -238,16 +237,15 @@ namespace BetterMiniMap
 		public override void PostOpen()
 		{
             base.PostOpen();
-            if (this.Size.x == 0)
-            {
-                this.Position = new Vector2(UI.screenWidth - defaultSize - defaultMargin, defaultMargin);
-                this.Size = new Vector2(defaultSize, defaultSize);
-            }
 #if DEBUG
             Log.Message($"PostOpen: {this.position} {this.size}");
 #endif
+            if (this.size.x == 0)
+                this.size = new Vector2(defaultSize, defaultSize);
             this.windowRect = new Rect(this.Position, this.Size);
             Find.WindowStack.CustomAdd(this.controls);
+            if (!this.Initialized)
+                this.initialized = true;
 		}
 
         public override void PreClose()
@@ -274,8 +272,14 @@ namespace BetterMiniMap
             if (this.windowRect.yMin < 0f)
                 this.windowRect.y = 0f;
 
-            this.Position = this.windowRect.position;
+            this.position = this.windowRect.position;
             this.Size = this.windowRect.size;
+        }
+
+        internal void SetLocality(MiniMapWindow miniMap)
+        {
+            this.position = this.windowRect.position = miniMap.position;
+            this.Size = this.windowRect.size = miniMap.size;
         }
 
         public void Toggle(bool add = false)
@@ -302,7 +306,7 @@ namespace BetterMiniMap
 
         public void Update()
         {
-            foreach (Overlay current in this.overlays)
+            foreach (Overlay current in Overlays)
                 if (current.ShouldUpdateOverlay)
                     current.Update();
 
@@ -313,17 +317,12 @@ namespace BetterMiniMap
         // NOTE: this is kind of nasty...
         public void ExposeData()
         {
-#if DEBUG
-            Log.Message($"ExposeData: {Scribe.mode}");
-#endif
             Scribe_Values.Look<Vector2>(ref this.position, "position");
             Scribe_Values.Look<Vector2>(ref this.size, "size");
 
             Scribe_Values.Look<bool>(ref this.active, "active", true);
 
-            foreach (Overlay overlay in this.Overlays)
-                if (overlay is IExposable)
-                    ((IExposable)overlay).ExposeData();
+            Scribe_References.Look<Map>(ref this.map, "map");
 
             switch(Scribe.mode)
             {
@@ -346,14 +345,14 @@ namespace BetterMiniMap
                 this.coords.size = new Vector2(1f, 1f);
         }
 
-        // TODO: fix this... it's nasty.
         private void PostLoadInit()
         {
-            // NOTE: there should be a cleaner way to do this...
-            // Replace default window
-            Find.WindowStack.Add(this);
-            if (!this.active)
-                Find.WindowStack.TryRemove(this, true);
+            if (!this.Initialized)
+            {
+                this.overlayManager = new OverlayManager(this.map);
+                this.initialized = true;
+            }
+            this.ExposeOverlays();
         }
 
         private void Saving()
@@ -368,6 +367,15 @@ namespace BetterMiniMap
             Vector2 coordsSize = this.coords.size; 
             Scribe_Values.Look<Vector2>(ref coordsPosition, "coordsPosition");
             Scribe_Values.Look<Vector2>(ref coordsSize, "coordsSize");
+
+            this.ExposeOverlays();
+        }
+
+        private void ExposeOverlays()
+        {
+            foreach (Overlay overlay in this.Overlays)
+                if (overlay is IExposable)
+                    ((IExposable)overlay).ExposeData();
         }
 
     }

@@ -9,14 +9,15 @@ namespace BetterMiniMap
 {
     internal class MiniMapControls : Window
     {
-		public const float buttonWidth = 20f;
-		private const float buttonMargin = 6f;
+		public const float buttonWidth = 18f;
+		private const float buttonMargin = 4f;
 
         private Rect configButtonRect;
         private Rect dragButtonRect;
         private Rect homeButtonRect;
         private Rect resizeButtonRect;
         private Rect miniMapManagerRect;
+        private Rect closeButtonRect;
 
         private MiniMapWindow miniMap;
 
@@ -38,6 +39,7 @@ namespace BetterMiniMap
             this.resizeButtonRect = new Rect(0, buttonMargin, buttonWidth, buttonWidth);
             this.dragButtonRect = new Rect(0, buttonMargin, buttonWidth, buttonWidth);
             this.miniMapManagerRect = new Rect(0, buttonMargin, buttonWidth, buttonWidth);
+            this.closeButtonRect = new Rect(0, buttonMargin, buttonWidth, buttonWidth);
 
             float xDiff = buttonWidth + 2f * buttonMargin;
 
@@ -45,13 +47,18 @@ namespace BetterMiniMap
             this.resizeButtonRect.x = xPos += xDiff;
             this.dragButtonRect.x = xPos += xDiff;
             this.miniMapManagerRect.x = xPos += xDiff;
+            this.closeButtonRect.x = xPos += xDiff;
         }
 
         protected override float Margin { get => 0f; }
 
         public void SetLocality()
         {
-            float width = this.miniMapManagerRect.x + buttonWidth + buttonMargin;
+            float width = 0; 
+            if (BetterMiniMapMod.modSettings.singleMode)
+                width = this.dragButtonRect.x + buttonWidth + buttonMargin;
+            else
+                width = this.closeButtonRect.x + buttonWidth + buttonMargin;
             this.windowRect = new Rect(miniMap.windowRect.x + miniMap.windowRect.width - width, miniMap.windowRect.y + miniMap.windowRect.height, width, this.DefaultHeight);
         }
 
@@ -88,7 +95,7 @@ namespace BetterMiniMap
 
             Widgets.DrawHighlightIfMouseover(this.homeButtonRect);
             TooltipHandler.TipRegion(this.homeButtonRect, "BMM_HomeButtonTooltip".Translate());
-            if (Widgets.ButtonImage(this.homeButtonRect, MiniMapTextures.homeA))
+            if (Widgets.ButtonImage(this.homeButtonRect, MiniMapTextures.HomeA))
             {
                 if (Event.current.button == 0 || Event.current.button == 1) // left/right click
                     Find.WindowStack.Add(this.GetAreaOptions());
@@ -96,7 +103,7 @@ namespace BetterMiniMap
 
             Widgets.DrawHighlightIfMouseover(this.configButtonRect);
             TooltipHandler.TipRegion(this.configButtonRect, "BMM_ConfigButtonTooltip".Translate());
-            if (Widgets.ButtonImage(this.configButtonRect, MiniMapTextures.config))
+            if (Widgets.ButtonImage(this.configButtonRect, MiniMapTextures.Config))
             {
                 if (Event.current.button == 0 || Event.current.button == 1) // left/right click
                     Find.WindowStack.Add(this.OverlayMenu);
@@ -104,7 +111,7 @@ namespace BetterMiniMap
 
             Widgets.DrawHighlightIfMouseover(this.resizeButtonRect);
             TooltipHandler.TipRegion(this.resizeButtonRect, "BMM_ResizeButtonTooltip".Translate());
-            if (Widgets.ButtonImage(this.resizeButtonRect, miniMap.resizing ? MiniMapTextures.resizeA : MiniMapTextures.resizeD))
+            if (Widgets.ButtonImage(this.resizeButtonRect, miniMap.resizing ? MiniMapTextures.ResizeA : MiniMapTextures.ResizeD))
             {
                 if (Event.current.button == 0 || Event.current.button == 1) // left/right click
                 {
@@ -115,7 +122,7 @@ namespace BetterMiniMap
 
             Widgets.DrawHighlightIfMouseover(this.dragButtonRect);
             TooltipHandler.TipRegion(this.dragButtonRect, "BMM_DragButtonTooltip".Translate());
-            if (Widgets.ButtonImage(this.dragButtonRect, miniMap.draggable ? MiniMapTextures.dragA : MiniMapTextures.dragD))
+            if (Widgets.ButtonImage(this.dragButtonRect, miniMap.draggable ? MiniMapTextures.DragA : MiniMapTextures.DragD))
             {
                 if (Event.current.button == 0 || Event.current.button == 1) // left/right click
                 {
@@ -124,11 +131,16 @@ namespace BetterMiniMap
                 }
             }
 
-            if (Widgets.ButtonImage(this.miniMapManagerRect, MiniMapTextures.mapManagerIcon))
+            if (Widgets.ButtonImage(this.miniMapManagerRect, MiniMapTextures.MapManagerIcon))
             {
-                
                 if (Event.current.button == 0 || Event.current.button == 1) // left/right click
                     Find.WindowStack.Add(MiniMap_GameComponent.MiniMapManager.MiniMapMenu);
+            }
+
+            if (Widgets.ButtonImage(this.closeButtonRect, MiniMapTextures.CloseXSmall))
+            {
+                if (Event.current.button == 0 || Event.current.button == 1) // left/right click
+                    this.miniMap.Close();
             }
         }
 

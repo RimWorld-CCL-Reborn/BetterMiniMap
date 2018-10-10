@@ -62,10 +62,6 @@ namespace BetterMiniMap
             {
                 if (overlays == null)
                     overlays = GetOverlays().ToList();
-#if DEBUG
-                foreach (Overlay o in overlays)
-                    Log.Message($"{o}->{o.OverlayPriority}");
-#endif
                 return overlays;
             }
         }
