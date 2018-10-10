@@ -29,10 +29,11 @@ namespace BetterMiniMap
 
         private static void AddOverlaySettings(OverlayDef def)
         {
-            OverlaySettingDatabase.overlaySettings.Add(def.defName, new OverlaySettings(def));
-            foreach (IndicatorProps props in def.indicatorMappings.mappings)
+            if (!OverlaySettingDatabase.overlaySettings.ContainsKey(def.defName))
             {
-                OverlaySettingDatabase.indicatorSettings.Add(props.name, new IndicatorSettings(props));
+                OverlaySettingDatabase.overlaySettings.Add(def.defName, new OverlaySettings(def));
+                foreach (IndicatorProps props in def.indicatorMappings.mappings)
+                    OverlaySettingDatabase.indicatorSettings.Add(props.name, new IndicatorSettings(props));
             }
         }
 
