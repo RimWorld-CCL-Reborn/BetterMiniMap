@@ -75,7 +75,13 @@ namespace BetterMiniMap.Overlays
 		{
             Color32[] pixels = new Color32[this.map.cellIndices.NumGridCells];
 			for (int i = 0; i < this.map.cellIndices.NumGridCells; i++)
-                pixels[i] = TerrainColors.colorMapping[this.map.terrainGrid.TerrainAt(i).shortHash];
+			{
+				Color curCol = this.map.terrainGrid.TerrainAt(i).color;
+				if (curCol != Color.white)
+					pixels[i] = curCol;
+				else
+					pixels[i] = TerrainColors.colorMapping[this.map.terrainGrid.TerrainAt(i).shortHash];
+			}
             base.Texture.SetPixels32(pixels);
         }
 
