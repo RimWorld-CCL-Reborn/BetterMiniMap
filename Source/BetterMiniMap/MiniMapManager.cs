@@ -102,7 +102,11 @@ namespace BetterMiniMap
             }
         }
 
-        internal MiniMapWindow GetMiniMap(Map map) => (miniMaps.ContainsKey(map.uniqueID)) ? miniMaps[map.uniqueID] : null;
+        internal MiniMapWindow GetMiniMap(Map map)
+        {
+            if (!miniMaps.ContainsKey(map.uniqueID)) AddMiniMap(map);
+            return miniMaps[map.uniqueID];
+        }
 
         public void ExposeData()
         {
