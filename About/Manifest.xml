@@ -9,5 +9,5 @@
         <li>ToModOrNotToMod</li>
     </loadAfter>-->
     <manifestUri>https://raw.githubusercontent.com/RimWorld-CCL-Reborn/BetterMiniMap/master/About/Manifest.xml</manifestUri>
-    <downloadUri>https://github.com/RimWorld-CCL-Reborn/BetterMiniMap/releases/tag/v1.0.0</downloadUri>
+    <downloadUri>https://github.com/RimWorld-CCL-Reborn/BetterMiniMap/releases/tag/v1.0.1</downloadUri>
 </Manifest>
