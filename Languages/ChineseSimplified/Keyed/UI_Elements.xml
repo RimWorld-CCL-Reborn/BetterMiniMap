@@ -42,4 +42,6 @@
   <BMM_ResizeButtonTooltip>开关缩放小地图。激活后点住地图左右拖动以进行缩放。</BMM_ResizeButtonTooltip>
   <BMM_DragButtonTooltip>开关移动小地图。激活后点住地图左右拖动以进行移动。</BMM_DragButtonTooltip>
 
+  <SH_ColorPresetHelp>单击使用预设。如要更改预设，请按SHIFT键并选中要更改的当前值。</SH_ColorPresetHelp>
+
 </LanguageData>
