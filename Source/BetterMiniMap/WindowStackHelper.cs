@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using Verse;
-using Harmony;
+using HarmonyLib;
 
 namespace BetterMiniMap
 {

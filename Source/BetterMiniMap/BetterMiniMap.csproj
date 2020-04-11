@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BetterMiniMap</RootNamespace>
     <AssemblyName>BetterMiniMap</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -29,20 +30,22 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony, Version=1.0.9.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\0Harmony.dll</HintPath>
+      <HintPath>..\..\..\Harmony.2.0.0.8\Release\net472\0Harmony.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="1SettingsHelper">
       <HintPath>..\..\..\SettingsHelper\Assemblies\1SettingsHelper.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>D:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -52,7 +55,19 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>D:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -85,15 +100,15 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /S /Y "$(TargetDir)*" "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\$(ProjectName)\Assemblies\"
-xcopy /S /Y "$(SolutionDir)..\About\*" "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\$(ProjectName)\About\"
-xcopy /S /Y "$(SolutionDir)..\Textures\*" "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\$(ProjectName)\Textures\"
-xcopy /S /Y "$(SolutionDir)..\Defs\*" "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\$(ProjectName)\Defs\"
-xcopy /S /Y "$(SolutionDir)..\Languages\*" "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\$(ProjectName)\Languages\"</PostBuildEvent>
+    <PostBuildEvent>xcopy /S /Y "$(TargetDir)*" "D:\SteamLibrary\steamapps\common\RimWorld\Mods\$(ProjectName)\Assemblies\"
+xcopy /S /Y "$(SolutionDir)..\About\*" "D:\SteamLibrary\steamapps\common\RimWorld\Mods\$(ProjectName)\About\"
+xcopy /S /Y "$(SolutionDir)..\Textures\*" "D:\SteamLibrary\steamapps\common\RimWorld\Mods\$(ProjectName)\Textures\"
+xcopy /S /Y "$(SolutionDir)..\Defs\*" "D:\SteamLibrary\steamapps\common\RimWorld\Mods\$(ProjectName)\Defs\"
+xcopy /S /Y "$(SolutionDir)..\Languages\*" "D:\SteamLibrary\steamapps\common\RimWorld\Mods\$(ProjectName)\Languages\"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>del /S /Q "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\$(ProjectName)\Defs\*"
-del /S /Q "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\$(ProjectName)\Assemblies\*"
-del /S /Q "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\$(ProjectName)\Languages\*"</PreBuildEvent>
+    <PreBuildEvent>del /S /Q "D:\SteamLibrary\steamapps\common\RimWorld\Mods\$(ProjectName)\Defs\*"
+del /S /Q "D:\SteamLibrary\steamapps\common\RimWorld\Mods\$(ProjectName)\Assemblies\*"
+del /S /Q "D:\SteamLibrary\steamapps\common\RimWorld\Mods\$(ProjectName)\Languages\*"</PreBuildEvent>
   </PropertyGroup>
 </Project>

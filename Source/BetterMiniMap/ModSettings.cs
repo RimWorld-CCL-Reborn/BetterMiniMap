@@ -5,7 +5,7 @@ using Verse;
 using SettingsHelper;
 
 using static BetterMiniMap.BetterMiniMapSettings;
-using Harmony;
+using HarmonyLib;
 using ColourPicker;
 
 namespace BetterMiniMap
@@ -246,7 +246,7 @@ namespace BetterMiniMap
         #region HARMONY
         static BetterMiniMapMod()
         {
-            HarmonyInstance harmony = HarmonyInstance.Create("rimworld.whyisthat.betterminimap.init");
+            Harmony harmony = new Harmony("rimworld.whyisthat.betterminimap.init");
             harmony.Patch(AccessTools.Method(typeof(UIRoot_Entry), nameof(UIRoot_Entry.Init)), null, new HarmonyMethod(typeof(BetterMiniMapMod), nameof(DefsLoaded)));
         }
 

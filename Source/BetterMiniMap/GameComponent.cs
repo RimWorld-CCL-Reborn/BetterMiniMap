@@ -1,6 +1,6 @@
 ﻿using Verse;
 using RimWorld;
-using Harmony;
+using HarmonyLib;
 using System.Linq;
 
 namespace BetterMiniMap
@@ -37,7 +37,7 @@ namespace BetterMiniMap
             researchPal = ModLister.AllInstalledMods.FirstOrDefault(m => m.Name == "ResearchPal")?.Active == true;
             relationsTab = ModLister.AllInstalledMods.FirstOrDefault(m => m.Name == "Relations Tab")?.Active == true;
 
-            HarmonyInstance harmony = HarmonyInstance.Create("rimworld.whyisthat.betterminimap.gamecomponent");
+            Harmony harmony = new Harmony("rimworld.whyisthat.betterminimap.gamecomponent");
             //harmony.Patch(AccessTools.Method(typeof(MainTabsRoot), nameof(MainTabsRoot.ToggleTab)), null, new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(ToggleMiniMap)));
             //harmony.Patch(AccessTools.Method(typeof(MainButtonWorker_ToggleWorld), nameof(MainButtonWorker_ToggleWorld.Activate)), null, new HarmonyMethod(typeof(MiniMap_GameComponent), nameof(ToggleMiniMap_WorldTab)));
 
