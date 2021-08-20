@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -13,6 +12,7 @@ namespace BetterMiniMap
         private Action gameComponentOnGUI;
 
         public Action GameComponentOnGUI { get => gameComponentOnGUI; }
+        public Dictionary<int, MiniMapWindow> MiniMaps { get => miniMaps; }
 
         public MiniMapManager()
         {
@@ -23,7 +23,7 @@ namespace BetterMiniMap
                 if (!GenScene.InPlayScene) return;
 
                 // init
-                MiniMap_GameComponent.MiniMap.Toggle(true);
+                MiniMap_GameComponentHelper.MiniMap.Toggle(true);
 
                 gameComponentOnGUI = delegate ()
                 {
@@ -32,12 +32,12 @@ namespace BetterMiniMap
                         // TODO: needs to be reworked
                         if (Event.current.keyCode == KeyCode.M)
                         {
-                            bool add = Find.WindowStack.Windows.IndexOf(MiniMap_GameComponent.MiniMap) == -1;
-                            MiniMap_GameComponent.MiniMap.Toggle(add); // TODO: this is a bit nasty...
-                            MiniMap_GameComponent.MiniMap.Active = add;
+                            bool add = Find.WindowStack.Windows.IndexOf(MiniMap_GameComponentHelper.MiniMap) == -1;
+                            MiniMap_GameComponentHelper.MiniMap.Toggle(add); // TODO: this is a bit nasty...
+                            MiniMap_GameComponentHelper.MiniMap.Active = add;
                         }
-                        if (Event.current.keyCode == KeyCode.K && MiniMap_GameComponent.MiniMap.Active)
-                            MiniMap_GameComponent.MiniMap.ToggleControls();
+                        if (Event.current.keyCode == KeyCode.K && MiniMap_GameComponentHelper.MiniMap.Active)
+                            MiniMap_GameComponentHelper.MiniMap.ToggleControls();
                     }
                 };
             };
@@ -74,33 +74,6 @@ namespace BetterMiniMap
         }
 
         public void RemoveMiniMap(Map map) => this.miniMaps.Remove(map.uniqueID);
-
-        public FloatMenu MiniMapMenu
-        {
-            get
-            {
-                return new FloatMenu(MiniMapMenuItems)
-                {
-                    closeOnCancel = false,
-                    preventCameraMotion = false,
-                };
-            }
-        }
-
-        public List<FloatMenuOption> MiniMapMenuItems
-        {
-            get
-            {
-                List<FloatMenuOption> items = new List<FloatMenuOption>();
-                // TODO: ordering
-                foreach(MiniMapWindow miniMap in miniMaps.Values)
-                    items.Add(new FloatMenuOption($"TileMap-{miniMap.Map.Tile}", ()=> {
-                        if (Find.WindowStack.Windows.IndexOf(miniMap) == -1)
-                            Find.WindowStack.CustomAdd(miniMap);
-                    }));
-                return items;
-            }
-        }
 
         internal MiniMapWindow GetMiniMap(Map map)
         {

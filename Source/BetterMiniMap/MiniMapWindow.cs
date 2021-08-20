@@ -9,7 +9,7 @@ using BetterMiniMap.Overlays;
 
 namespace BetterMiniMap
 {
-	internal class MiniMapWindow : Window, IExposable
+	public class MiniMapWindow : Window, IExposable
 	{
         public const float defaultSize = 250f;
         public const int defaultMargin = 8;

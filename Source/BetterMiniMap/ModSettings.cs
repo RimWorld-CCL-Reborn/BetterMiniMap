@@ -237,27 +237,49 @@ namespace BetterMiniMap
         }
     }
 
-    [StaticConstructorOnStartup]
-    public class BetterMiniMapMod : Mod
+    // TODO: this seems like a hack...
+    public static class BetterMiniMapModHelper
     {
-        //public static BetterMiniMapSettings settings;
-        public static BetterMiniMapSettings modSettings;
+        private static BetterMiniMapMod _inst; 
+        public static void SetInst(BetterMiniMapMod inst)
+        {
+            if (_inst == null) _inst = inst;
+        }
 
+        // delay loading modSettings until overlayDefs are loaded
+        public static void DelayedGetSettings()
+        {
+            BetterMiniMapMod.modSettings = _inst.GetSettings<BetterMiniMapSettings>();
+        }
+    }
+
+    [StaticConstructorOnStartup]
+    public class BetterMiniMapMod_DefsLoaded
+    {
         #region HARMONY
-        static BetterMiniMapMod()
+        static BetterMiniMapMod_DefsLoaded()
         {
             Harmony harmony = new Harmony("rimworld.whyisthat.betterminimap.init");
-            harmony.Patch(AccessTools.Method(typeof(UIRoot_Entry), nameof(UIRoot_Entry.Init)), null, new HarmonyMethod(typeof(BetterMiniMapMod), nameof(DefsLoaded)));
+            harmony.Patch(AccessTools.Method(typeof(UIRoot_Entry), nameof(UIRoot_Entry.Init)), null, new HarmonyMethod(typeof(BetterMiniMapMod_DefsLoaded), nameof(DefsLoaded)));
         }
 
         // NOTE: this occurs before HugsLib's DefsLoadded... but the defs are loaded...
-        public static void DefsLoaded() => OverlaySettingDatabase.InitializeOverlaySettings();
+        public static void DefsLoaded()
+        {
+            OverlaySettingDatabase.InitializeOverlaySettings();
+            BetterMiniMapModHelper.DelayedGetSettings();
+            MiniMap_GameComponentHelper.ApplyPatches();
+        }
         #endregion
+    }
+
+    public class BetterMiniMapMod : Mod
+    {
+        public static BetterMiniMapSettings modSettings;
 
         public BetterMiniMapMod(ModContentPack content) : base(content)
         {
-            //modSettings.rootDir = content.RootDir;
-            modSettings = GetSettings<BetterMiniMapSettings>();
+            BetterMiniMapModHelper.SetInst(this);
             ListingStandardHelper.Gap = 10f;
         }
 

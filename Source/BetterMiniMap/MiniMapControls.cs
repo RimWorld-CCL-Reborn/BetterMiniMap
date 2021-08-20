@@ -134,7 +134,7 @@ namespace BetterMiniMap
             if (Widgets.ButtonImage(this.miniMapManagerRect, MiniMapTextures.MapManagerIcon))
             {
                 if (Event.current.button == 0 || Event.current.button == 1) // left/right click
-                    Find.WindowStack.Add(MiniMap_GameComponent.MiniMapManager.MiniMapMenu);
+                    Find.WindowStack.Add(MiniMap_GameComponentHelper.MiniMapMenu);
             }
 
             if (Widgets.ButtonImage(this.closeButtonRect, MiniMapTextures.CloseXSmall))
