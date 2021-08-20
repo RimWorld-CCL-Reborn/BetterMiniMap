@@ -348,7 +348,6 @@ namespace BetterMiniMap
             Color color1 = colorContainer.GetColorFromContainer(colorKey);
             // draw button leaving room for color rect in rightHalf rect (plus some padding)
             if (Widgets.ButtonText(thisPart.LeftPartPixels(textSize), buttonText))
-                //Find.WindowStack.Add(new ColorSelectDialog(buttonText, color1, (SelectionColorWidget scw) => { colorContainer.SetColorFromContainer(colorKey, scw.SelectedColor); }, true));
                 Find.WindowStack.Add(new Dialog_ColourPicker(color1, (Color c) => colorContainer.SetColorFromContainer(colorKey, c)));
             GUI.color = color1;
             // draw square with color in rightHalf rectA 
