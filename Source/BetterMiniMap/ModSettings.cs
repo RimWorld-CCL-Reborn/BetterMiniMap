@@ -300,7 +300,6 @@ namespace BetterMiniMap
             listing_Standard.AddSubSettingsButton("BMM_ColorPickersLabel".Translate(), (Rect inRect) =>
             {
                 Listing_Standard subsettings = inRect.BeginListingStandard();
-                //listing_Standard.AddColorPickerButton("BMM_FogOverlayLabel".Translate(), settings.overlayColors.fog, (SelectionColorWidget scw) => { settings.overlayColors.fog = scw.SelectedColor; });
                 subsettings.AddColorPickerButton("BMM_BuildingsOverlayLabel".Translate(), modSettings.overlayColors.buildings, nameof(modSettings.overlayColors.buildings), modSettings.overlayColors);
 
                 subsettings.AddColorPickerButton("BMM_ViewpointOverlayLabel".Translate(), modSettings.overlayColors.viewpoint, (Color c) => {
