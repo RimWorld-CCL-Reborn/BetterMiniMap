@@ -57,7 +57,6 @@ namespace BetterMiniMap
         public Map Map { get => this.map; }
 
         public List<Overlay> Overlays { get => overlayManager.Overlays; }
-        public bool Active { get => this.active; set => this.active = value; }
         public AreaOverlay OverlayArea { get => overlayManager.AreaOverlay;  }
         public Vector2 Position { get => this.position; internal set => this.position = value; }
         public Vector2 Size { get => this.size; internal set => this.size = value; }
@@ -294,10 +293,12 @@ namespace BetterMiniMap
             }
             else
                 Find.WindowStack.TryRemove(this, true);
+            this.active = add;
         }
 
         public void ToggleControls()
         {
+            if (!this.active) return;
             if (Find.WindowStack.Windows.IndexOf(this.controls) == -1)
                 Find.WindowStack.Add(this.controls);
             else

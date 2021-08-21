@@ -34,9 +34,8 @@ namespace BetterMiniMap
                         {
                             bool add = Find.WindowStack.Windows.IndexOf(MiniMap_GameComponentHelper.MiniMap) == -1;
                             MiniMap_GameComponentHelper.MiniMap.Toggle(add); // TODO: this is a bit nasty...
-                            MiniMap_GameComponentHelper.MiniMap.Active = add;
                         }
-                        if (Event.current.keyCode == BetterMiniMapMod.modSettings.toggleMiniMapControls && MiniMap_GameComponentHelper.MiniMap.Active)
+                        if (Event.current.keyCode == BetterMiniMapMod.modSettings.toggleMiniMapControls)
                             MiniMap_GameComponentHelper.MiniMap.ToggleControls();
                     }
                 };
