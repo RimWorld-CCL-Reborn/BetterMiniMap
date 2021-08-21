@@ -124,7 +124,7 @@ namespace BetterMiniMap
         }
 
         // NOTE: shadow relic class -- only used for scribing values tracked in OverlaySettingDatabase (imported from OverlayDefs) 
-        // TODO: consider new setting format
+        // TODO: consider new setting format (used for scribing values from OverlaySettingsDatabase using OverlayDefs)
         public class IndicatorSizes : IExposable
         {
             public void ExposeData()
@@ -200,6 +200,8 @@ namespace BetterMiniMap
         public OverlayColors overlayColors;
         public IndicatorSizes indicatorSizes;
         public bool singleMode = false;
+        public KeyCode toggleMiniMap = KeyCode.M;
+        public KeyCode toggleMiniMapControls = KeyCode.K;
 
         // HIDDEN SETTINGS
         public bool mipMaps = false;
@@ -212,6 +214,8 @@ namespace BetterMiniMap
             Scribe_Deep.Look(ref this.overlayColors, "overlayColors");
             Scribe_Deep.Look(ref this.indicatorSizes, "indicatorSizes");
             Scribe_Values.Look<bool>(ref this.singleMode, "singleMode", false);
+            Scribe_Values.Look(ref this.toggleMiniMap, "toggleMiniMap", KeyCode.M, true);
+            Scribe_Values.Look(ref this.toggleMiniMapControls, "toggleMiniMapControls", KeyCode.K, true);
 
             // HIDDEN SETTINGS
             Scribe_Values.Look<bool>(ref this.mipMaps, "mipMaps", false);

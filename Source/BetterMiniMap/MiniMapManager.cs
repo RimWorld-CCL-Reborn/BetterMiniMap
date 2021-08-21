@@ -30,13 +30,13 @@ namespace BetterMiniMap
                     if (Event.current.type == EventType.KeyDown)
                     {
                         // TODO: needs to be reworked
-                        if (Event.current.keyCode == KeyCode.M)
+                        if (Event.current.keyCode == BetterMiniMapMod.modSettings.toggleMiniMap)
                         {
                             bool add = Find.WindowStack.Windows.IndexOf(MiniMap_GameComponentHelper.MiniMap) == -1;
                             MiniMap_GameComponentHelper.MiniMap.Toggle(add); // TODO: this is a bit nasty...
                             MiniMap_GameComponentHelper.MiniMap.Active = add;
                         }
-                        if (Event.current.keyCode == KeyCode.K && MiniMap_GameComponentHelper.MiniMap.Active)
+                        if (Event.current.keyCode == BetterMiniMapMod.modSettings.toggleMiniMapControls && MiniMap_GameComponentHelper.MiniMap.Active)
                             MiniMap_GameComponentHelper.MiniMap.ToggleControls();
                     }
                 };
