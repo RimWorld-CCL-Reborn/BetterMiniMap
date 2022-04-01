@@ -177,7 +177,7 @@
     <defName>FireOverlay</defName>
     <label>Fires</label>
     <priority>975</priority>
-    <description>This overlay shows any crashed ships that have landed on the map</description>
+    <description>This overlay shows fires on the map</description>
     <visible>false</visible>
     <overlayClass>BetterMiniMap.Overlays.ThingOverlay</overlayClass>
     <updatePeriod>360</updatePeriod>

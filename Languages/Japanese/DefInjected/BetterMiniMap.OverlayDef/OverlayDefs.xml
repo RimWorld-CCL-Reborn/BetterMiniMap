@@ -38,6 +38,11 @@
   <ShipsOverlay.indicatorMappings.mappings.0.name>宇宙船</ShipsOverlay.indicatorMappings.mappings.0.name>
   <ShipsOverlay.indicatorMappings.mappings.0.label>宇宙船の表示サイズ</ShipsOverlay.indicatorMappings.mappings.0.label>
 
+  <FireOverlay.label>火災</FireOverlay.label>
+  <FireOverlay.description>このオーバーレイは、マップ上の火災を表示します</FireOverlay.description>
+  <FireOverlay.indicatorMappings.mappings.0.name>火災</FireOverlay.indicatorMappings.mappings.0.name>
+  <FireOverlay.indicatorMappings.mappings.0.label>火災</FireOverlay.indicatorMappings.mappings.0.label>
+
   <TiberiumOverlay.label>ティベリウム</TiberiumOverlay.label>
   <TiberiumOverlay.description>このオーバーレイは、マップ上のティベリウムの分布を表示します</TiberiumOverlay.description>
   <TiberiumOverlay.indicatorMappings.mappings.0.name>ティベリウム緑</TiberiumOverlay.indicatorMappings.mappings.0.name>
@@ -50,5 +55,6 @@
   <TiberiumOverlay.indicatorMappings.mappings.3.label>ティベリウム氷河</TiberiumOverlay.indicatorMappings.mappings.3.label>
   <TiberiumOverlay.indicatorMappings.mappings.4.name>ティベリウム鉱脈</TiberiumOverlay.indicatorMappings.mappings.4.name>
   <TiberiumOverlay.indicatorMappings.mappings.4.label>ティベリウム鉱脈</TiberiumOverlay.indicatorMappings.mappings.4.label>
+
 
 </LanguageData>
