@@ -42,4 +42,6 @@
   <BMM_ResizeButtonTooltip>ミニマップのサイズ変更を切り替えますこのアイコンをクリックしてONにすると白く光ります。その後マップをクリックすると選択され、マップを左ドラッグして移動させると地図のサイズが変更できます。サイズを固定するにはこのアイコンをもう一度クリックして動作OFFにします。</BMM_ResizeButtonTooltip>
   <BMM_DragButtonTooltip>マップ下のこのアイコンをクリックしてONに(白く光る)するとミニマップの表示場所がドラッグで移動可能になります。固定するには地図を移動させた後、このアイコンをクリックして動作OFFにすると固定されます。</BMM_DragButtonTooltip>
 
+  <SH_ColorPresetHelp>クリックするとプリセットが使えます。シフトを押したまま選択するとプリセットの変更が可能です。</SH_ColorPresetHelp>
+
 </LanguageData>
